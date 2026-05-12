@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEKTOR_X — TECHNOLOGIA UJAWNIA PRAWDĘ</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --cyan: #00e5ff;
+    --red: #ff003c;
+    --yellow: #ffe600;
+    --bg: #030a03;
+    --bg2: #050f05;
+    --panel: rgba(0,255,65,0.04);
+    --border: rgba(0,255,65,0.15);
+    --text: #a0c8a0;
+    --dim: #3a5a3a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* SCANLINES */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NOISE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(3,10,3,0.95);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 52px;
+    backdrop-filter: blur(8px);
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    text-decoration: none;
+  }
+  .logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+  }
+  .nav-links a {
+    display: block;
+    padding: 0 1.1rem;
+    height: 52px;
+    line-height: 52px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    border-right: 1px solid var(--border);
+  }
+  .nav-links a:first-child { border-left: 1px solid var(--border); }
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a.active { color: var(--green); }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 0.25rem 0.75rem;
+    animation: livePulse 2s infinite;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: blink 1s infinite;
+  }
+  @keyframes livePulse {
+    0%,100% { box-shadow: 0 0 0 rgba(255,0,60,0); }
+    50% { box-shadow: 0 0 8px rgba(255,0,60,0.4); }
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* TICKER */
+  .ticker {
+    position: fixed;
+    top: 52px; left: 0; right: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.8);
+    border-bottom: 1px solid rgba(0,255,65,0.08);
+    height: 28px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .ticker-label {
+    background: var(--red);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0 0.75rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ticker-track {
+    display: flex;
+    animation: ticker 40s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-track span {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #5a8a5a;
+    padding: 0 3rem;
+  }
+  .ticker-track span em {
+    color: var(--cyan);
+    font-style: normal;
+  }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-left {}
+
+  .transmission-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--green);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .transmission-tag::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 .w1 { color: #fff; display: block; }
+  .hero h1 .w2 { color: var(--green); display: block; text-shadow: 0 0 30px rgba(0,255,65,0.5); }
+  .hero h1 .w3 { color: var(--cyan); display: block; text-shadow: 0 0 30px rgba(0,229,255,0.5); }
+
+  .hero-desc {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: #5a8a5a;
+    border-left: 2px solid var(--border);
+    padding-left: 1rem;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    background: var(--green);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .btn-primary:hover {
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,255,65,0.6);
+  }
+
+  .btn-secondary {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover {
+    background: rgba(0,229,255,0.08);
+    box-shadow: 0 0 15px rgba(0,229,255,0.3);
+  }
+
+  /* TERMINAL PANEL */
+  .hero-right {
+    position: relative;
+  }
+
+  .terminal {
+    background: rgba(0,10,0,0.9);
+    border: 1px solid var(--border);
+    padding: 0;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0,255,65,0.08), inset 0 0 40px rgba(0,0,0,0.5);
+  }
+  .terminal::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, rgba(0,255,65,0.1) 0%, transparent 50%, rgba(0,229,255,0.05) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .terminal-bar {
+    background: rgba(0,255,65,0.06);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+  .t-dot { width:8px;height:8px;border-radius:50%; }
+  .t-dot.r{background:var(--red)} .t-dot.y{background:var(--yellow)} .t-dot.g{background:var(--green)}
+  .terminal-title { margin-left: auto; }
+
+  .terminal-body {
+    padding: 1.5rem;
+    font-size: 0.75rem;
+    line-height: 1.9;
+    position: relative;
+    z-index: 1;
+    min-height: 300px;
+  }
+  .t-line { display: flex; gap: 0.75rem; margin-bottom: 0.1rem; }
+  .t-prompt { color: var(--green); flex-shrink: 0; }
+  .t-cmd { color: #c8e6c8; }
+  .t-out { color: #4a7a4a; padding-left: 1.5rem; }
+  .t-out.highlight { color: var(--cyan); }
+  .t-out.warn { color: var(--yellow); }
+  .t-out.alert { color: var(--red); }
+  .t-blank { height: 0.5rem; }
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--green);
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    border: 1px solid var(--border);
+    border-top: none;
+    margin-top: -1px;
+  }
+  .stat-cell {
+    padding: 1.2rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+    text-shadow: 0 0 15px rgba(0,255,65,0.4);
+  }
+  .stat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+    display: block;
+  }
+
+  /* GRID BG */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  .section-header {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .section-tag {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 0.25rem 0.75rem;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.05em;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ARTICLES GRID */
+  .articles {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .article-card {
+    background: var(--bg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .article-card:hover { background: var(--panel); }
+  .article-card.featured {
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 500px;
+    padding: 2.5rem;
+  }
+  .article-card.featured::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 30%,
+      rgba(0,255,65,0.03) 60%,
+      rgba(3,10,3,0.95) 100%
+    );
+    z-index: 0;
+  }
+
+  .card-fake-img {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(0,255,65,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 70%, rgba(0,229,255,0.03) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* Glitch grid pattern per card */
+  .article-card.featured .card-fake-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,255,65,0.015) 40px, rgba(0,255,65,0.015) 41px),
+      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,255,65,0.015) 40px, rgba(0,255,65,0.015) 41px);
+  }
+
+  .card-content { position: relative; z-index: 1; }
+
+  .card-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid;
+  }
+  .cat-tech { color: var(--green); border-color: rgba(0,255,65,0.3); }
+  .cat-ufo  { color: var(--cyan);  border-color: rgba(0,229,255,0.3); }
+  .cat-spy  { color: var(--red);   border-color: rgba(255,0,60,0.3); }
+  .cat-it   { color: var(--yellow);border-color: rgba(255,230,0,0.3); }
+
+  .card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .article-card.featured .card-title { font-size: 1.6rem; }
+  .card-title-sm { font-size: 1rem; }
+
+  .card-excerpt {
+    font-size: 0.72rem;
+    color: #4a7a4a;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .card-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .card-meta::before {
+    content: '//';
+    color: var(--green);
+  }
+
+  /* CATEGORIES ROW */
+  .categories {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .cat-card {
+    background: var(--bg);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .cat-card:hover { background: var(--panel); }
+
+  .cat-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    filter: grayscale(0.5);
+  }
+
+  .cat-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .cat-count {
+    font-size: 0.6rem;
+    color: var(--dim);
+  }
+
+  .cat-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-bar-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    transition: width 1s ease;
+  }
+
+  /* SIGNAL SECTION */
+  .signal-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  .signal-box {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .signal-box::before {
+    content: 'SIGNAL';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Orbitron', monospace;
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(0,255,65,0.03);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .signal-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+  .signal-title span { color: var(--green); }
+
+  .signal-text {
+    font-size: 0.78rem;
+    color: #4a7a4a;
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .signal-form {
+    display: flex;
+    gap: 0;
+  }
+  .signal-input {
+    flex: 1;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.8rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .signal-input::placeholder { color: var(--dim); }
+  .signal-input:focus { border-color: var(--green); }
+
+  .signal-btn {
+    background: var(--green);
+    color: #000;
+    border: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .signal-btn:hover { background: #fff; }
+
+  .signal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .sig-stat {
+    background: var(--bg2);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .sig-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+    text-shadow: 0 0 20px rgba(0,255,65,0.3);
+  }
+  .sig-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-size: 0.65rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+  }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--green); }
+
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  .footer-logo span { color: var(--red); }
+
+  /* GLITCH ANIMATION on hover */
+  .logo:hover {
+    animation: glitch 0.3s linear;
+  }
+  @keyframes glitch {
+    0%   { text-shadow: 2px 0 var(--red), -2px 0 var(--cyan); }
+    25%  { text-shadow: -2px 0 var(--red), 2px 0 var(--cyan); }
+    50%  { text-shadow: 2px 0 var(--cyan), -2px 0 var(--red); }
+    75%  { text-shadow: -2px 0 var(--cyan), 2px 0 var(--red); }
+    100% { text-shadow: none; }
+  }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.8s ease forwards;
+  }
+  .fade-in:nth-child(1){animation-delay:0.1s}
+  .fade-in:nth-child(2){animation-delay:0.25s}
+  .fade-in:nth-child(3){animation-delay:0.4s}
+  .fade-in:nth-child(4){animation-delay:0.55s}
+
+  @keyframes fadeIn {
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* TYPE EFFECT */
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--green);
+    animation: typing 2s steps(30, end) 0.5s both, blinkCaret 0.75s step-end infinite 2.5s;
+    width: 0;
+  }
+  @keyframes typing { from{width:0} to{width:100%} }
+  @keyframes blinkCaret { 0%,100%{border-color:var(--green)} 50%{border-color:transparent} }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns:1fr; gap:2rem; }
+    .articles { grid-template-columns:1fr 1fr; }
+    .article-card.featured { grid-row:span 1; min-height:300px; }
+    .categories { grid-template-columns:repeat(3,1fr); }
+    .signal-box { grid-template-columns:1fr; }
+    .stats-bar { grid-template-columns:repeat(2,1fr); }
+    nav { padding: 0 1rem; }
+    .nav-links { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Cybersec</a></li>
+    <li><a href="#">Hacking</a></li>
+    <li><a href="#">Prywatność</a></li>
+    <li><a href="#">Narzędzia</a></li>
+    <li><a href="#">Archiwum</a></li>
+  </ul>
+
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span>NOWA PODATNOŚĆ CVE-2025 — ŁATAJ TERAZ <em>///</em> PHISHING 2FA — JAK SIĘ BRONIĆ <em>///</em> VPN KTÓRY NAPRAWDĘ CHRONI — LISTA <em>///</em> RANSOMWARE W POLSKICH FIRMACH — RAPORT <em>///</em> HASŁA MENEDŻERY — TOP 5 W 2025 <em>///</em> ZERO-DAY W WINDOWS — SZCZEGÓŁY <em>///</em> JAK SPRAWDZIĆ CZY CIEBIE ZHAKOWANO <em>///</em></span>
+    <span>NOWA PODATNOŚĆ CVE-2025 — ŁATAJ TERAZ <em>///</em> PHISHING 2FA — JAK SIĘ BRONIĆ <em>///</em> VPN KTÓRY NAPRAWDĘ CHRONI — LISTA <em>///</em> RANSOMWARE W POLSKICH FIRMACH — RAPORT <em>///</em> HASŁA MENEDŻERY — TOP 5 W 2025 <em>///</em> ZERO-DAY W WINDOWS — SZCZEGÓŁY <em>///</em> JAK SPRAWDZIĆ CZY CIEBIE ZHAKOWANO <em>///</em></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="transmission-tag fade-in">TRANSMISJA AKTYWNA — SEKTOR X — PL</div>
+    <h1 class="fade-in">
+      <span class="w1">TECHNOLOGIA</span>
+      <span class="w2">UJAWNIA</span>
+      <span class="w3">PRAWDĘ</span>
+    </h1>
+    <p class="hero-desc fade-in">
+      Praktyczne porady z IT i cyberbezpieczeństwa. Chroń swoje dane, rozpoznaj ataki, zabezpiecz sieć — bez ściemy, bez korporacyjnego bełkotu.
+    </p>
+    <div class="hero-cta fade-in">
+      <a href="#" class="btn-primary">Wejdź do archiwum</a>
+
+    </div>
+  </div>
+
+  <div class="hero-right fade-in">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="t-dot r"></div>
+        <div class="t-dot y"></div>
+        <div class="t-dot g"></div>
+        <span class="terminal-title">sektor_x@terminal:~</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">root@sx:~$</span><span class="t-cmd">./security_scan.sh --target=twoj_system</span></div>
+        <div class="t-blank"></div>
+        <div class="t-line"><span class="t-out">[INFO] Skanowanie portów...</span></div>
+        <div class="t-line"><span class="t-out highlight">[OK] Firewall aktywny</span></div>
+        <div class="t-line"><span class="t-out warn">[!] Wykryto 3 otwarte porty</span></div>
+        <div class="t-blank"></div>
+        <div class="t-line"><span class="t-prompt">root@sx:~$</span><span class="t-cmd">cat /var/log/threats/latest</span></div>
+        <div class="t-blank"></div>
+        <div class="t-line"><span class="t-out">> Phishing kampanie: AKTYWNE</span></div>
+        <div class="t-line"><span class="t-out alert">> Ransomware warianty: +12 dziś</span></div>
+        <div class="t-line"><span class="t-out warn">> Twoje hasło w bazie wycieków: SPRAWDŹ</span></div>
+        <div class="t-line"><span class="t-out highlight">> VPN status: ZALECANY</span></div>
+        <div class="t-blank"></div>
+        <div class="t-line"><span class="t-prompt">root@sx:~$</span><span class="t-cmd typewriter">_</span></div>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-cell"><span class="stat-num">312</span><span class="stat-label">Poradniki</span></div>
+      <div class="stat-cell"><span class="stat-num">CVE</span><span class="stat-label">Monitoring</span></div>
+      <div class="stat-cell"><span class="stat-num">99.7%</span><span class="stat-label">Uptime</span></div>
+      <div class="stat-cell"><span class="stat-num">LIVE</span><span class="stat-label">Status</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">// Najnowsze</div>
+    <div class="section-title">PORADY I ANALIZY</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles">
+    <!-- FEATURED -->
+    <a class="article-card featured" href="artykuly/10-rzeczy-bezpieczenstwo.html">
+      <div class="card-fake-img"></div>
+      <div class="card-content">
+        <span class="card-cat cat-spy">● MUST READ</span>
+        <h2 class="card-title">10 rzeczy które musisz zrobić dziś, żeby nie dać się zhakować w 2025</h2>
+        <p class="card-excerpt">Menedżer haseł, 2FA, VPN, aktualizacje — brzmi nudno, ale każdy z tych kroków realnie zmniejsza ryzyko o 80%. Konkretna checklista bez lania wody.</p>
+        <div class="card-meta">
+          <span>09.05.2025</span>
+          <span>10 min czytania</span>
+          <span>↗ 8.1k wyświetleń</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- SMALL CARDS -->
+    <a class="article-card" href="artykuly/jak-rozpoznac-phishing.html">
+      <div class="card-content">
+        <span class="card-cat cat-it">● PHISHING</span>
+        <h3 class="card-title card-title-sm">Jak rozpoznać fałszywy email zanim klikniesz — 7 sygnałów alarmowych</h3>
+        <div class="card-meta"><span>07.05.2025</span><span>5 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" href="artykuly/vpn-test.html">
+      <div class="card-content">
+        <span class="card-cat cat-tech">● VPN</span>
+        <h3 class="card-title card-title-sm">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</h3>
+        <div class="card-meta"><span>06.05.2025</span><span>8 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" href="artykuly/menedzer-hasel.html">
+      <div class="card-content">
+        <span class="card-cat cat-ufo">● HASŁA</span>
+        <h3 class="card-title card-title-sm">Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?</h3>
+        <div class="card-meta"><span>05.05.2025</span><span>7 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" href="artykuly/zabezpiecz-router.html">
+      <div class="card-content">
+        <span class="card-cat cat-spy">● SIEĆ</span>
+        <h3 class="card-title card-title-sm">Zabezpiecz router domowy w 15 minut — krok po kroku</h3>
+        <div class="card-meta"><span>04.05.2025</span><span>6 min</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">// Sektory</div>
+    <div class="section-title">OBSZARY BADAŃ</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="categories">
+    <a class="cat-card" href="#">
+      <div class="cat-icon">🔐</div>
+      <div class="cat-name">Cybersec</div>
+      <div class="cat-count">127 poradników</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:85%;background:var(--green)"></div></div>
+    </a>
+    <a class="cat-card" href="#">
+      <div class="cat-icon">🎣</div>
+      <div class="cat-name">Phishing</div>
+      <div class="cat-count">54 poradników</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:45%;background:var(--red)"></div></div>
+    </a>
+    <a class="cat-card" href="#">
+      <div class="cat-icon">🕵️</div>
+      <div class="cat-name">Prywatność</div>
+      <div class="cat-count">89 poradników</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:65%;background:var(--cyan)"></div></div>
+    </a>
+    <a class="cat-card" href="#">
+      <div class="cat-icon">🛠️</div>
+      <div class="cat-name">Narzędzia</div>
+      <div class="cat-count">61 poradników</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:50%;background:var(--yellow)"></div></div>
+    </a>
+    <a class="cat-card" href="#">
+      <div class="cat-icon">🗃️</div>
+      <div class="cat-name">Archiwum</div>
+      <div class="cat-count">312 poradników</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:100%;background:var(--dim)"></div></div>
+    </a>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2025</div>
+  <div>
+    <!-- KONTAKT: dodaj mailto:twoj@email.com gdy będziesz gotowy -->
+    <a href="#">Polityka prywatności</a>
+  </div>
+</footer>
+
+</body>
+</html>
