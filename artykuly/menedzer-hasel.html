@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitwarden vs 1Password vs KeePass — SEKTOR_X</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--yellow);border-color:rgba(255,230,0,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout strong{color:#fff;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+  @media(max-width:700px){nav{padding:0 1rem;}.nav-links{display:none;}.article-wrapper{padding:100px 1rem 4rem;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Cybersec</a></li><li><a href="#">Hacking</a></li><li><a href="#">Prywatność</a></li><li><a href="#">Narzędzia</a></li><li><a href="#">Archiwum</a></li>
+  </ul>
+</nav>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span>MENEDŻERY HASEŁ TOP 5 W 2025 <em>///</em> PHISHING 2FA — JAK SIĘ BRONIĆ <em>///</em> VPN KTÓRY NAPRAWDĘ CHRONI <em>///</em> NOWA PODATNOŚĆ CVE-2025 <em>///</em></span>
+    <span>MENEDŻERY HASEŁ TOP 5 W 2025 <em>///</em> PHISHING 2FA — JAK SIĘ BRONIĆ <em>///</em> VPN KTÓRY NAPRAWDĘ CHRONI <em>///</em> NOWA PODATNOŚĆ CVE-2025 <em>///</em></span>
+  </div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html">Sektor_X</a><span class="breadcrumb-sep">›</span>
+    <a href="#">Narzędzia</a><span class="breadcrumb-sep">›</span>
+    <span>Menedżer haseł — porównanie</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat">● Narzędzia</span>
+    <h1 class="article-title">Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?</h1>
+    <div class="article-meta"><span>05.05.2025</span><span>7 min czytania</span></div>
+    <p class="article-lead">Menedżer haseł to must-have w 2025. Ale który wybrać? Testujemy trzy najpopularniejsze opcje — darmową, płatną i lokalną — i mówimy wprost który polecamy dla kogo.</p>
+  </header>
+  <div class="article-content">
+
+    <p>Jeśli używasz tego samego hasła w kilku miejscach — jesteś o jeden wyciek danych od katastrofy. Menedżer haseł rozwiązuje ten problem generując i przechowując unikalne, losowe hasło dla każdego serwisu. Ty pamiętasz tylko jedno.</p>
+
+    <h2>Bitwarden — najlepszy darmowy</h2>
+    <p>Bitwarden to nasz główny polecany wybór dla większości użytkowników. Open-source, darmowy w pełni funkcjonalnej wersji, dostępny na wszystkich platformach.</p>
+    <ul>
+      <li><strong>Cena:</strong> Darmowy (Premium: 10$/rok za TOTP i zaawansowane 2FA)</li>
+      <li><strong>Platformy:</strong> Windows, Mac, Linux, iOS, Android, wszystkie przeglądarki</li>
+      <li><strong>Szyfrowanie:</strong> AES-256, klucz generowany lokalnie przed wysłaniem</li>
+      <li><strong>Audyt:</strong> Zewnętrzny audyt bezpieczeństwa co roku</li>
+      <li><strong>Self-hosting:</strong> Możliwy — możesz hostować własny serwer Bitwarden</li>
+    </ul>
+    <div class="callout"><strong>💡 Dla kogo:</strong> Dla wszystkich którzy szukają darmowego, bezpiecznego rozwiązania. Szczególnie dla osób które chcą open-source.</div>
+
+    <h2>1Password — najlepszy płatny</h2>
+    <p>1Password to premium na rynku — dopracowany UX, dodatkowe funkcje bezpieczeństwa (Travel Mode, Secret Key), świetna integracja z firmami.</p>
+    <ul>
+      <li><strong>Cena:</strong> ~15 zł/mies. (individual) lub ~25 zł/mies. (families, 5 osób)</li>
+      <li><strong>Unikalny feature:</strong> Secret Key — dodatkowy klucz do odszyfrowywania, nigdy nie opuszcza urządzenia</li>
+      <li><strong>Travel Mode:</strong> Ukrywa wybrane hasła gdy przekraczasz granicę</li>
+      <li><strong>Wady:</strong> Droższy, zamknięty kod źródłowy</li>
+    </ul>
+    <div class="callout warn"><strong>⚠️ Dla kogo:</strong> Dla osób które cenią UX i nie mają problemu z płaceniem. Świetny dla firm i rodzin.</div>
+
+    <h2>KeePass — dla zaawansowanych</h2>
+    <p>KeePass to stary weteran — baza haseł przechowywana lokalnie jako zaszyfrowany plik. Żadnej chmury, żadnego serwera, maksymalna kontrola.</p>
+    <ul>
+      <li><strong>Cena:</strong> Całkowicie darmowy, open-source</li>
+      <li><strong>Przechowywanie:</strong> Lokalnie — plik .kdbx na twoim dysku</li>
+      <li><strong>Synchronizacja:</strong> Manualna — przez Syncthing, własny serwer lub pendrive</li>
+      <li><strong>Wady:</strong> Słabszy UX, synchronizacja wymaga konfiguracji</li>
+    </ul>
+    <div class="callout"><strong>💡 Dla kogo:</strong> Dla osób które nie ufają żadnej chmurze i chcą pełnej kontroli. Wymaga więcej konfiguracji.</div>
+
+    <h2>Który wybrać? Krótka odpowiedź</h2>
+    <ul>
+      <li>Zwykły użytkownik → <em>Bitwarden</em> (darmowy, łatwy, bezpieczny)</li>
+      <li>Rodzina lub firma → <em>1Password Families/Teams</em></li>
+      <li>Paranoik lub sysadmin → <em>KeePass + Syncthing</em></li>
+    </ul>
+
+    <hr>
+
+    <div class="callout"><strong>🚀 Jak zacząć z Bitwarden w 5 minut:</strong> Wejdź na bitwarden.com → Create Account → zainstaluj rozszerzenie przeglądarki → zacznij zapisywać hasła przy kolejnych logowaniach. Nie musisz importować wszystkiego od razu.</div>
+
+  </div>
+  <div class="article-tags">
+    <span class="tag">hasła</span><span class="tag">bitwarden</span><span class="tag">1password</span><span class="tag">keepass</span><span class="tag">narzędzia</span>
+  </div>
+  <div class="related">
+    <div class="related-header">// Powiązane artykuły</div>
+    <ul class="related-list">
+      <li><a href="10-rzeczy-bezpieczenstwo.html">10 rzeczy które musisz zrobić dziś, żeby nie dać się zhakować</a></li>
+      <li><a href="jak-rozpoznac-phishing.html">Jak rozpoznać fałszywy email zanim klikniesz</a></li>
+      <li><a href="vpn-test.html">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a></li>
+    </ul>
+  </div>
+</div>
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2025</div>
+  <div><!-- KONTAKT: dodaj mailto:twoj@email.com gdy będziesz gotowy -->
+    <a href="#">Polityka prywatności</a></div>
+</footer>
+</body>
+</html>

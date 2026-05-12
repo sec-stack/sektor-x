@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 rzeczy które musisz zrobić dziś — SEKTOR_X</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--bg2:#050f05;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--text:#a0c8a0;--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;gap:0;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;letter-spacing:0.08em;color:#5a8a5a;padding:0 3rem;}
+  .ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;letter-spacing:0.12em;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;}
+  .cat-cybersec{color:var(--green);border-color:rgba(0,255,65,0.3);}
+  .cat-phishing{color:var(--red);border-color:rgba(255,0,60,0.3);}
+  .cat-privacy{color:var(--cyan);border-color:rgba(0,229,255,0.3);}
+  .cat-tools{color:var(--yellow);border-color:rgba(255,230,0,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;letter-spacing:-0.01em;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;letter-spacing:0.1em;color:var(--dim);display:flex;gap:1.5rem;align-items:center;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:0.05em;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;letter-spacing:0.05em;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .article-content ol{list-style:none;counter-reset:item;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ol li{counter-increment:item;padding:0.5rem 0 0.5rem 2.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ol li::before{content:counter(item,decimal-leading-zero);position:absolute;left:0;color:var(--green);font-family:'Orbitron',monospace;font-size:0.7rem;}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+  .callout strong{color:#fff;}
+  .article-content code{background:rgba(0,255,65,0.07);border:1px solid var(--border);color:var(--green);padding:0.1rem 0.4rem;font-family:'Share Tech Mono',monospace;font-size:0.85em;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .checklist{background:var(--panel);border:1px solid var(--border);padding:1.5rem;margin:1.5rem 0;}
+  .checklist-title{font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:1rem;}
+  .checklist ul{margin:0;}
+  .checklist ul li{cursor:pointer;user-select:none;transition:color 0.2s;}
+  .checklist ul li.done{color:var(--dim);text-decoration:line-through;}
+  .checklist ul li.done::before{content:'✓';color:var(--green);}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+  .tag:hover{color:var(--green);border-color:var(--green);}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}
+  .related-list li{border-bottom:1px solid var(--border);}
+  .related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}
+  .related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);letter-spacing:0.1em;position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}
+  .footer-logo span{color:var(--red);}
+  @media(max-width:700px){nav{padding:0 1rem;}.nav-links{display:none;}.article-wrapper{padding:100px 1rem 4rem;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Cybersec</a></li>
+    <li><a href="#">Hacking</a></li>
+    <li><a href="#">Prywatność</a></li>
+    <li><a href="#">Narzędzia</a></li>
+    <li><a href="#">Archiwum</a></li>
+  </ul>
+</nav>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span>NOWA PODATNOŚĆ CVE-2025 — ŁATAJ TERAZ <em>///</em> PHISHING 2FA — JAK SIĘ BRONIĆ <em>///</em> VPN KTÓRY NAPRAWDĘ CHRONI — LISTA <em>///</em> RANSOMWARE W POLSKICH FIRMACH — RAPORT <em>///</em></span>
+    <span>NOWA PODATNOŚĆ CVE-2025 — ŁATAJ TERAZ <em>///</em> PHISHING 2FA — JAK SIĘ BRONIĆ <em>///</em> VPN KTÓRY NAPRAWDĘ CHRONI — LISTA <em>///</em> RANSOMWARE W POLSKICH FIRMACH — RAPORT <em>///</em></span>
+  </div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html">Sektor_X</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="#">Cybersec</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>10 rzeczy które musisz zrobić</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat cat-cybersec">● Cybersec</span>
+    <h1 class="article-title">10 rzeczy które musisz zrobić dziś, żeby nie dać się zhakować w 2025</h1>
+    <div class="article-meta">
+      <span>09.05.2025</span>
+      <span>10 min czytania</span>
+    </div>
+    <p class="article-lead">
+      Menedżer haseł, 2FA, VPN, aktualizacje — brzmi nudno, ale każdy z tych kroków realnie zmniejsza ryzyko włamania o ponad 80%. Konkretna checklista bez lania wody.
+    </p>
+  </header>
+  <div class="article-content">
+
+    <p>Większość włamań nie dzieje się przez zaawansowane exploity rodem z filmów o hakerach. Dzieje się przez <strong>twoje stare hasło z 2018 roku</strong>, które wyciekło z jakiegoś serwisu i dalej działa na twoim koncie bankowym. Poniżej 10 kroków które możesz wykonać dziś — bez wiedzy technicznej.</p>
+
+    <h2>1. Zainstaluj menedżera haseł</h2>
+    <p>To absolutna podstawa. Menedżer haseł generuje i przechowuje unikalne, losowe hasła dla każdego serwisu. Ty pamiętasz tylko jedno — główne hasło do menedżera.</p>
+    <ul>
+      <li><strong>Bitwarden</strong> — darmowy, open-source, działa na wszystkich urządzeniach</li>
+      <li><strong>1Password</strong> — płatny (~15 zł/mies.), świetny UX, polecany dla firm</li>
+      <li><strong>KeePass</strong> — darmowy, lokalny (brak chmury), dla zaawansowanych</li>
+    </ul>
+    <div class="callout">
+      <strong>💡 Jak zacząć:</strong> Pobierz Bitwarden (bitwarden.com), załóż konto, zainstaluj rozszerzenie do przeglądarki. Przy kolejnym logowaniu gdziekolwiek — zapisz hasło w menedżerze i zmień je na losowe.
+    </div>
+
+    <h2>2. Włącz uwierzytelnianie dwuskładnikowe (2FA)</h2>
+    <p>Nawet jeśli ktoś zdobędzie twoje hasło, bez drugiego składnika nie wejdzie na konto. 2FA to dodatkowy kod generowany na telefonie.</p>
+    <ul>
+      <li>Zainstaluj <em>Aegis Authenticator</em> (Android) lub <em>Raivo OTP</em> (iOS)</li>
+      <li>Włącz 2FA na: Gmail, Facebook, Instagram, banku, Allegro</li>
+      <li>Unikaj 2FA przez SMS — jest słabsze niż aplikacja</li>
+    </ul>
+
+    <h2>3. Sprawdź czy twoje dane wyciekły</h2>
+    <p>Wejdź na <em>haveibeenpwned.com</em> i wpisz swój email. Strona sprawdzi czy twoje dane pojawiły się w znanych wyciekach. Jeśli tak — zmień hasła w tych serwisach natychmiast.</p>
+    <div class="callout warn">
+      <strong>⚠️ Uwaga:</strong> Jeśli używasz tego samego hasła w wielu miejscach i ono wyciekło — zmieniaj je wszędzie, nie tylko w jednym miejscu.
+    </div>
+
+    <h2>4. Zaktualizuj system i aplikacje</h2>
+    <p>Większość ataków ransomware i exploitów wykorzystuje <strong>znane luki</strong> w niezaktualizowanym oprogramowaniu. Łatki bezpieczeństwa są publikowane właśnie po to, żeby je instalować.</p>
+    <ul>
+      <li>Windows: Ustawienia → Windows Update → Sprawdź aktualizacje</li>
+      <li>Mac: Preferencje systemowe → Uaktualnienia oprogramowania</li>
+      <li>Telefon: Ustawienia → O telefonie → Aktualizacje systemu</li>
+      <li>Włącz automatyczne aktualizacje — nie odkładaj ich na później</li>
+    </ul>
+
+    <h2>5. Zabezpiecz router domowy</h2>
+    <p>Router to brama do twojej sieci. Większość ludzi nigdy nie zmienia domyślnych ustawień — a domyślne hasła adminów routerów są publicznie znane.</p>
+    <ol>
+      <li>Wejdź na <code>192.168.1.1</code> lub <code>192.168.0.1</code> w przeglądarce</li>
+      <li>Zaloguj się (domyślnie admin/admin lub sprawdź naklejkę na routerze)</li>
+      <li>Zmień hasło admina na silne, unikalne</li>
+      <li>Zmień nazwę sieci WiFi (SSID) — usuń nazwę dostawcy internetu</li>
+      <li>Upewnij się że szyfrowanie to WPA3 lub WPA2</li>
+    </ol>
+
+    <h2>6. Używaj VPN w publicznych sieciach WiFi</h2>
+    <p>Publiczne WiFi w kawiarni, hotelu, na lotnisku — to środowisko gdzie ataki <em>man-in-the-middle</em> są trywialne. VPN szyfruje cały ruch między twoim urządzeniem a internetem.</p>
+    <div class="callout">
+      <strong>💡 Polecane VPN:</strong> Mullvad (najlepszy dla prywatności), ProtonVPN (darmowy plan), NordVPN (popularny, łatwy w obsłudze). Unikaj darmowych VPN bez reputacji — płacisz danymi.
+    </div>
+
+    <h2>7. Zaszyfruj dysk twardy</h2>
+    <p>Jeśli zgubisz laptop lub zostanie skradziony, bez szyfrowania dysku złodziej ma dostęp do wszystkich twoich plików. Szyfrowanie jest wbudowane w systemy operacyjne.</p>
+    <ul>
+      <li><strong>Windows:</strong> BitLocker (Pro) lub Device Encryption (Home)</li>
+      <li><strong>Mac:</strong> FileVault — Preferencje → Ochrona i prywatność → FileVault</li>
+      <li><strong>Linux:</strong> LUKS przy instalacji systemu</li>
+    </ul>
+
+    <h2>8. Zrób kopię zapasową danych</h2>
+    <p>Ransomware szyfruje twoje pliki i żąda okupu. Jedyna skuteczna obrona to backup. Zasada <strong>3-2-1</strong>: 3 kopie, na 2 różnych nośnikach, 1 poza domem (chmura).</p>
+    <ul>
+      <li>Lokalna kopia: zewnętrzny dysk HDD/SSD</li>
+      <li>Chmura: Backblaze (~30 zł/mies. za nieograniczone dane), Proton Drive</li>
+      <li>Automatyzacja: ustaw backup raz i zapomnij — musi działać bez twojego udziału</li>
+    </ul>
+
+    <h2>9. Uważaj na phishing</h2>
+    <p>Phishing to najpopularniejszy wektor ataku. Fałszywy email "od InPostu" z linkiem do "śledzenia przesyłki" — klikasz, wpisujesz dane karty — gotowe.</p>
+    <ul>
+      <li>Zawsze sprawdzaj adres nadawcy (nie tylko wyświetlaną nazwę)</li>
+      <li>Nie klikaj linków w emailach — wejdź bezpośrednio na stronę</li>
+      <li>Banki i instytucje nigdy nie proszą o hasło przez email</li>
+      <li>Sprawdź URL przed podaniem czegokolwiek — czy to na pewno właściwa domena?</li>
+    </ul>
+
+    <h2>10. Przejrzyj uprawnienia aplikacji</h2>
+    <p>Sprawdź regularnie jakie uprawnienia mają aplikacje na twoim telefonie. Latarka nie potrzebuje dostępu do kontaktów. Gra nie potrzebuje mikrofonu.</p>
+    <ul>
+      <li><strong>Android:</strong> Ustawienia → Aplikacje → Uprawnienia</li>
+      <li><strong>iOS:</strong> Ustawienia → Prywatność i bezpieczeństwo</li>
+      <li>Odinstaluj aplikacje których nie używasz</li>
+    </ul>
+
+    <hr>
+
+    <div class="checklist">
+      <div class="checklist-title">✓ Twoja checklista — kliknij żeby odhaczyć</div>
+      <ul>
+        <li onclick="this.classList.toggle('done')">Zainstalowałem menedżera haseł (Bitwarden)</li>
+        <li onclick="this.classList.toggle('done')">Włączyłem 2FA na głównych kontach</li>
+        <li onclick="this.classList.toggle('done')">Sprawdziłem haveibeenpwned.com</li>
+        <li onclick="this.classList.toggle('done')">Zaktualizowałem system operacyjny</li>
+        <li onclick="this.classList.toggle('done')">Zmieniłem hasło admina routera</li>
+        <li onclick="this.classList.toggle('done')">Mam działający VPN</li>
+        <li onclick="this.classList.toggle('done')">Włączyłem szyfrowanie dysku</li>
+        <li onclick="this.classList.toggle('done')">Mam działający backup (3-2-1)</li>
+        <li onclick="this.classList.toggle('done')">Wiem jak rozpoznać phishing</li>
+        <li onclick="this.classList.toggle('done')">Przejrzałem uprawnienia aplikacji</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="article-tags">
+    <span class="tag">cybersec</span>
+    <span class="tag">bezpieczeństwo</span>
+    <span class="tag">hasła</span>
+    <span class="tag">2fa</span>
+    <span class="tag">vpn</span>
+    <span class="tag">backup</span>
+    <span class="tag">phishing</span>
+  </div>
+
+  <div class="related">
+    <div class="related-header">// Powiązane artykuły</div>
+    <ul class="related-list">
+      <li><a href="jak-rozpoznac-phishing.html">Jak rozpoznać fałszywy email zanim klikniesz — 7 sygnałów alarmowych</a></li>
+      <li><a href="vpn-test.html">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a></li>
+      <li><a href="menedzer-hasel.html">Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?</a></li>
+      <li><a href="zabezpiecz-router.html">Zabezpiecz router domowy w 15 minut — krok po kroku</a></li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2025</div>
+  <div><!-- KONTAKT: dodaj mailto:twoj@email.com gdy będziesz gotowy -->
+    <a href="#">Polityka prywatności</a></div>
+</footer>
+</body>
+</html>
