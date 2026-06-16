@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zhakowali mi Facebook — co teraz? Plan awaryjny — SEKTOR_X</title>
+<meta name="description" content="Konto Facebook zhakowane? Działaj krok po kroku. Odzyskiwanie dostępu, zabezpieczenie konta, zgłoszenie włamania. Konkretny plan na teraz.">
+<meta name="keywords" content="zhakowane konto facebook, odzyskaj facebook, włamanie na facebook, zabezpiecz facebook, konto przejęte">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:9999;}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:48px;backdrop-filter:blur(8px);}
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+.sx-back{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;color:var(--green);text-decoration:none;border:1px solid var(--border);padding:0.3rem 0.8rem;transition:all 0.2s;font-family:'Rajdhani',sans-serif;}
+.sx-back:hover{background:rgba(0,255,65,0.08);border-color:var(--green);}
+.ticker{position:fixed;top:48px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+.ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+.ticker-track{display:flex;animation:ticker 35s linear infinite;white-space:nowrap;}
+.ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.article-wrapper{max-width:860px;margin:0 auto;padding:105px 2rem 6rem;position:relative;z-index:1;}
+.breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+.breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+.article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--red);border-color:rgba(255,0,60,0.3);}
+.article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+.article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.article-meta::before{content:'//';color:var(--green);}
+.article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--red);}
+.article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+.article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.article-content h2::before{content:'// ';color:var(--green);}
+.article-content p{margin-bottom:1.2rem;}
+.article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+.article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+.article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+.article-content ol{list-style:none;counter-reset:item;margin:1rem 0 1.5rem;padding:0;}
+.article-content ol li{counter-increment:item;padding:0.6rem 0 0.6rem 2.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+.article-content ol li::before{content:counter(item,decimal-leading-zero);position:absolute;left:0;color:var(--green);font-family:'Orbitron',monospace;font-size:0.7rem;}
+.callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+.callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+.callout strong{color:#fff;}
+.article-content strong{color:#c8e6c8;font-weight:normal;}
+.article-content em{color:var(--cyan);font-style:normal;}
+.article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+.article-content a{color:var(--cyan);text-decoration:none;}.article-content a:hover{text-decoration:underline;}
+.checklist{background:var(--panel);border:1px solid var(--border);padding:1.5rem;margin:1.5rem 0;}
+.checklist-title{font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:1rem;}
+.checklist ul{margin:0;}
+.checklist ul li{cursor:pointer;user-select:none;transition:color 0.2s;}
+.checklist ul li.done{color:var(--dim);text-decoration:line-through;}
+.checklist ul li.done::before{content:'✓';color:var(--green);}
+.article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+.tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+.related{margin-top:3rem;border:1px solid var(--border);}
+.related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+.related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+.related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+.related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+.footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+@media(max-width:700px){nav{padding:0 1rem;}.article-wrapper{padding:95px 1rem 3rem;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <a href="../index.html" class="sx-back">← Powrót</a>
+</nav>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span><a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+    <span><a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+  </div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html">Sektor_X</a><span class="breadcrumb-sep">›</span>
+    <a href="#">Cybersec</a><span class="breadcrumb-sep">›</span>
+    <span>Zhakowane konto Facebook</span>
+  </div>
+  <header>
+    <span class="article-cat">🚨 SYTUACJA AWARYJNA</span>
+    <h1 class="article-title">Zhakowali mi Facebook — co teraz? Plan awaryjny krok po kroku</h1>
+    <div class="article-meta"><span>19.05.2026</span><span>8 min czytania</span></div>
+    <p class="article-lead">Nie panikuj — każda minuta się liczy ale działanie z głową jest ważniejsze niż działanie szybko. Ten artykuł prowadzi Cię przez wszystkie kroki od odzyskania dostępu do zabezpieczenia konta na przyszłość.</p>
+  </header>
+  <div class="article-content">
+
+    <h2>Krok 1 — Sprawdź czy masz jeszcze dostęp</h2>
+    <p>Pierwsza rzecz: sprawdź czy możesz się jeszcze zalogować na swoje konto. Wejdź bezpośrednio na <em>facebook.com</em> (nie przez link z emaila — wpisz ręcznie w pasek adresu).</p>
+    <div class="callout alert">
+      <strong>🚨 Masz dostęp:</strong> Działaj natychmiast — skocz do Kroku 3 i zmień hasło zanim haker zdąży to zrobić.<br><br>
+      <strong>🚨 Nie masz dostępu:</strong> Haker już zmienił hasło. Idź do Kroku 2 — odzyskiwanie przez Facebook.
+    </div>
+
+    <h2>Krok 2 — Odzyskiwanie dostępu (gdy hasło zmienione)</h2>
+    <p>Facebook ma kilka ścieżek odzyskiwania dostępu. Zacznij od najszybszej:</p>
+    <ol>
+      <li>Wejdź na <em>facebook.com/login</em> → kliknij <strong>"Nie pamiętasz hasła?"</strong></li>
+      <li>Wpisz swój email lub numer telefonu powiązany z kontem</li>
+      <li>Facebook wyśle kod na email lub SMS — jeśli masz dostęp do tych danych, zresetujesz hasło</li>
+      <li>Jeśli haker zmienił też email i telefon → kliknij <strong>"Nie masz dostępu do tych danych?"</strong> i przejdź przez weryfikację tożsamości przez zdjęcie ID</li>
+    </ol>
+    <div class="callout warn">
+      <strong>⚠️ Jeśli żadna metoda nie działa:</strong> Użyj specjalnego formularza Facebooka dla przejętych kont: <em>facebook.com/hacked</em> — tam możesz zgłosić włamanie i przejść przez weryfikację tożsamości.
+    </div>
+
+    <h2>Krok 3 — Działaj natychmiast po odzyskaniu dostępu</h2>
+    <p>Masz z powrotem dostęp — teraz liczy się każda sekunda. Wykonaj te kroki po kolei:</p>
+    <ol>
+      <li><strong>Zmień hasło</strong> — natychmiast. Użyj długiego, unikalnego hasła (min. 16 znaków). Najlepiej wygenerowanego przez menedżera haseł.</li>
+      <li><strong>Wyloguj wszystkie urządzenia</strong> — Ustawienia → Bezpieczeństwo i logowanie → Gdzie jesteś zalogowany → Wyloguj ze wszystkich sesji</li>
+      <li><strong>Zmień email powiązany z kontem</strong> — upewnij się że to Twój email do którego masz dostęp</li>
+      <li><strong>Sprawdź aplikacje powiązane</strong> — Ustawienia → Aplikacje i strony → usuń wszystko podejrzane</li>
+      <li><strong>Sprawdź posty i wiadomości</strong> — sprawdź czy haker nie wysłał czegoś do Twoich znajomych</li>
+    </ol>
+
+    <h2>Krok 4 — Włącz uwierzytelnianie dwuskładnikowe (2FA)</h2>
+    <p>To najważniejszy krok który zapobiegnie kolejnemu włamaniu. Po włączeniu 2FA — nawet jeśli ktoś zdobędzie Twoje hasło — bez drugiego kodu nie wejdzie na konto.</p>
+    <ol>
+      <li>Ustawienia → Bezpieczeństwo i logowanie → Uwierzytelnianie dwuskładnikowe</li>
+      <li>Wybierz <strong>Aplikacja uwierzytelniająca</strong> (NIE SMS — łatwiejszy do przechwycenia)</li>
+      <li>Zainstaluj <em>Aegis</em> (Android) lub <em>Raivo OTP</em> (iOS) i zeskanuj kod QR</li>
+      <li>Zapisz kody zapasowe w bezpiecznym miejscu</li>
+    </ol>
+    <div class="callout">
+      <strong>💡 Dlaczego aplikacja zamiast SMS?</strong> Ataki SIM-swapping pozwalają hakerom przejąć Twój numer telefonu i odbierać SMS-y w Twoim imieniu. Aplikacja generuje kody lokalnie — jest bezpieczniejsza.
+    </div>
+
+    <h2>Krok 5 — Poinformuj znajomych</h2>
+    <p>Haker mógł wysyłać wiadomości do Twoich znajomych — z prośbą o pożyczkę, z linkami do phishingu lub złośliwym oprogramowaniem. Poinformuj znajomych żeby ignorowali podejrzane wiadomości "od Ciebie" z tamtego okresu.</p>
+
+    <h2>Krok 6 — Sprawdź inne konta</h2>
+    <p>Jeśli używałeś tego samego hasła w innych miejscach — musisz zmienić je wszędzie. To krytyczne.</p>
+    <ul>
+      <li>Sprawdź czy email używany na Facebooku ma te same hasło gdzieś indziej</li>
+      <li>Wejdź na <em>haveibeenpwned.com</em> — sprawdź czy Twój email wyciekł w bazach danych</li>
+      <li>Zmień hasła w serwisach gdzie używałeś tego samego co na FB</li>
+    </ul>
+
+    <hr>
+
+    <div class="callout">
+      <strong>💡 Jak to się stało? Najczęstsze przyczyny:</strong><br>
+      <strong>1. Phishing</strong> — kliknąłeś w fałszywy link i wpisałeś hasło na podrobionej stronie<br>
+      <strong>2. Wyciek danych</strong> — Twoje hasło wyciekło z innego serwisu i używałeś go też na FB<br>
+      <strong>3. Słabe hasło</strong> — haker złamał je bruteforce lub znalazł w słowniku<br>
+      <strong>4. Złośliwe oprogramowanie</strong> — keylogger na komputerze przechwycił hasło
+    </div>
+
+    <div class="checklist">
+      <div class="checklist-title">✓ Checklista po włamaniu — kliknij żeby odhaczyć</div>
+      <ul>
+        <li onclick="this.classList.toggle('done')">Odzyskałem dostęp do konta</li>
+        <li onclick="this.classList.toggle('done')">Zmieniłem hasło na silne i unikalne</li>
+        <li onclick="this.classList.toggle('done')">Wylogowałem wszystkie urządzenia</li>
+        <li onclick="this.classList.toggle('done')">Sprawdziłem i usunąłem podejrzane aplikacje</li>
+        <li onclick="this.classList.toggle('done')">Włączyłem 2FA (aplikacja uwierzytelniająca)</li>
+        <li onclick="this.classList.toggle('done')">Poinformowałem znajomych o włamaniu</li>
+        <li onclick="this.classList.toggle('done')">Sprawdziłem haveibeenpwned.com</li>
+        <li onclick="this.classList.toggle('done')">Zmieniłem hasła w innych serwisach</li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="article-tags">
+    <span class="tag">facebook</span><span class="tag">włamanie</span><span class="tag">odzyskiwanie konta</span><span class="tag">2fa</span><span class="tag">cybersec</span>
+  </div>
+  <div class="related">
+    <div class="related-header">// Powiązane artykuły</div>
+    <ul class="related-list">
+      <li><a href="10-rzeczy-bezpieczenstwo.html">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a></li>
+      <li><a href="jak-rozpoznac-phishing.html">Jak rozpoznać phishing — 7 sygnałów alarmowych</a></li>
+      <li><a href="menedzer-hasel.html">Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?</a></li>
+      <li><a href="generator-hasel.html">Generator bezpiecznych haseł — lokalny, bez wysyłania danych</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="newsletter-cta" style="margin-top:2.5rem;padding:2rem;border:1px solid var(--green);background:var(--panel);text-align:center;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.75rem;">// Newsletter</div>
+  <p style="color:#ccc;font-size:0.85rem;margin-bottom:1.25rem;">Spodobało się? Otrzymuj nowe artykuły prosto na skrzynkę — bez spamu, bez bullshitu.</p>
+  <a href="https://sektorx.substack.com" target="_blank" style="display:inline-block;padding:0.75rem 2rem;background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;font-size:0.85rem;">📧 Zapisz się na newsletter</a>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026</div>
+  <div><a href="#">Polityka prywatności</a></div>
+</footer>
+</body>
+</html>
