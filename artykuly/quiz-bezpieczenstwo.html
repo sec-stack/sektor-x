@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Czy jesteś łatwym celem? Quiz bezpieczeństwa — SEKTOR_X</title>
+<meta name="description" content="Sprawdź czy jesteś łatwym celem dla hakerów. Interaktywny quiz bezpieczeństwa — 10 pytań, wynik i konkretne porady co poprawić.">
+<meta name="keywords" content="quiz bezpieczeństwo, test cybersecurity, czy jestem bezpieczny, sprawdź bezpieczeństwo online">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--orange:#ff8c00;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:9999;}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:48px;backdrop-filter:blur(8px);}
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+.sx-back{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;color:var(--green);text-decoration:none;border:1px solid var(--border);padding:0.3rem 0.8rem;transition:all 0.2s;font-family:'Rajdhani',sans-serif;}
+.sx-back:hover{background:rgba(0,255,65,0.08);border-color:var(--green);}
+
+.wrapper{max-width:700px;margin:0 auto;padding:80px 2rem 4rem;position:relative;z-index:1;}
+
+/* HEADER */
+.quiz-header{text-align:center;margin-bottom:3rem;}
+.quiz-tag{font-size:0.65rem;letter-spacing:0.2em;color:var(--green);margin-bottom:1rem;display:block;}
+.quiz-title{font-family:'Orbitron',monospace;font-size:clamp(1.4rem,5vw,2rem);font-weight:900;color:#fff;line-height:1.2;margin-bottom:1rem;}
+.quiz-title span{color:var(--red);}
+.quiz-desc{font-size:0.82rem;color:#5a8a5a;line-height:1.8;}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:2rem;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.65rem;letter-spacing:0.1em;color:var(--dim);margin-bottom:6px;}
+.progress-bar{height:3px;background:rgba(0,255,65,0.1);position:relative;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width 0.4s ease;width:0%;}
+
+/* QUESTION */
+.question-card{border:1px solid var(--border);background:rgba(0,10,0,0.6);padding:2rem;margin-bottom:1rem;display:none;}
+.question-card.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-num{font-size:0.6rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:0.75rem;}
+.q-text{font-size:0.95rem;color:#fff;line-height:1.6;margin-bottom:1.5rem;font-family:'Rajdhani',sans-serif;font-weight:600;}
+
+/* OPTIONS */
+.options{display:flex;flex-direction:column;gap:8px;}
+.opt{padding:0.9rem 1.2rem;border:1px solid var(--border);background:transparent;color:#7aaa7a;font-family:'Share Tech Mono',monospace;font-size:0.78rem;cursor:pointer;text-align:left;transition:all 0.2s;display:flex;align-items:center;gap:1rem;}
+.opt:hover{border-color:var(--green);color:#fff;background:rgba(0,255,65,0.04);}
+.opt.selected-yes{border-color:var(--green);background:rgba(0,255,65,0.08);color:var(--green);}
+.opt.selected-no{border-color:var(--red);background:rgba(255,0,60,0.08);color:var(--red);}
+.opt.selected-part{border-color:var(--yellow);background:rgba(255,230,0,0.08);color:var(--yellow);}
+.opt-icon{font-size:1rem;flex-shrink:0;}
+
+/* RESULT */
+.result{display:none;text-align:center;padding:2rem;}
+.result.show{display:block;animation:fadeIn 0.5s ease;}
+.result-score-wrap{margin:2rem 0;}
+.result-circle{width:140px;height:140px;border-radius:50%;border:3px solid;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;}
+.result-num{font-family:'Orbitron',monospace;font-size:2.5rem;font-weight:900;line-height:1;}
+.result-max{font-size:0.65rem;letter-spacing:0.1em;color:var(--dim);}
+.result-label{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.result-desc{font-size:0.82rem;color:#5a8a5a;line-height:1.8;margin-bottom:2rem;}
+
+/* SCORE COLORS */
+.score-safe{color:var(--green);border-color:var(--green);box-shadow:0 0 30px rgba(0,255,65,0.2);}
+.score-medium{color:var(--yellow);border-color:var(--yellow);box-shadow:0 0 30px rgba(255,230,0,0.2);}
+.score-risk{color:var(--orange);border-color:var(--orange);box-shadow:0 0 30px rgba(255,140,0,0.2);}
+.score-danger{color:var(--red);border-color:var(--red);box-shadow:0 0 30px rgba(255,0,60,0.2);}
+
+/* RECOMMENDATIONS */
+.recs{text-align:left;margin-top:2rem;}
+.recs-title{font-size:0.65rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:1rem;text-transform:uppercase;}
+.rec-item{border:1px solid var(--border);padding:1rem 1.2rem;margin-bottom:8px;display:flex;gap:1rem;align-items:flex-start;font-size:0.78rem;color:#5a8a5a;line-height:1.7;}
+.rec-icon{font-size:1rem;flex-shrink:0;}
+.rec-item strong{color:#c8e6c8;font-weight:normal;display:block;margin-bottom:0.2rem;}
+.rec-link{color:var(--cyan);text-decoration:none;font-size:0.72rem;}
+.rec-link:hover{color:#fff;}
+
+/* BUTTONS */
+.btn{font-family:'Rajdhani',monospace;font-size:0.8rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:0.8rem 2rem;cursor:pointer;border:none;transition:all 0.2s;display:inline-block;text-decoration:none;}
+.btn-primary{background:var(--green);color:#000;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.btn-primary:hover{background:#fff;box-shadow:0 0 20px rgba(0,255,65,0.4);}
+.btn-outline{background:transparent;color:var(--green);border:1px solid var(--green);}
+.btn-outline:hover{background:rgba(0,255,65,0.08);}
+.btn-group{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;}
+
+footer{border-top:1px solid var(--border);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;max-width:700px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+.footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.85rem;color:#fff;}.footer-logo span{color:var(--red);}
+
+@media(max-width:600px){nav{padding:0 1rem;}.wrapper{padding:70px 1rem 3rem;}.question-card{padding:1.25rem;}.opt{font-size:0.72rem;padding:0.75rem 1rem;}}
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <a href="../index.html" class="sx-back">← Powrót</a>
+</nav>
+
+<div class="wrapper">
+
+  <div class="quiz-header">
+    <span class="quiz-tag">// NARZĘDZIA / QUIZ BEZPIECZEŃSTWA</span>
+    <h1 class="quiz-title">Czy jesteś <span>łatwym celem</span>?</h1>
+    <p class="quiz-desc">10 pytań · 3 minuty · dowiesz się jak naprawdę stoisz z bezpieczeństwem online — i co zrobić żeby to poprawić.</p>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-meta">
+      <span id="qNum">Pytanie 1 z 10</span>
+      <span id="qPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- START -->
+  <div class="question-card active" id="startCard">
+    <div class="q-text" style="text-align:center;margin-bottom:2rem">Gotowy żeby sprawdzić ile jesteś wart jako cel dla hakera?<br><br><span style="color:var(--dim);font-size:0.75rem">Quiz jest anonimowy — żadne dane nie są wysyłane na serwer</span></div>
+    <div style="text-align:center"><button class="btn btn-primary" onclick="startQuiz()">Rozpocznij quiz →</button></div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="questionArea"></div>
+
+  <!-- RESULT -->
+  <div class="result" id="resultArea"></div>
+
+</div>
+
+
+<div class="newsletter-cta" style="margin-top:2.5rem;padding:2rem;border:1px solid var(--green);background:var(--panel);text-align:center;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.75rem;">// Newsletter</div>
+  <p style="color:#ccc;font-size:0.85rem;margin-bottom:1.25rem;">Spodobało się? Otrzymuj nowe artykuły prosto na skrzynkę — bez spamu, bez bullshitu.</p>
+  <a href="https://sektorx.substack.com" target="_blank" style="display:inline-block;padding:0.75rem 2rem;background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;font-size:0.85rem;">📧 Zapisz się na newsletter</a>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026</div>
+</footer>
+
+<script>
+const questions = [
+  {
+    text: "Czy używasz tego samego hasła w więcej niż jednym miejscu?",
+    opts: [
+      { icon: "✅", text: "Nie — każde konto ma inne hasło", val: 10, cat: null },
+      { icon: "⚠️", text: "Kilka różnych haseł, ale powtarzam je", val: 4, cat: "hasla" },
+      { icon: "🚨", text: "Jedno lub dwa hasła do wszystkiego", val: 0, cat: "hasla" }
+    ]
+  },
+  {
+    text: "Czy używasz menedżera haseł (Bitwarden, 1Password, KeePass)?",
+    opts: [
+      { icon: "✅", text: "Tak, wszystkie hasła mam w menedżerze", val: 10, cat: null },
+      { icon: "⚠️", text: "Nie, ale planuję zacząć", val: 3, cat: "hasla" },
+      { icon: "🚨", text: "Nie — pamiętam hasła w głowie lub zapisuję w notatniku", val: 0, cat: "hasla" }
+    ]
+  },
+  {
+    text: "Czy masz włączone uwierzytelnianie dwuskładnikowe (2FA) na ważnych kontach?",
+    opts: [
+      { icon: "✅", text: "Tak — na emailu, banku, social media", val: 10, cat: null },
+      { icon: "⚠️", text: "Tylko na niektórych kontach", val: 5, cat: "2fa" },
+      { icon: "🚨", text: "Nie mam włączonego 2FA nigdzie", val: 0, cat: "2fa" }
+    ]
+  },
+  {
+    text: "Co robisz gdy dostajesz nieoczekiwany email z linkiem od banku lub InPostu?",
+    opts: [
+      { icon: "✅", text: "Ignoruję link — wchodzę bezpośrednio na stronę", val: 10, cat: null },
+      { icon: "⚠️", text: "Sprawdzam adres nadawcy i link zanim kliknę", val: 6, cat: null },
+      { icon: "🚨", text: "Klikam — jeśli wygląda normalnie to wchodzę", val: 0, cat: "phishing" }
+    ]
+  },
+  {
+    text: "Kiedy ostatnio aktualizowałeś system operacyjny na komputerze?",
+    opts: [
+      { icon: "✅", text: "Mam automatyczne aktualizacje — zawsze aktualne", val: 10, cat: null },
+      { icon: "⚠️", text: "Kilka tygodni temu", val: 5, cat: "aktualizacje" },
+      { icon: "🚨", text: "Nie pamiętam / wyłączyłem aktualizacje", val: 0, cat: "aktualizacje" }
+    ]
+  },
+  {
+    text: "Czy Twoja sieć WiFi w domu jest zabezpieczona hasłem WPA2 lub WPA3?",
+    opts: [
+      { icon: "✅", text: "Tak — WPA2/WPA3, zmieniłem domyślne hasło routera", val: 10, cat: null },
+      { icon: "⚠️", text: "Ma hasło ale nie wiem jakie szyfrowanie", val: 5, cat: "siec" },
+      { icon: "🚨", text: "Otwarta sieć lub nie wiem", val: 0, cat: "siec" }
+    ]
+  },
+  {
+    text: "Czy sprawdzałeś kiedyś czy Twój email pojawił się w bazie wycieków (haveibeenpwned.com)?",
+    opts: [
+      { icon: "✅", text: "Tak — regularnie sprawdzam", val: 10, cat: null },
+      { icon: "⚠️", text: "Raz sprawdziłem dawno temu", val: 4, cat: "wycieki" },
+      { icon: "🚨", text: "Nigdy nie słyszałem / nie sprawdzałem", val: 0, cat: "wycieki" }
+    ]
+  },
+  {
+    text: "Jak często robisz kopię zapasową ważnych plików?",
+    opts: [
+      { icon: "✅", text: "Automatycznie — mam backup lokalny i w chmurze", val: 10, cat: null },
+      { icon: "⚠️", text: "Od czasu do czasu — ręcznie", val: 4, cat: "backup" },
+      { icon: "🚨", text: "Nie robię backupów", val: 0, cat: "backup" }
+    ]
+  },
+  {
+    text: "Czy korzystasz z VPN gdy łączysz się z publicznym WiFi (kawiarnia, hotel)?",
+    opts: [
+      { icon: "✅", text: "Zawsze używam VPN na publicznym WiFi", val: 10, cat: null },
+      { icon: "⚠️", text: "Czasami — nie zawsze pamiętam", val: 4, cat: "vpn" },
+      { icon: "🚨", text: "Nie używam VPN nigdy", val: 0, cat: "vpn" }
+    ]
+  },
+  {
+    text: "Czy potrafisz rozpoznać fałszywą stronę internetową (phishing)?",
+    opts: [
+      { icon: "✅", text: "Tak — sprawdzam domenę, certyfikat SSL, wygląd strony", val: 10, cat: null },
+      { icon: "⚠️", text: "Staram się ale nie zawsze jestem pewny", val: 5, cat: "phishing" },
+      { icon: "🚨", text: "Nie wiem jak odróżnić fałszywą od prawdziwej", val: 0, cat: "phishing" }
+    ]
+  }
+];
+
+const recommendations = {
+  hasla: { icon: "🔑", title: "Zainstaluj menedżera haseł", text: "Bitwarden jest darmowy i otwartoźródłowy. Zacznij dziś — generuje i przechowuje unikalne hasła dla każdego serwisu.", link: "menedzer-hasel.html", linkText: "→ Przewodnik: Bitwarden vs 1Password vs KeePass" },
+  "2fa": { icon: "🔐", title: "Włącz 2FA na ważnych kontach", text: "Zainstaluj Aegis (Android) lub Raivo (iOS) i włącz 2FA na emailu, Facebooku i banku. Zajmie 10 minut.", link: "10-rzeczy-bezpieczenstwo.html", linkText: "→ Jak włączyć 2FA krok po kroku" },
+  phishing: { icon: "🎣", title: "Naucz się rozpoznawać phishing", text: "Sprawdzaj zawsze adres nadawcy i domenę w linku. Nigdy nie klikaj w emailach od banku — wejdź bezpośrednio.", link: "jak-rozpoznac-phishing.html", linkText: "→ 7 sygnałów które zdradzają phishing" },
+  aktualizacje: { icon: "🔄", title: "Włącz automatyczne aktualizacje", text: "Większość ataków ransomware wykorzystuje znane luki w niezaktualizowanym oprogramowaniu. Włącz auto-update.", link: "10-rzeczy-bezpieczenstwo.html", linkText: "→ Checklista bezpieczeństwa" },
+  siec: { icon: "📡", title: "Zabezpiecz router domowy", text: "Zmień hasło admina routera, upewnij się że używasz WPA2/WPA3. Zajmie 15 minut.", link: "zabezpiecz-router.html", linkText: "→ Przewodnik: Zabezpiecz router w 15 minut" },
+  wycieki: { icon: "💧", title: "Sprawdź wycieki danych", text: "Wejdź na haveibeenpwned.com i sprawdź swój email. Jeśli pojawił się w wycieku — zmień hasła w tych serwisach.", link: "10-rzeczy-bezpieczenstwo.html", linkText: "→ Co zrobić po wycieku" },
+  backup: { icon: "💾", title: "Zrób backup danych", text: "Zasada 3-2-1: 3 kopie, 2 nośniki, 1 poza domem. Backblaze za ~30 zł/mies. to automatyczny backup wszystkiego.", link: "10-rzeczy-bezpieczenstwo.html", linkText: "→ Jak skonfigurować backup" },
+  vpn: { icon: "🛡️", title: "Używaj VPN na publicznym WiFi", text: "Mullvad lub ProtonVPN — oba sprawdzone, nie logują ruchu. Na publicznym WiFi bez VPN ryzyko przechwycenia danych jest realne.", link: "vpn-test.html", linkText: "→ Który VPN naprawdę nie loguje?" }
+};
+
+let current = 0;
+let score = 0;
+let badCats = [];
+let answers = [];
+
+function startQuiz() {
+  document.getElementById('startCard').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'block';
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  document.getElementById('questionArea').innerHTML = '';
+  const q = questions[idx];
+  const card = document.createElement('div');
+  card.className = 'question-card active';
+  card.innerHTML = `
+    <div class="q-num">PYTANIE ${idx+1} Z ${questions.length}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="options">
+      ${q.opts.map((o,i) => `<button class="opt" onclick="selectOpt(${idx},${i})" data-idx="${i}">
+        <span class="opt-icon">${o.icon}</span>${o.text}
+      </button>`).join('')}
+    </div>`;
+  document.getElementById('questionArea').appendChild(card);
+  updateProgress(idx);
+}
+
+function selectOpt(qIdx, oIdx) {
+  const opts = document.querySelectorAll('.opt');
+  const chosen = questions[qIdx].opts[oIdx];
+  opts.forEach(o => o.style.opacity = '0.4');
+  opts[oIdx].style.opacity = '1';
+  opts[oIdx].classList.add(chosen.val === 10 ? 'selected-yes' : chosen.val === 0 ? 'selected-no' : 'selected-part');
+
+  score += chosen.val;
+  if (chosen.cat) badCats.push(chosen.cat);
+  answers.push(oIdx);
+
+  setTimeout(() => {
+    if (qIdx < questions.length - 1) showQuestion(qIdx + 1);
+    else showResult();
+  }, 500);
+}
+
+function updateProgress(idx) {
+  const pct = Math.round((idx / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('qNum').textContent = `Pytanie ${idx+1} z ${questions.length}`;
+  document.getElementById('qPct').textContent = pct + '%';
+}
+
+function showResult() {
+  document.getElementById('questionArea').innerHTML = '';
+  document.getElementById('progressWrap').style.display = 'none';
+
+  const maxScore = questions.length * 10;
+  const pct = Math.round((score / maxScore) * 100);
+
+  let cls, label, desc;
+  if (pct >= 80) {
+    cls = 'score-safe'; label = 'DOBRA OCHRONA'; desc = 'Świetnie! Stosujesz podstawowe zasady bezpieczeństwa. Kilka obszarów możesz jeszcze poprawić — sprawdź rekomendacje poniżej.';
+  } else if (pct >= 60) {
+    cls = 'score-medium'; label = 'ŚREDNIE RYZYKO'; desc = 'Masz podstawy ale są istotne luki. Hakerzy szukają łatwych celów — kilka zmian wystarczy żeby znacznie zwiększyć bezpieczeństwo.';
+  } else if (pct >= 30) {
+    cls = 'score-risk'; label = 'WYSOKIE RYZYKO'; desc = 'Jesteś stosunkowo łatwym celem. Nie panikuj — każdy krok z listy poniżej realne zmniejsza ryzyko. Zacznij od menedżera haseł i 2FA.';
+  } else {
+    cls = 'score-danger'; label = 'ŁATWY CEL'; desc = 'Twoje bezpieczeństwo online wymaga natychmiastowej uwagi. Koniecznie przejrzyj wszystkie rekomendacje poniżej i zacznij działać dziś.';
+  }
+
+  const uniqueCats = [...new Set(badCats)];
+  const recHtml = uniqueCats.length > 0
+    ? `<div class="recs"><div class="recs-title">// Co poprawić w Twoim przypadku</div>${
+        uniqueCats.map(cat => {
+          const r = recommendations[cat];
+          return `<div class="rec-item"><span class="rec-icon">${r.icon}</span><div><strong>${r.title}</strong>${r.text}<br><a class="rec-link" href="${r.link}">${r.linkText}</a></div></div>`;
+        }).join('')
+      }</div>`
+    : `<div class="recs"><div class="recs-title">// Doskonale — brak krytycznych luk!</div></div>`;
+
+  const result = document.getElementById('resultArea');
+  result.innerHTML = `
+    <div class="result-score-wrap">
+      <div class="result-circle ${cls}">
+        <div class="result-num">${pct}<span style="font-size:1rem">%</span></div>
+        <div class="result-max">bezpieczeństwo</div>
+      </div>
+      <div class="result-label ${cls.replace('score-','').replace('safe','').replace('medium','').replace('risk','').replace('danger','')}" style="color:${pct>=80?'var(--green)':pct>=60?'var(--yellow)':pct>=30?'var(--orange)':'var(--red)'}">${label}</div>
+      <div class="result-desc">${desc}</div>
+    </div>
+    ${recHtml}
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="location.reload()">Powtórz quiz</button>
+      <a class="btn btn-outline" href="../index.html">← Strona główna</a>
+    </div>`;
+  result.classList.add('show');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

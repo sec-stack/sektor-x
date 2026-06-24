@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jak sprawdzić czy mam wirusa? — SEKTOR_X</title>
+<meta name="description" content="Jak sprawdzić czy komputer ma wirusa lub złośliwe oprogramowanie? 8 sygnałów ostrzegawczych, darmowe narzędzia do skanowania, co zrobić gdy znajdziesz wirusa.">
+<meta name="keywords" content="jak sprawdzić wirusa, mam wirusa na komputerze, złośliwe oprogramowanie, malware, skanowanie komputera, usunąć wirusa">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:9999;}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:48px;backdrop-filter:blur(8px);}
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+.sx-back{font-size:0.7rem;font-weight:600;letter-spacing:0.1em;color:var(--green);text-decoration:none;border:1px solid var(--border);padding:0.3rem 0.8rem;transition:all 0.2s;font-family:'Rajdhani',sans-serif;}
+.sx-back:hover{background:rgba(0,255,65,0.08);border-color:var(--green);}
+.ticker{position:fixed;top:48px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+.ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+.ticker-track{display:flex;animation:ticker 35s linear infinite;white-space:nowrap;}
+.ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.article-wrapper{max-width:860px;margin:0 auto;padding:105px 2rem 6rem;position:relative;z-index:1;}
+.breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+.breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+.article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--yellow);border-color:rgba(255,230,0,0.3);}
+.article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+.article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.article-meta::before{content:'//';color:var(--green);}
+.article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--yellow);}
+.article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+.article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.article-content h2::before{content:'// ';color:var(--green);}
+.article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+.article-content p{margin-bottom:1.2rem;}
+.article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+.article-content ul li{padding:0.5rem 0 0.5rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+.article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+.article-content ol{list-style:none;counter-reset:item;margin:1rem 0 1.5rem;padding:0;}
+.article-content ol li{counter-increment:item;padding:0.6rem 0 0.6rem 2.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+.article-content ol li::before{content:counter(item,decimal-leading-zero);position:absolute;left:0;color:var(--green);font-family:'Orbitron',monospace;font-size:0.7rem;}
+.callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+.callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+.callout strong{color:#fff;}
+.article-content strong{color:#c8e6c8;font-weight:normal;}
+.article-content em{color:var(--cyan);font-style:normal;}
+.article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+.article-content a{color:var(--cyan);text-decoration:none;}.article-content a:hover{text-decoration:underline;}
+/* SYMPTOM CARDS */
+.symptoms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:1rem 0 1.5rem;}
+.symptom{border:1px solid var(--border);padding:1rem;background:rgba(0,0,0,0.3);}
+.sym-icon{font-size:1.3rem;margin-bottom:0.5rem;}
+.sym-title{font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:0.3rem;}
+.sym-text{font-size:0.72rem;color:#5a8a5a;line-height:1.6;}
+/* TOOLS */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:1rem 0;}
+.tool-card{border:1px solid var(--border);padding:1rem;background:rgba(0,0,0,0.3);}
+.tool-name{font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;color:var(--green);margin-bottom:0.3rem;}
+.tool-tag{font-size:0.58rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:1px 5px;margin-bottom:0.5rem;display:inline-block;}
+.tool-desc{font-size:0.72rem;color:#5a8a5a;line-height:1.6;}
+.article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+.tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+.related{margin-top:3rem;border:1px solid var(--border);}
+.related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+.related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+.related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+.related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:860px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+.footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+@media(max-width:700px){nav{padding:0 1rem;}.article-wrapper{padding:95px 1rem 3rem;}.symptoms,.tools-grid{grid-template-columns:1fr;}}
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <a href="../index.html" class="sx-back">← Powrót</a>
+</nav>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span><a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+    <span><a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+  </div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html">Sektor_X</a><span class="breadcrumb-sep">›</span>
+    <a href="#">Cybersec</a><span class="breadcrumb-sep">›</span>
+    <span>Jak sprawdzić czy mam wirusa</span>
+  </div>
+  <header>
+    <span class="article-cat">● Cybersec</span>
+    <h1 class="article-title">Jak sprawdzić czy mam wirusa? 8 sygnałów i darmowe narzędzia</h1>
+    <div class="article-meta"><span>19.05.2026</span><span>7 min czytania</span></div>
+    <p class="article-lead">Komputer zaczął działać wolniej? Wyskakują dziwne reklamy? Nie ignoruj — to mogą być sygnały że coś jest nie tak. Sprawdź listę objawów i darmowe narzędzia które potwierdzą lub wykluczą infekcję.</p>
+  </header>
+  <div class="article-content">
+
+    <h2>8 objawów które mogą wskazywać na wirusa</h2>
+    <p>Żaden z tych objawów sam w sobie nie gwarantuje infekcji — ale jeśli widzisz kilka naraz, warto sprawdzić.</p>
+
+    <div class="symptoms">
+      <div class="symptom"><div class="sym-icon">🐌</div><div class="sym-title">Komputer nagle zwolnił</div><div class="sym-text">Szczególnie przy starcie systemu i otwieraniu programów. Malware często działa w tle i zużywa procesor i RAM.</div></div>
+      <div class="symptom"><div class="sym-icon">💾</div><div class="sym-title">Dysk ciągle pracuje</div><div class="sym-text">Słyszysz ciągłe cykanie dysku HDD lub dioda dysku świeci bez przerwy — nawet gdy nic nie robisz?</div></div>
+      <div class="symptom"><div class="sym-icon">🌐</div><div class="sym-title">Przeglądarka zachowuje się dziwnie</div><div class="sym-text">Nowe paski narzędzi, zmieniona strona startowa, wyskakujące reklamy, przekierowania na inne strony.</div></div>
+      <div class="symptom"><div class="sym-icon">📡</div><div class="sym-title">Duży ruch sieciowy bez powodu</div><div class="sym-text">Komputer wysyła dane gdy nic nie pobierasz. Może oznaczać że malware komunikuje się z serwerem hakera.</div></div>
+      <div class="symptom"><div class="sym-icon">🔒</div><div class="sym-title">Pliki nie otwierają się</div><div class="sym-text">Pliki mają dziwne rozszerzenia, są zaszyfrowane lub pojawia się komunikat z żądaniem okupu — to ransomware.</div></div>
+      <div class="symptom"><div class="sym-icon">🛡️</div><div class="sym-title">Antywirus wyłączył się sam</div><div class="sym-text">Zaawansowane malware wyłącza oprogramowanie antywirusowe żeby móc działać swobodnie.</div></div>
+      <div class="symptom"><div class="sym-icon">👤</div><div class="sym-title">Konta wysyłają wiadomości same</div><div class="sym-text">Znajomi dostają od Ciebie wiadomości których nie wysyłałeś — możliwe że keylogger ukradł hasła.</div></div>
+      <div class="symptom"><div class="sym-icon">🔥</div><div class="sym-title">Komputer mocno się grzeje</div><div class="sym-text">Bez wymagających programów? Cryptominer może używać Twojego komputera do kopania kryptowalut.</div></div>
+    </div>
+
+    <h2>Jak sprawdzić — darmowe narzędzia</h2>
+    <p>Użyj kilku narzędzi — żadne nie wykrywa 100% zagrożeń. Dwa skany z różnych silników dają lepsze pokrycie.</p>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-name">Malwarebytes</div>
+        <div class="tool-tag">DARMOWY SKAN</div>
+        <div class="tool-desc">Najskuteczniejszy detektor malware. Darmowa wersja pozwala skanować i usuwać zagrożenia. malwarebytes.com</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Windows Defender</div>
+        <div class="tool-tag">WBUDOWANY WIN 10/11</div>
+        <div class="tool-desc">Bezpłatny, wbudowany. Uruchom pełny skan: Zabezpieczenia Windows → Ochrona przed wirusami → Opcje skanowania → Pełne skanowanie</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">VirusTotal</div>
+        <div class="tool-tag">ONLINE — PLIKI/URL</div>
+        <div class="tool-desc">Skanuje pliki i linki 70+ silnikami antywirusowymi. Idealny do sprawdzenia podejrzanego pliku przed otwarciem. virustotal.com</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">AdwCleaner</div>
+        <div class="tool-tag">ADWARE/PUP</div>
+        <div class="tool-desc">Specjalizuje się w usuwaniu adware, niechcianych pasków narzędzi i PUP. Darmowy, od Malwarebytes.</div>
+      </div>
+    </div>
+
+    <h2>Sprawdź Menedżer Zadań — co zużywa CPU?</h2>
+    <p>Szybki sposób na wykrycie cryptominera lub podejrzanego procesu:</p>
+    <ol>
+      <li>Wciśnij <strong>Ctrl+Shift+Esc</strong> → otwiera się Menedżer Zadań</li>
+      <li>Kliknij na kolumnę <strong>CPU</strong> lub <strong>Pamięć</strong> żeby posortować malejąco</li>
+      <li>Sprawdź co zajmuje największe zasoby — czy znasz te programy?</li>
+      <li>Nieznany proces? Kliknij prawym → <strong>Wyszukaj w internecie</strong> — Google pokaże czy to legalne czy malware</li>
+    </ol>
+    <div class="callout warn">
+      <strong>⚠️ Podejrzane nazwy procesów:</strong> Malware często podszywa się pod systemowe procesy. <em>svchost.exe</em> to legalny proces Windows — ale <em>svch0st.exe</em> (z zerem zamiast litery O) to już prawdopodobnie wirus.
+    </div>
+
+    <h2>Co zrobić gdy skaner wykrył wirusa?</h2>
+    <ol>
+      <li><strong>Odłącz od internetu</strong> — zapobiega dalszemu wykradaniu danych i komunikacji malware z serwerem</li>
+      <li><strong>Usuń wykryte zagrożenia</strong> przez narzędzie które je znalazło — postępuj zgodnie z instrukcją</li>
+      <li><strong>Zrób drugi skan</strong> innym narzędziem — upewnij się że nic nie pozostało</li>
+      <li><strong>Zmień hasła</strong> — wszystkich ważnych kont ze <strong>innego urządzenia</strong> (telefon) — komputer może mieć keyloggera</li>
+      <li><strong>Sprawdź konta bankowe</strong> — czy nie było nieautoryzowanych transakcji</li>
+      <li><strong>Jeśli nic nie pomaga</strong> — formatowanie i reinstalacja systemu to jedyna pewna metoda</li>
+    </ol>
+
+    <h2>Jak zapobiegać infekcjom w przyszłości</h2>
+    <ul>
+      <li><strong>Aktualizuj system</strong> — większość infekcji wykorzystuje znane luki w niezaktualizowanym oprogramowaniu</li>
+      <li><strong>Nie klikaj w linki z emaili</strong> — szczególnie od nieznanych nadawców</li>
+      <li><strong>Pobieraj software tylko z oficjalnych źródeł</strong> — nie z serwisów z "crackami"</li>
+      <li><strong>Włącz Windows Defender</strong> i nie wyłączaj go</li>
+      <li><strong>Rób regularne backupy</strong> — to jedyna ochrona przed ransomware</li>
+    </ul>
+
+    <div class="callout">
+      <strong>💡 Najlepsza obrona to backup:</strong> Nawet jeśli ransomware zaszyfruje Twoje pliki — jeśli masz aktualny backup, możesz sformatować komputer i przywrócić wszystko bez płacenia okupu.
+    </div>
+
+  </div>
+  <div class="article-tags">
+    <span class="tag">wirus</span><span class="tag">malware</span><span class="tag">ransomware</span><span class="tag">skanowanie</span><span class="tag">cybersec</span>
+  </div>
+  <div class="related">
+    <div class="related-header">// Powiązane artykuły</div>
+    <ul class="related-list">
+      <li><a href="10-rzeczy-bezpieczenstwo.html">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a></li>
+      <li><a href="zhakowane-konto-facebook.html">Zhakowali mi Facebook — co teraz? Plan awaryjny</a></li>
+      <li><a href="quiz-bezpieczenstwo.html">Quiz: Czy jesteś łatwym celem?</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="newsletter-cta" style="margin-top:2.5rem;padding:2rem;border:1px solid var(--green);background:var(--panel);text-align:center;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.75rem;">// Newsletter</div>
+  <p style="color:#ccc;font-size:0.85rem;margin-bottom:1.25rem;">Spodobało się? Otrzymuj nowe artykuły prosto na skrzynkę — bez spamu, bez bullshitu.</p>
+  <a href="https://sektorx.substack.com" target="_blank" style="display:inline-block;padding:0.75rem 2rem;background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;font-size:0.85rem;">📧 Zapisz się na newsletter</a>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026</div>
+  <div><a href="#">Polityka prywatności</a></div>
+</footer>
+</body>
+</html>
