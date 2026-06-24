@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEKTOR_X — IT Bezpieczeństwo i Cybersec po Polsku</title>
+  <meta name="description" content="Praktyczne porady z cyberbezpieczeństwa i IT. Chroń swoje dane, rozpoznaj ataki, zabezpiecz sieć. Bez ściemy, po polsku.">
+  <meta name="keywords" content="cyberbezpieczeństwo, IT bezpieczeństwo, phishing, VPN, hasła, hacking, Polska">
+  <meta name="author" content="SEKTOR_X">
+  <meta property="og:title" content="SEKTOR_X — IT Bezpieczeństwo i Cybersec po Polsku">
+  <meta property="og:description" content="Praktyczne porady z cyberbezpieczeństwa i IT. Chroń swoje dane, rozpoznaj ataki, zabezpiecz sieć. Bez ściemy, po polsku.">
+  <meta property="og:type" content="article">
+  <meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&family=Exo+2:wght@900&subset=latin-ext&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --cyan: #00e5ff;
+    --red: #ff003c;
+    --yellow: #ffe600;
+    --bg: #030a03;
+    --bg2: #050f05;
+    --panel: rgba(0,255,65,0.04);
+    --border: rgba(0,255,65,0.15);
+    --text: #a0c8a0;
+    --dim: #3a5a3a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* SCANLINES */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NOISE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(3,10,3,0.95);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 52px;
+    backdrop-filter: blur(8px);
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    text-decoration: none;
+  }
+  .logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+  }
+  .nav-links a {
+    display: block;
+    padding: 0 1.1rem;
+    height: 52px;
+    line-height: 52px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    border-right: 1px solid var(--border);
+  }
+  .nav-links a:first-child { border-left: 1px solid var(--border); }
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a.active { color: var(--green); }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    border: 1px solid var(--red);
+    padding: 0.25rem 0.75rem;
+    animation: livePulse 2s infinite;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: blink 1s infinite;
+  }
+  @keyframes livePulse {
+    0%,100% { box-shadow: 0 0 0 rgba(255,0,60,0); }
+    50% { box-shadow: 0 0 8px rgba(255,0,60,0.4); }
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* TICKER */
+  .ticker {
+    position: fixed;
+    top: 52px; left: 0; right: 0;
+    z-index: 999;
+    background: rgba(0,0,0,0.8);
+    border-bottom: 1px solid rgba(0,255,65,0.08);
+    height: 28px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .ticker-label {
+    background: var(--red);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0 0.75rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ticker-track {
+    display: flex;
+    animation: ticker 40s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-track span {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #5a8a5a;
+    padding: 0 3rem;
+  }
+  .ticker-track span em {
+    color: var(--cyan);
+    font-style: normal;
+  }
+
+  .typewriter-line { overflow: hidden; border-right: 2px solid var(--green); white-space: nowrap; animation: typing 3s steps(40,end) forwards; width: 0; border-right: none; }
+  @keyframes typing { from { width: 0 } to { width: 100% } }
+  @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--green); } }
+  .t-line-hidden { opacity: 0; animation: fadeIn 0.1s forwards; }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-left {}
+
+  .transmission-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--green);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .transmission-tag::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 .w1 { color: #fff; display: block; }
+  .hero h1 .w2 { color: var(--green); display: block; text-shadow: 0 0 30px rgba(0,255,65,0.5); }
+  .hero h1 .w3 { color: var(--cyan); display: block; text-shadow: 0 0 30px rgba(0,229,255,0.5); font-family: 'Exo 2', 'Orbitron', sans-serif; }
+
+  .hero-desc {
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: #5a8a5a;
+    border-left: 2px solid var(--border);
+    padding-left: 1rem;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    background: var(--green);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .btn-primary:hover {
+    background: #fff;
+    box-shadow: 0 0 20px rgba(0,255,65,0.6);
+  }
+
+  .btn-secondary {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover {
+    background: rgba(0,229,255,0.08);
+    box-shadow: 0 0 15px rgba(0,229,255,0.3);
+  }
+
+  /* TERMINAL PANEL */
+  .hero-right {
+    position: relative;
+  }
+
+  .terminal {
+    background: rgba(0,10,0,0.9);
+    border: 1px solid var(--border);
+    padding: 0;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0,255,65,0.08), inset 0 0 40px rgba(0,0,0,0.5);
+  }
+  .terminal::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, rgba(0,255,65,0.1) 0%, transparent 50%, rgba(0,229,255,0.05) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .terminal-bar {
+    background: rgba(0,255,65,0.06);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+  .t-dot { width:8px;height:8px;border-radius:50%; }
+  .t-dot.r{background:var(--red)} .t-dot.y{background:var(--yellow)} .t-dot.g{background:var(--green)}
+  .terminal-title { margin-left: auto; }
+
+  .terminal-body {
+    padding: 1.5rem;
+    font-size: 0.75rem;
+    line-height: 1.9;
+    position: relative;
+    z-index: 1;
+    min-height: 300px;
+  }
+  .t-line { display: flex; gap: 0.75rem; margin-bottom: 0.1rem; }
+  .t-prompt { color: var(--green); flex-shrink: 0; }
+  .t-cmd { color: #c8e6c8; }
+  .t-out { color: #4a7a4a; padding-left: 1.5rem; }
+  .t-out.highlight { color: var(--cyan); }
+  .t-out.warn { color: var(--yellow); }
+  .t-out.alert { color: var(--red); }
+  .t-blank { height: 0.5rem; }
+  .cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--green);
+    animation: blink 1s infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    border: 1px solid var(--border);
+    border-top: none;
+    margin-top: -1px;
+  }
+  .stat-cell {
+    padding: 1.2rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+    text-shadow: 0 0 15px rgba(0,255,65,0.4);
+  }
+  .stat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+    display: block;
+  }
+
+  /* GRID BG */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  .section-header {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .section-tag {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1px solid var(--green);
+    padding: 0.25rem 0.75rem;
+  }
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.05em;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ARTICLES GRID */
+  .articles {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .article-card {
+    background: var(--bg);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .article-card:hover { background: var(--panel); }
+  .article-card.featured {
+    grid-row: span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 500px;
+    padding: 2.5rem;
+  }
+  .article-card.featured::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 30%,
+      rgba(0,255,65,0.03) 60%,
+      rgba(3,10,3,0.95) 100%
+    );
+    z-index: 0;
+  }
+
+  .card-fake-img {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(0,255,65,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 70%, rgba(0,229,255,0.03) 0%, transparent 50%);
+    z-index: 0;
+  }
+
+  /* Glitch grid pattern per card */
+  .article-card.featured .card-fake-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,255,65,0.015) 40px, rgba(0,255,65,0.015) 41px),
+      repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,255,65,0.015) 40px, rgba(0,255,65,0.015) 41px);
+  }
+
+  .card-content { position: relative; z-index: 1; }
+
+  .card-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid;
+  }
+  .cat-tech { color: var(--green); border-color: rgba(0,255,65,0.3); }
+  .cat-ufo  { color: var(--cyan);  border-color: rgba(0,229,255,0.3); }
+  .cat-spy  { color: var(--red);   border-color: rgba(255,0,60,0.3); }
+  .cat-it   { color: var(--yellow);border-color: rgba(255,230,0,0.3); }
+
+  .card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .article-card.featured .card-title { font-size: 1.6rem; }
+  .card-title-sm { font-size: 1rem; }
+
+  .card-excerpt {
+    font-size: 0.72rem;
+    color: #4a7a4a;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .card-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .card-meta::before {
+    content: '//';
+    color: var(--green);
+  }
+
+  /* CATEGORIES ROW */
+  .categories {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .cat-card {
+    background: var(--bg);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .cat-card:hover { background: var(--panel); }
+
+  .cat-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    filter: grayscale(0.5);
+  }
+
+  .cat-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .cat-count {
+    font-size: 0.6rem;
+    color: var(--dim);
+  }
+
+  .cat-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-bar-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    transition: width 1s ease;
+  }
+
+  /* SIGNAL SECTION */
+  .signal-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  .signal-box {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .signal-box::before {
+    content: 'SIGNAL';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Orbitron', monospace;
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(0,255,65,0.03);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .signal-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+  .signal-title span { color: var(--green); }
+
+  .signal-text {
+    font-size: 0.78rem;
+    color: #4a7a4a;
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .signal-form {
+    display: flex;
+    gap: 0;
+  }
+  .signal-input {
+    flex: 1;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.8rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .signal-input::placeholder { color: var(--dim); }
+  .signal-input:focus { border-color: var(--green); }
+
+  .signal-btn {
+    background: var(--green);
+    color: #000;
+    border: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .signal-btn:hover { background: #fff; }
+
+  .signal-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .sig-stat {
+    background: var(--bg2);
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .sig-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+    text-shadow: 0 0 20px rgba(0,255,65,0.3);
+  }
+  .sig-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-size: 0.65rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+  }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--green); }
+
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  .footer-logo span { color: var(--red); }
+
+  /* GLITCH ANIMATION on hover */
+  .logo:hover {
+    animation: glitch 0.3s linear;
+  }
+  @keyframes glitch {
+    0%   { text-shadow: 2px 0 var(--red), -2px 0 var(--cyan); }
+    25%  { text-shadow: -2px 0 var(--red), 2px 0 var(--cyan); }
+    50%  { text-shadow: 2px 0 var(--cyan), -2px 0 var(--red); }
+    75%  { text-shadow: -2px 0 var(--cyan), 2px 0 var(--red); }
+    100% { text-shadow: none; }
+  }
+
+  /* FADE IN */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.8s ease forwards;
+  }
+  .fade-in:nth-child(1){animation-delay:0.1s}
+  .fade-in:nth-child(2){animation-delay:0.25s}
+  .fade-in:nth-child(3){animation-delay:0.4s}
+  .fade-in:nth-child(4){animation-delay:0.55s}
+
+  @keyframes fadeIn {
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* TYPE EFFECT */
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--green);
+    animation: typing 2s steps(30, end) 0.5s both, blinkCaret 0.75s step-end infinite 2.5s;
+    width: 0;
+  }
+  @keyframes typing { from{width:0} to{width:100%} }
+  @keyframes blinkCaret { 0%,100%{border-color:var(--green)} 50%{border-color:transparent} }
+
+  
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+
+    /* NAV */
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+
+    /* TICKER */
+    .ticker-label { font-size: 0.55rem; padding: 0 0.5rem; }
+    .ticker-track span { font-size: 0.55rem; padding: 0 1.5rem; }
+
+    /* HERO */
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 90px 1rem 3rem;
+      gap: 2rem;
+    }
+    .hero h1 { font-size: clamp(2rem, 10vw, 3.5rem); }
+    .hero-desc { font-size: 0.8rem; }
+    .hero-cta { flex-direction: column; }
+    .btn-primary, .btn-secondary { text-align: center; }
+
+    /* TERMINAL */
+    .terminal-body { padding: 1rem; font-size: 0.65rem; min-height: 200px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+
+    /* ARTICLES GRID */
+    .articles {
+      grid-template-columns: 1fr;
+    }
+    .article-card.featured {
+      grid-row: span 1;
+      min-height: 250px;
+    }
+    .article-card.featured .card-title { font-size: 1.2rem; }
+
+    /* CATEGORIES */
+    .categories { grid-template-columns: repeat(3, 1fr); }
+
+    /* SECTION HEADER */
+    .section-header { padding: 2rem 1rem 1rem; flex-wrap: wrap; gap: 0.75rem; }
+    .section-title { font-size: 0.85rem; }
+
+    /* ARTICLES PADDING */
+    .articles { margin: 0 0 2rem; }
+    .article-card { padding: 1.25rem; }
+    .article-card.featured { padding: 1.5rem; }
+
+    /* SIGNAL BOX */
+    .signal-box { grid-template-columns: 1fr; padding: 1.5rem; }
+    .signal-form { flex-direction: column; }
+    .signal-input { border-right: 1px solid var(--border); border-bottom: none; }
+    .signal-stats { grid-template-columns: repeat(2, 1fr); }
+
+    /* FOOTER */
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: clamp(1.8rem, 9vw, 2.5rem); }
+    .categories { grid-template-columns: 1fr 1fr; }
+    .stat-num { font-size: 1.1rem; }
+    .section-tag { font-size: 0.6rem; }
+    .articles { border-left: none; border-right: none; }
+  }
+
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    transition: all 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0;
+    background: rgba(3,10,3,0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 998;
+    backdrop-filter: blur(8px);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 1rem 2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+  }
+
+</style>
+<script src="lang.js"></script>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="#" class="active" data-filter="all" onclick="filterCat(event,'all')" data-pl="Wszystkie" data-en="All">Wszystkie</a></li>
+    <li><a href="#" data-filter="cybersec" onclick="filterCat(event,'cybersec')" data-pl="Cybersec" data-en="Cybersec">Cybersec</a></li>
+    <li><a href="#" data-filter="poradniki" onclick="filterCat(event,'poradniki')" data-pl="Poradniki" data-en="Guides" data-pl="Poradniki" data-en="Guides">Poradniki</a></li>
+    <li><a href="#" data-filter="narzedzia" onclick="filterCat(event,'narzedzia')" data-pl="Narzędzia" data-en="Tools">Narzędzia</a></li>
+    <li><a href="#" data-filter="prywatnosc" onclick="filterCat(event,'prywatnosc')" data-pl="Prywatność" data-en="Privacy">Prywatność</a></li>
+    <li><a href="baza-operacyjna.html" data-pl-href="baza-operacyjna.html" data-en-href="operator-base.html" data-pl="Baza Operacyjna" data-en="Operator Base" style="color:var(--cyan)">Baza Operacyjna</a></li>
+  </ul>
+
+  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="lang-switcher" style="margin-left:1rem;">
+    <button class="lang-btn" data-lang="pl" onclick="switchLang('pl')">🇵🇱 PL</button>
+    <button class="lang-btn" data-lang="en" onclick="switchLang('en')">🇬🇧 EN</button>
+  </div>
+
+</nav>
+<div class="mobile-menu">
+  <a href="#" onclick="filterCat(event,'all')">Wszystkie</a>
+  <a href="#" onclick="filterCat(event,'cybersec')">Cybersec</a>
+  <a href="#" onclick="filterCat(event,'poradniki')">Poradniki</a>
+  <a href="#" onclick="filterCat(event,'narzedzia')">Narzędzia</a>
+  <a href="#" onclick="filterCat(event,'prywatnosc')">Prywatność</a>
+  <a href="baza-operacyjna.html" data-pl-href="baza-operacyjna.html" data-en-href="operator-base.html" data-pl="Baza Operacyjna" data-en="Operator Base" style="color:var(--cyan)">Baza Operacyjna</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span><a href="artykuly/10-rzeczy-bezpieczenstwo.html" data-pl-href="artykuly/10-rzeczy-bezpieczenstwo.html" data-en-href="articles/10-things-security.html" data-pl-href="artykuly/10-rzeczy-bezpieczenstwo.html" data-pl-href="artykuly/10-rzeczy-bezpieczenstwo.html" data-en-href="articles/10-things-security.html" data-en-href="articles/10-things-security.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="artykuly/jak-rozpoznac-phishing.html" data-pl-href="artykuly/jak-rozpoznac-phishing.html" data-en-href="articles/how-to-spot-phishing.html" data-pl-href="artykuly/jak-rozpoznac-phishing.html" data-pl-href="artykuly/jak-rozpoznac-phishing.html" data-en-href="articles/how-to-spot-phishing.html" data-en-href="articles/how-to-spot-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="artykuly/vpn-test.html" data-pl-href="artykuly/vpn-test.html" data-en-href="articles/vpn-test.html" data-pl-href="artykuly/vpn-test.html" data-pl-href="artykuly/vpn-test.html" data-en-href="articles/vpn-test.html" data-en-href="articles/vpn-test.html" style="color:inherit;text-decoration:none;"><span data-pl="Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług" data-en="Which VPN Actually Doesn&apos;t Log? We Tested 12 Services">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</span></a> <em>///</em> <a href="artykuly/menedzer-hasel.html" data-pl-href="artykuly/menedzer-hasel.html" data-en-href="articles/password-manager.html" data-pl-href="artykuly/menedzer-hasel.html" data-pl-href="artykuly/menedzer-hasel.html" data-en-href="articles/password-manager.html" data-en-href="articles/password-manager.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="artykuly/zabezpiecz-router.html" data-pl-href="artykuly/zabezpiecz-router.html" data-en-href="articles/secure-your-router.html" data-pl-href="artykuly/zabezpiecz-router.html" data-pl-href="artykuly/zabezpiecz-router.html" data-en-href="articles/secure-your-router.html" data-en-href="articles/secure-your-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="artykuly/zhakowane-konto-facebook.html" data-pl-href="artykuly/zhakowane-konto-facebook.html" data-en-href="articles/hacked-facebook-account.html" data-pl-href="artykuly/zhakowane-konto-facebook.html" data-pl-href="artykuly/zhakowane-konto-facebook.html" data-en-href="articles/hacked-facebook-account.html" data-en-href="articles/hacked-facebook-account.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-pl-href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-en-href="articles/how-to-check-for-virus.html" data-pl-href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-pl-href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-en-href="articles/how-to-check-for-virus.html" data-en-href="articles/how-to-check-for-virus.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+    <span><a href="artykuly/10-rzeczy-bezpieczenstwo.html" data-pl-href="artykuly/10-rzeczy-bezpieczenstwo.html" data-en-href="articles/10-things-security.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="artykuly/jak-rozpoznac-phishing.html" data-pl-href="artykuly/jak-rozpoznac-phishing.html" data-en-href="articles/how-to-spot-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="artykuly/vpn-test.html" data-pl-href="artykuly/vpn-test.html" data-en-href="articles/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</a> <em>///</em> <a href="artykuly/menedzer-hasel.html" data-pl-href="artykuly/menedzer-hasel.html" data-en-href="articles/password-manager.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="artykuly/zabezpiecz-router.html" data-pl-href="artykuly/zabezpiecz-router.html" data-en-href="articles/secure-your-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="artykuly/zhakowane-konto-facebook.html" data-pl-href="artykuly/zhakowane-konto-facebook.html" data-en-href="articles/hacked-facebook-account.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-pl-href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-en-href="articles/how-to-check-for-virus.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="transmission-tag fade-in"><span data-pl="TRANSMISJA AKTYWNA — SEKTOR X — PL" data-en="ACTIVE TRANSMISSION — SECTOR X — EN">TRANSMISJA AKTYWNA — SEKTOR X — PL</span></div>
+    <h1 class="fade-in">
+      <span class="w1" data-pl="TECHNOLOGIA" data-en="TECHNOLOGY">TECHNOLOGIA</span>
+      <span class="w2" data-pl="UJAWNIA" data-en="REVEALS">UJAWNIA</span>
+      <span class="w3" data-pl="PRAWDĘ" data-en="TRUTH">PRAWDĘ</span>
+    </h1>
+    <p class="hero-desc fade-in">
+      <span data-pl="Praktyczne porady z IT i cyberbezpieczeństwa. Chroń swoje dane, rozpoznaj ataki, zabezpiecz sieć — bez ściemy, bez korporacyjnego bełkotu." data-en="Practical IT and cybersecurity advice. Protect your data, recognize attacks, secure your network — no fluff, no corporate BS.">Praktyczne porady z IT i cyberbezpieczeństwa. Chroń swoje dane, rozpoznaj ataki, zabezpiecz sieć — bez ściemy, bez korporacyjnego bełkotu.</span>
+    </p>
+    <div class="hero-cta fade-in">
+      <a href="#artykuly" class="btn-primary" data-pl="Wejdź do archiwum" data-en="Browse Archive">Wejdź do archiwum</a>
+      <a href="https://sektorx.substack.com" target="_blank" class="btn-secondary" data-pl="📧 Newsletter — zapisz się" data-en="📧 Newsletter — subscribe">📧 Newsletter — zapisz się</a>
+
+    </div>
+  </div>
+
+  <div class="hero-right fade-in">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="t-dot r"></div>
+        <div class="t-dot y"></div>
+        <div class="t-dot g"></div>
+        <span class="terminal-title">sektor_x@terminal:~</span>
+      </div>
+      <div class="terminal-body" id="terminal">
+      </div>
+      <script>
+        const lines = [
+          {type:'date', delay:300},
+          {type:'blank', delay:150},
+          {type:'cmd', text:'./security_scan.sh --target=twoj_system', delay:400},
+          {type:'blank', delay:200},
+          {type:'out', text:'[INFO] Skanowanie portów...', delay:300},
+          {type:'ok', text:'[OK] Firewall aktywny', delay:400},
+          {type:'warn', text:'[!] Skan portów: wkrótce aplikacja →', delay:400},
+          {type:'blank', delay:200},
+          {type:'cmd', text:'cat /var/log/threats/latest', delay:500},
+          {type:'blank', delay:200},
+          {type:'out', text:'> Phishing kampanie: AKTYWNE', delay:300},
+          {type:'alert', text:'> Nowe CVE krytyczne: <a href="artykuly/10-rzeczy-bezpieczenstwo.html" data-pl-href="artykuly/10-rzeczy-bezpieczenstwo.html" data-en-href="articles/10-things-security.html" style="color:inherit;">+12 dziś — sprawdź →</a>', delay:300},
+          {type:'warn', text:'> Twoje hasło w bazie wycieków: <a href="https://haveibeenpwned.com" target="_blank" style="color:inherit;">SPRAWDŹ →</a>', delay:300},
+          {type:'ok', text:'> VPN status: <a href="artykuly/vpn-test.html" data-pl-href="artykuly/vpn-test.html" data-en-href="articles/vpn-test.html" style="color:inherit;">ZALECANY — czytaj →</a>', delay:300},
+          {type:'blank', delay:200},
+          {type:'cmd', text:'./read_latest.sh', delay:400},
+          {type:'link', text:'[NOWY] <a href="artykuly/zabezpiecz-router.html" data-pl-href="artykuly/zabezpiecz-router.html" data-en-href="articles/secure-your-router.html" style="color:var(--cyan);text-decoration:none;">Zabezpiecz router domowy w 15 minut →</a>', delay:300},
+          {type:'blank', delay:200},
+          {type:'clock', delay:100},
+        ];
+        const term = document.getElementById('terminal');
+        const prompt = '<span class="t-prompt">root@sx:~$</span>';
+        
+        function runTerminal() {
+          term.innerHTML = '';
+          let i = 0;
+          function nextLine() {
+            if (i >= lines.length) {
+              setTimeout(runTerminal, 30000);
+              return;
+            }
+            const l = lines[i++];
+            const div = document.createElement('div');
+            div.className = 't-line';
+            if (l.type === 'blank') { div.className = 't-blank'; }
+            else if (l.type === 'cmd') { div.innerHTML = prompt + '<span class="t-cmd typewriter-line">' + l.text + '</span>'; }
+            else if (l.type === 'ok') { div.innerHTML = '<span class="t-out highlight">' + l.text + '</span>'; }
+            else if (l.type === 'warn') { div.innerHTML = '<span class="t-out warn">' + l.text + '</span>'; }
+            else if (l.type === 'alert') { div.innerHTML = '<span class="t-out alert">' + l.text + '</span>'; }
+            else if (l.type === 'link') { div.innerHTML = '<span class="t-out">' + l.text + '</span>'; }
+            else if (l.type === 'date') {
+              const now = new Date();
+              const days = ['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];
+              const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+              const dateStr = days[now.getDay()] + ' ' + months[now.getMonth()] + ' ' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0') + ' CET ' + now.getFullYear();
+              div.innerHTML = prompt + '<span class="t-cmd">date</span>';
+              term.appendChild(div);
+              const dateLine = document.createElement('div');
+              dateLine.className = 't-line';
+              dateLine.innerHTML = '<span class="t-out highlight">' + dateStr + '</span>';
+              term.appendChild(dateLine);
+              setTimeout(nextLine, l.delay);
+              return;
+            }
+            else if (l.type === 'clock') {
+              div.innerHTML = prompt + '<span class="t-cmd" id="live-clock">_</span>';
+              term.appendChild(div);
+              function updateClock() {
+                const el = document.getElementById('live-clock');
+                if (!el) return;
+                const n = new Date();
+                el.textContent = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0') + ':' + String(n.getSeconds()).padStart(2,'0') + ' ▌';
+              }
+              updateClock();
+              setInterval(updateClock, 1000);
+              return;
+            }
+            else if (l.type === 'cursor') { div.innerHTML = prompt + '<span class="t-cmd">_</span>'; }
+            else { div.innerHTML = '<span class="t-out">' + l.text + '</span>'; }
+            term.appendChild(div);
+            setTimeout(nextLine, l.delay);
+          }
+          setTimeout(nextLine, 800);
+        }
+        runTerminal();
+      </script>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-cell"><span class="stat-num">11</span><span class="stat-label">Artykułów</span></div>
+      <div class="stat-cell"><span class="stat-num">CVE</span><span class="stat-label">Monitoring</span></div>
+      <div class="stat-cell"><span class="stat-num">99.7%</span><span class="stat-label">Uptime</span></div>
+      <div class="stat-cell"><span class="stat-num">LIVE</span><span class="stat-label">Status</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<section>
+  <div class="section-header">
+    <div class="section-tag" data-pl="// Najnowsze" data-en="// Latest">//  Najnowsze</div>
+    <div class="section-title" data-pl="PORADY I ANALIZY" data-en="GUIDES &amp; ANALYSIS">PORADY I ANALIZY</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="articles" id="articles-grid">
+    <!-- FEATURED -->
+    <a class="article-card featured" data-cat="cybersec" href="artykuly/10-rzeczy-bezpieczenstwo.html" data-pl-href="artykuly/10-rzeczy-bezpieczenstwo.html" data-en-href="articles/10-things-security.html">
+      <div class="card-fake-img"></div>
+      <div class="card-content">
+        <span class="card-cat cat-spy">● MUST READ</span>
+        <h2 class="card-title"><span data-pl="10 rzeczy które musisz zrobić dziś, żeby nie dać się zhakować w 2025" data-en="10 Things You Must Do Today To Avoid Getting Hacked in 2025">10 rzeczy które musisz zrobić dziś, żeby nie dać się zhakować w 2025</span></h2>
+        <p class="card-excerpt"><span data-pl="Menedżer haseł, 2FA, VPN, aktualizacje — brzmi nudno, ale każdy z tych kroków realnie zmniejsza ryzyko o 80%. Konkretna checklista bez lania wody." data-en="Password manager, 2FA, VPN, updates — sounds boring, but each step genuinely reduces your risk by 80%. A concrete checklist, no filler.">Menedżer haseł, 2FA, VPN, aktualizacje — brzmi nudno, ale każdy z tych kroków realnie zmniejsza ryzyko o 80%. Konkretna checklista bez lania wody.</span></p>
+        <div class="card-meta">
+          <span>09.05.2025</span>
+          <span>10 min czytania</span>
+          <span>↗ MUST READ</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- SMALL CARDS -->
+    <a class="article-card" data-cat="cybersec" href="artykuly/jak-rozpoznac-phishing.html" data-pl-href="artykuly/jak-rozpoznac-phishing.html" data-en-href="articles/how-to-spot-phishing.html">
+      <div class="card-content">
+        <span class="card-cat cat-it">● PHISHING</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Jak rozpoznać fałszywy email zanim klikniesz — 7 sygnałów alarmowych" data-en="How to Spot a Phishing Email Before You Click — 7 Red Flags">Jak rozpoznać fałszywy email zanim klikniesz — 7 sygnałów alarmowych</span></h3>
+        <div class="card-meta"><span>07.05.2025</span><span>5 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="prywatnosc" href="artykuly/vpn-test.html" data-pl-href="artykuly/vpn-test.html" data-en-href="articles/vpn-test.html">
+      <div class="card-content">
+        <span class="card-cat cat-tech">● VPN</span>
+        <h3 class="card-title card-title-sm">Który VPN naprawdę nie loguje? Przetestowaliśmy 12 usług</h3>
+        <div class="card-meta"><span>06.05.2025</span><span>8 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="cybersec" href="artykuly/menedzer-hasel.html" data-pl-href="artykuly/menedzer-hasel.html" data-en-href="articles/password-manager.html">
+      <div class="card-content">
+        <span class="card-cat cat-ufo">● HASŁA</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?" data-en="Bitwarden vs 1Password vs KeePass — Which Password Manager to Choose?">Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?</span></h3>
+        <div class="card-meta"><span>05.05.2025</span><span>7 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="poradniki" href="artykuly/samba-ad-dc.html" data-pl-href="artykuly/samba-ad-dc.html" data-en-href="articles/samba-ad-dc.html">
+      <div class="card-content">
+        <span class="card-cat" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;display:inline-block;padding:0.2rem 0.6rem;border:1px solid;margin-bottom:0.75rem;">● PORADNIKI</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Linux jako Active Directory — Samba AD DC kompletny przewodnik" data-en="Linux as Active Directory — Samba AD DC Complete Guide">Linux jako Active Directory — Samba AD DC kompletny przewodnik</span></h3>
+        <div class="card-meta"><span>19.05.2025</span><span>Interaktywny</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="poradniki" href="artykuly/fortigate-przewodnik.html" data-pl-href="artykuly/fortigate-przewodnik.html" data-en-href="articles/fortigate-guide.html">
+      <div class="card-content">
+        <span class="card-cat cat-tools" style="color:var(--yellow);border-color:rgba(255,230,0,0.3);">● NARZĘDZIA</span>
+        <h3 class="card-title card-title-sm"><span data-pl="FortiGate 60F/120G — kompletny przewodnik admina (8 faz)" data-en="FortiGate 60F/120G — Complete Admin Guide (8 Phases)">FortiGate 60F/120G — kompletny przewodnik admina (8 faz)</span></h3>
+        <div class="card-meta"><span>14.05.2025</span><span>Interaktywny</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="cybersec" href="artykuly/zabezpiecz-router.html" data-pl-href="artykuly/zabezpiecz-router.html" data-en-href="articles/secure-your-router.html">
+      <div class="card-content">
+        <span class="card-cat cat-spy">● SIEĆ</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Zabezpiecz router domowy w 15 minut — krok po kroku" data-en="Secure Your Home Router in 15 Minutes — Step by Step">Zabezpiecz router domowy w 15 minut — krok po kroku</span></h3>
+        <div class="card-meta"><span>04.05.2026</span><span>6 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="cybersec" href="artykuly/zhakowane-konto-facebook.html" data-pl-href="artykuly/zhakowane-konto-facebook.html" data-en-href="articles/hacked-facebook-account.html">
+      <div class="card-content">
+        <span class="card-cat" style="color:var(--red);border-color:rgba(255,0,60,0.3);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;display:inline-block;padding:0.2rem 0.6rem;border:1px solid;margin-bottom:0.75rem;">🚨 AWARYJNA</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Zhakowali mi Facebook — co teraz? Plan awaryjny krok po kroku" data-en="My Facebook Got Hacked — What Now? Emergency Recovery Plan">Zhakowali mi Facebook — co teraz? Plan awaryjny krok po kroku</span></h3>
+        <div class="card-meta"><span>19.05.2026</span><span>8 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="cybersec" href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-pl-href="artykuly/jak-sprawdzic-czy-mam-wirusa.html" data-en-href="articles/how-to-check-for-virus.html">
+      <div class="card-content">
+        <span class="card-cat" style="color:var(--yellow);border-color:rgba(255,230,0,0.3);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;display:inline-block;padding:0.2rem 0.6rem;border:1px solid;margin-bottom:0.75rem;">● MALWARE</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Jak sprawdzić czy mam wirusa? 8 sygnałów i darmowe narzędzia" data-en="Do I Have a Virus? 8 Warning Signs and Free Tools to Check">Jak sprawdzić czy mam wirusa? 8 sygnałów i darmowe narzędzia</span></h3>
+        <div class="card-meta"><span>19.05.2026</span><span>7 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="narzedzia" href="artykuly/quiz-bezpieczenstwo.html" data-pl-href="artykuly/quiz-bezpieczenstwo.html" data-en-href="articles/security-quiz.html">
+      <div class="card-content">
+        <span class="card-cat" style="color:var(--cyan);border-color:rgba(0,229,255,0.3);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;display:inline-block;padding:0.2rem 0.6rem;border:1px solid;margin-bottom:0.75rem;">⚡ QUIZ</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Czy jesteś łatwym celem? Interaktywny quiz bezpieczeństwa" data-en="Are You an Easy Target? Interactive Security Quiz">Czy jesteś łatwym celem? Interaktywny quiz bezpieczeństwa</span></h3>
+        <div class="card-meta"><span>19.05.2026</span><span>3 min</span></div>
+      </div>
+    </a>
+
+    <a class="article-card" data-cat="narzedzia" href="artykuly/generator-hasel.html" data-pl-href="artykuly/generator-hasel.html" data-en-href="articles/password-generator.html">
+      <div class="card-content">
+        <span class="card-cat" style="color:var(--green);border-color:rgba(0,255,65,0.3);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;display:inline-block;padding:0.2rem 0.6rem;border:1px solid;margin-bottom:0.75rem;">🔑 NARZĘDZIE</span>
+        <h3 class="card-title card-title-sm"><span data-pl="Generator haseł + Kalkulator siły — lokalny, zero danych na serwer" data-en="Password Generator + Strength Calculator — Local, Zero Server Data">Generator haseł + Kalkulator siły — lokalny, zero danych na serwer</span></h3>
+        <div class="card-meta"><span>19.05.2026</span><span>narzędzie</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section>
+  <div class="section-header">
+    <div class="section-tag" data-pl="// Sektory" data-en="// Sectors">// Sektory</div>
+    <div class="section-title" data-pl="OBSZARY BADAŃ" data-en="RESEARCH AREAS">OBSZARY BADAŃ</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="categories">
+    <a class="cat-card" href="#" onclick="filterCat(event,'cybersec')">
+      <div class="cat-icon">🔐</div>
+      <div class="cat-name">Cybersec</div>
+      <div class="cat-count" data-pl="4 artykuły" data-en="4 articles">4 artykuły</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:70%;background:var(--green)"></div></div>
+    </a>
+    <a class="cat-card" href="#" onclick="filterCat(event,'poradniki')">
+      <div class="cat-icon">📖</div>
+      <div class="cat-name">Poradniki</div>
+      <div class="cat-count" data-pl="2 przewodniki" data-en="2 guides">2 przewodniki</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:30%;background:var(--cyan)"></div></div>
+    </a>
+    <a class="cat-card" href="#" onclick="filterCat(event,'narzedzia')">
+      <div class="cat-icon">🛠️</div>
+      <div class="cat-name">Narzędzia</div>
+      <div class="cat-count" data-pl="3 narzędzia" data-en="3 tools">3 narzędzia</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:40%;background:var(--yellow)"></div></div>
+    </a>
+    <a class="cat-card" href="#" onclick="filterCat(event,'prywatnosc')">
+      <div class="cat-icon">🕵️</div>
+      <div class="cat-name">Prywatność</div>
+      <div class="cat-count" data-pl="1 artykuł" data-en="1 article">1 artykuł</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:15%;background:var(--cyan)"></div></div>
+    </a>
+    <a class="cat-card" href="#" onclick="filterCat(event,'archiwum')">
+      <div class="cat-icon">🗃️</div>
+      <div class="cat-name" data-pl="Archiwum" data-en="Archive">Archiwum</div>
+      <div class="cat-count" data-pl="wkrótce" data-en="coming soon">wkrótce</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:5%;background:var(--dim)"></div></div>
+    </a>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div><span data-pl="// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026" data-en="// TECHNOLOGY REVEALS TRUTH // 2026">// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026</span></div>
+  <div>
+    <!-- KONTAKT: dodaj mailto:twoj@email.com gdy będziesz gotowy -->
+    <a href="#">Polityka prywatności</a>
+  </div>
+</footer>
+
+<style>
+/* FILTER TRANSITIONS */
+.article-card {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.article-card.hidden {
+  display: none;
+}
+.article-card.fading {
+  opacity: 0;
+  transform: scale(0.97);
+}
+/* empty state */
+.no-results {
+  display: none;
+  grid-column: 1/-1;
+  padding: 3rem;
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+}
+.no-results::before { content: '// '; color: var(--green); }
+</style>
+
+<script>
+function filterCat(e, cat) {
+  e.preventDefault();
+
+  // update active nav link
+  document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(a => {
+    a.classList.remove('active');
+  });
+  e.currentTarget.classList.add('active');
+
+  // close mobile menu
+  document.querySelector('.mobile-menu').classList.remove('open');
+
+  const cards = document.querySelectorAll('.article-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const cardCat = card.getAttribute('data-cat');
+    if (cat === 'all' || cardCat === cat) {
+      card.classList.remove('hidden');
+      visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+
+  // show/hide empty state
+  let noRes = document.querySelector('.no-results');
+  if (!noRes) {
+    noRes = document.createElement('div');
+    noRes.className = 'no-results';
+    noRes.textContent = 'Brak artykułów w tej kategorii — wkrótce';
+    document.getElementById('articles-grid').appendChild(noRes);
+  }
+  noRes.style.display = visible === 0 ? 'block' : 'none';
+
+  // scroll to articles
+  document.querySelector('.articles').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+<script>initLang();</script>
+</body>
+</html>
