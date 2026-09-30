@@ -1,0 +1,15 @@
+/* SEKTOR_X — czcionki hostowane lokalnie (bez połączeń z Google). Licencja: SIL OFL 1.1, patrz OFL.txt */
+@font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url(share-tech-mono.woff) format('woff');}
+@font-face{font-family:'Rajdhani';font-style:normal;font-weight:400;font-display:swap;src:url(rajdhani-400.woff) format('woff');}
+@font-face{font-family:'Rajdhani';font-style:normal;font-weight:600;font-display:swap;src:url(rajdhani-600.woff) format('woff');}
+@font-face{font-family:'Rajdhani';font-style:normal;font-weight:700;font-display:swap;src:url(rajdhani-700.woff) format('woff');}
+@font-face{font-family:'Orbitron';font-style:normal;font-weight:400 900;font-display:swap;src:url(orbitron-var.woff) format('woff');}
+@font-face{font-family:'Exo 2';font-style:normal;font-weight:100 900;font-display:swap;src:url(exo2-var.woff) format('woff');}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;src:url(jetbrains-mono-var.woff) format('woff');}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:100 1000;font-display:swap;src:url(dm-sans-var.woff) format('woff');}
+@font-face{font-family:'DM Sans';font-style:italic;font-weight:100 1000;font-display:swap;src:url(dm-sans-italic-var.woff) format('woff');}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url(space-grotesk-var.woff) format('woff');}
+@font-face{font-family:'Syne';font-style:normal;font-weight:400 800;font-display:swap;src:url(syne-var.woff) format('woff');}
+/* Polskie znaki: Orbitron i Share Tech Mono nie mają ą ę ł ś itd. — podmieniamy tylko te znaki na pasujące kroje */
+@font-face{font-family:'Orbitron';font-style:normal;font-weight:400 900;font-display:swap;src:url(exo2-var.woff) format('woff');unicode-range:U+0100-017F;}
+@font-face{font-family:'Share Tech Mono';font-style:normal;font-weight:400;font-display:swap;src:url(jetbrains-mono-var.woff) format('woff');unicode-range:U+0100-017F;}

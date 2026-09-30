@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy policy — SEKTOR_X</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/privacy-policy.html">
+  <link rel="alternate" hreflang="pl" href="https://sec-stack.github.io/sektor-x/polityka-prywatnosci.html">
+  <link rel="alternate" hreflang="en" href="https://sec-stack.github.io/sektor-x/privacy-policy.html">
+  <meta name="description" content="SEKTOR_X privacy policy: no cookies, ads or analytics. What GitHub Pages and Substack process.">
+  <meta name="author" content="SEKTOR_X Operator">
+  <meta property="og:title" content="Privacy policy — SEKTOR_X">
+  <meta property="og:description" content="SEKTOR_X privacy policy: no cookies, ads or analytics. What GitHub Pages and Substack process.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/privacy-policy.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="en_GB">
+  <meta name="robots" content="index, follow">
+<link href="fonts/fonts.css" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--cyan);border-color:rgba(0,229,255,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+  .callout strong{color:#fff;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  /* VPN TABLE */
+  .vpn-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.75rem;}
+  .vpn-table th{background:var(--panel);border:1px solid var(--border);padding:0.75rem 1rem;text-align:left;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;}
+  .vpn-table td{border:1px solid rgba(0,255,65,0.08);padding:0.75rem 1rem;color:#6a9a6a;}
+  .vpn-table tr:hover td{background:var(--panel);}
+  .vpn-table .yes{color:var(--green);}.vpn-table .no{color:var(--red);}.vpn-table .partial{color:var(--yellow);}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+  
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .ticker-label { font-size: 0.55rem; padding: 0 0.5rem; }
+    .ticker-track span { font-size: 0.55rem; padding: 0 1.5rem; }
+    .article-wrapper { padding: 90px 1rem 3rem; }
+    .article-title { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .article-meta { flex-wrap: wrap; gap: 0.75rem; }
+    .article-lead { font-size: 0.82rem; }
+    .article-content { font-size: 0.78rem; }
+    .article-content h2 { font-size: 1rem; }
+    .callout { padding: 1rem; font-size: 0.75rem; }
+    .checklist { padding: 1rem; }
+    .related-list a { padding: 0.75rem 1rem; font-size: 0.72rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1rem; }
+    /* VPN TABLE — scrollable on mobile */
+    .vpn-table { display: block; overflow-x: auto; white-space: nowrap; }
+    /* Code blocks */
+    .code-block { padding: 0.75rem 1rem; }
+    .code-block pre { font-size: 0.7rem; }
+  }
+
+  @media (max-width: 480px) {
+    .article-title { font-size: clamp(1.1rem, 6vw, 1.5rem); }
+    .breadcrumb { font-size: 0.6rem; }
+    .article-tags { gap: 0.35rem; }
+    .tag { font-size: 0.55rem; }
+  }
+
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    transition: all 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0;
+    background: rgba(3,10,3,0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 998;
+    backdrop-filter: blur(8px);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 1rem 2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+  }
+
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+  .article-content a{color:var(--cyan);}
+  .article-content ol{margin:1rem 0 1.5rem 1.5rem;}
+  .lead-box{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin:2rem 0;}
+  .lead-box div{background:var(--bg);padding:1.2rem;font-size:0.75rem;line-height:1.7;}
+  .lead-box b{display:block;font-family:'Orbitron',monospace;color:var(--green);font-size:0.8rem;margin-bottom:0.4rem;font-weight:700;}
+  @media(max-width:768px){.lead-box{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="index.html?lang=en" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html?lang=en">Articles</a></li><li><a href="operator-base.html">Operator Base</a></li><li><a href="about.html">About</a></li><li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="window.location.href='polityka-prywatnosci.html'">🇵🇱 PL</button>
+    <button class="lang-btn active">🇬🇧 EN</button>
+  </div>
+  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html?lang=en">Articles</a>
+  <a href="operator-base.html">Operator Base</a>
+  <a href="about.html">About</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+  <a href="polityka-prywatnosci.html">🇵🇱 Polski</a>
+</div>
+<div class="article-wrapper" style="padding-top:90px">
+  <div class="breadcrumb">
+    <a href="index.html?lang=en">Sektor_X</a><span class="breadcrumb-sep">›</span><span>Privacy policy</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat">● Privacy</span>
+    <h1 class="article-title">Privacy policy</h1>
+    <div class="article-meta"><span>Effective: 27.09.2026</span></div>
+    <p class="article-lead">Zero cookies, zero ads, zero analytics. Here is the full, honest list of what still happens to your data.</p>
+  </header>
+  <div class="article-content">
+
+    <p>This policy describes what actually happens to your data when you visit SEKTOR_X. In short: <strong>I don't collect personal data, I don't use cookies, ads or analytics, and the site loads nothing from third-party servers</strong> (the only exception is DNS lookups made by the domain scanner when you use it — see below). The details are below, because “no fluff” applies here too.</p>
+
+    <h2>1. Who runs the site</h2>
+    <p>The controller of SEKTOR_X (sec-stack.github.io/sektor-x) is its author. Contact: reply to any <a href="https://sektorx.substack.com" target="_blank" rel="noopener">newsletter</a> email, or open an issue on <a href="https://github.com/sec-stack/sektor-x/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+
+    <h2>2. Hosting — GitHub Pages</h2>
+    <p>The site is hosted on GitHub Pages (GitHub, Inc.). Like any web server, GitHub processes technical connection data, including your IP address, for example for security purposes. I have no access to those logs. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub privacy statement</a>.</p>
+
+    <h2>3. Fonts</h2>
+    <p>All fonts are hosted together with the site. Your browser does not contact Google Fonts or any other external server to display a page.</p>
+
+    <h2>4. Browser storage (localStorage)</h2>
+    <p>If you switch the site language (PL/EN), your choice is stored locally in your browser under the key <code>sx_lang</code>. It never leaves your device and you can remove it by clearing site data. It is not a cookie and is not used for tracking.</p>
+
+    <h2>5. Tools: password generator and quiz</h2>
+    <p>The password generator, strength calculator and quiz run <strong>entirely in your browser</strong>. Generated passwords and answers are never sent or stored anywhere.</p>
+
+    <h2>5a. Domain security scanner</h2>
+    <p>The scanner runs in your browser. To check a domain, your browser sends its name to public DNS resolvers: <strong>Cloudflare</strong> (cloudflare-dns.com) and, as a fallback, <strong>Google</strong> (dns.google). They see your IP address and the domain being checked, under their own privacy policies. The scanner also connects to the scanned domain's website to verify HTTPS. I don't store scanned domains or results.</p>
+
+    <h2>6. Newsletter — Substack</h2>
+    <p>The newsletter runs on Substack. When you subscribe, you give your email address directly to Substack, which processes it under its <a href="https://substack.com/privacy" target="_blank" rel="noopener">own privacy policy</a>. I can see the subscriber list and use it only to send the newsletter. You can unsubscribe at any time via the link in every email.</p>
+
+    <h2>6a. E-books and tools — Naffy and Gumroad</h2>
+    <p>E-books and tools are delivered through <strong>Naffy</strong> and <strong>Gumroad</strong>. Any email or payment details you enter there are processed by those services (and their payment providers) under their own policies; I see the data needed to fulfil the order, such as the buyer's or downloader's email address.</p>
+
+    <h2>7. External links</h2>
+    <p>Articles link to sources and tools on other sites (e.g. haveibeenpwned.com). Once you click, that site's privacy policy applies.</p>
+
+    <h2>8. Your rights</h2>
+    <p>Under the GDPR you have the right to access, rectify and erase your data, to restrict processing and to object. You can also lodge a complaint with the Polish supervisory authority, the President of the Personal Data Protection Office (<a href="https://uodo.gov.pl" target="_blank" rel="noopener">uodo.gov.pl</a>), or with the authority in your own EU country.</p>
+
+    <h2>9. Changes</h2>
+    <p>If something new appears on the site — for example cookie-free analytics or affiliate links — I will update this policy and the date at the top. The Polish version of this policy is the reference version.</p>
+
+  </div>
+</div>
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGY REVEALS TRUTH // 2026</div>
+  <div><a href="about.html">About</a> · <a href="privacy-policy.html">Privacy policy</a> · <a href="feed.xml">RSS</a></div>
+</footer>
+</body>
+</html>

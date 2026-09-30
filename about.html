@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — SEKTOR_X</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/about.html">
+  <link rel="alternate" hreflang="pl" href="https://sec-stack.github.io/sektor-x/o-mnie.html">
+  <link rel="alternate" hreflang="en" href="https://sec-stack.github.io/sektor-x/about.html">
+  <meta name="description" content="Who is behind SEKTOR_X: a Polish-first security guide for home users and small businesses, plus a journal of the road through IT. Principles and contact.">
+  <meta name="author" content="SEKTOR_X Operator">
+  <meta property="og:title" content="About — SEKTOR_X">
+  <meta property="og:description" content="Who is behind SEKTOR_X: a Polish-first security guide for home users and small businesses, plus a journal of the road through IT. Principles and contact.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/about.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="en_GB">
+  <meta name="robots" content="index, follow">
+<link href="fonts/fonts.css" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--cyan);border-color:rgba(0,229,255,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+  .callout strong{color:#fff;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  /* VPN TABLE */
+  .vpn-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.75rem;}
+  .vpn-table th{background:var(--panel);border:1px solid var(--border);padding:0.75rem 1rem;text-align:left;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;}
+  .vpn-table td{border:1px solid rgba(0,255,65,0.08);padding:0.75rem 1rem;color:#6a9a6a;}
+  .vpn-table tr:hover td{background:var(--panel);}
+  .vpn-table .yes{color:var(--green);}.vpn-table .no{color:var(--red);}.vpn-table .partial{color:var(--yellow);}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+  
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .ticker-label { font-size: 0.55rem; padding: 0 0.5rem; }
+    .ticker-track span { font-size: 0.55rem; padding: 0 1.5rem; }
+    .article-wrapper { padding: 90px 1rem 3rem; }
+    .article-title { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .article-meta { flex-wrap: wrap; gap: 0.75rem; }
+    .article-lead { font-size: 0.82rem; }
+    .article-content { font-size: 0.78rem; }
+    .article-content h2 { font-size: 1rem; }
+    .callout { padding: 1rem; font-size: 0.75rem; }
+    .checklist { padding: 1rem; }
+    .related-list a { padding: 0.75rem 1rem; font-size: 0.72rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1rem; }
+    /* VPN TABLE — scrollable on mobile */
+    .vpn-table { display: block; overflow-x: auto; white-space: nowrap; }
+    /* Code blocks */
+    .code-block { padding: 0.75rem 1rem; }
+    .code-block pre { font-size: 0.7rem; }
+  }
+
+  @media (max-width: 480px) {
+    .article-title { font-size: clamp(1.1rem, 6vw, 1.5rem); }
+    .breadcrumb { font-size: 0.6rem; }
+    .article-tags { gap: 0.35rem; }
+    .tag { font-size: 0.55rem; }
+  }
+
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    transition: all 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0;
+    background: rgba(3,10,3,0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 998;
+    backdrop-filter: blur(8px);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 1rem 2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+  }
+
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+  .article-content a{color:var(--cyan);}
+  .article-content ol{margin:1rem 0 1.5rem 1.5rem;}
+  .lead-box{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin:2rem 0;}
+  .lead-box div{background:var(--bg);padding:1.2rem;font-size:0.75rem;line-height:1.7;}
+  .lead-box b{display:block;font-family:'Orbitron',monospace;color:var(--green);font-size:0.8rem;margin-bottom:0.4rem;font-weight:700;}
+  @media(max-width:768px){.lead-box{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="index.html?lang=en" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html?lang=en">Articles</a></li><li><a href="operator-base.html">Operator Base</a></li><li><a href="about.html">About</a></li><li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="window.location.href='o-mnie.html'">🇵🇱 PL</button>
+    <button class="lang-btn active">🇬🇧 EN</button>
+  </div>
+  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html?lang=en">Articles</a>
+  <a href="operator-base.html">Operator Base</a>
+  <a href="about.html">About</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+  <a href="o-mnie.html">🇵🇱 Polski</a>
+</div>
+<div class="article-wrapper" style="padding-top:90px">
+  <div class="breadcrumb">
+    <a href="index.html?lang=en">Sektor_X</a><span class="breadcrumb-sep">›</span><span>About — who is behind SEKTOR_X</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat">● Operator</span>
+    <h1 class="article-title">About — who is behind SEKTOR_X</h1>
+    <div class="article-meta"><span>Updated: 27.09.2026</span></div>
+    <p class="article-lead">Online security in plain language, for regular people and for small businesses — written by an ordinary sysadmin who does it every day, plus my journal from the road through IT. No editorial team, no sponsors, no fluff.</p>
+  </header>
+  <div class="article-content">
+
+    <h2>What SEKTOR_X is</h2>
+    <p>SEKTOR_X is two things at once. On one side, a <strong>guide for regular people and small businesses</strong>: concrete, verifiable instructions — from passwords, phishing and your home router to firewalls, Active Directory, backup, email and NIS2 — written Polish-first and without corporate jargon. On the other, <strong>my journal</strong> — the <a href="operator-base.html">Operator Base</a>: notes on what I'm building, what I'm learning and where I got it wrong.</p>
+    <p>The two are connected. Most guides start as a journal note (“set up Samba as a domain controller today and DNS refused to cooperate”) and only after a few attempts turn into a step-by-step walkthrough.</p>
+
+    <div class="lead-box">
+      <div><b>// GUIDES</b>From “secure your router in 15 minutes” to full admin guides: FortiGate, Samba AD DC.</div>
+      <div><b>// TOOLS</b>A password generator and a quiz that run entirely in your browser. Nothing is sent to a server.</div>
+      <div><b>// JOURNAL</b>Operator Base — a path through IT and security, unfiltered, mistakes included.</div>
+    </div>
+
+    <h2>Who writes it</h2>
+    <p>One person, no editorial team, no sponsor. I am an ordinary sysadmin at one company — from FortiGate and Active Directory to the NIS2 rollout I am running right now. I know the absurdities of small firms getting corporate-grade requirements with a “find your own budget” attitude. I write about what I configure, break and fix myself. I document the journey so that a year from now I can see where I started — and so that someone at the start of the same road knows they're not alone.</p>
+    <p>The site is written in Polish first. Some articles are translated into English; the interactive admin guides are Polish-only for now.</p>
+
+    <h2>Principles</h2>
+    <ul>
+      <li><strong>Verifiable.</strong> Facts come with sources. If I haven't tested something myself, I say so.</li>
+      <li><strong>Up to date.</strong> Every article shows its publication date and last update. Security advice ages fast.</li>
+      <li><strong>Independent.</strong> Nobody pays for a spot in a ranking. If affiliate links ever appear, they will be clearly marked and won't change the recommendations.</li>
+      <li><strong>Private.</strong> No ads, no trackers, no tracking cookies. Details in the <a href="privacy-policy.html">privacy policy</a>.</li>
+      <li><strong>Corrections.</strong> Found a mistake? Tell me. I fix it and update the date.</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>Easiest way: subscribe to the <a href="https://sektorx.substack.com" target="_blank" rel="noopener">newsletter</a> and reply to any email — it comes straight to me. You can also report a mistake or suggest a topic on <a href="https://github.com/sec-stack/sektor-x/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+
+  </div>
+</div>
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGY REVEALS TRUTH // 2026</div>
+  <div><a href="about.html">About</a> · <a href="privacy-policy.html">Privacy policy</a> · <a href="feed.xml">RSS</a></div>
+</footer>
+</body>
+</html>

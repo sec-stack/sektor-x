@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FortiGate, cz. 1 — pierwsze logowanie, backup, firmware i interfejsy — SEKTOR_X</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="SEKTOR_X" href="../feed.xml">
+
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/artykuly/fortigate-1-podstawy.html">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/artykuly/fortigate-1-podstawy.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="pl_PL">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "FortiGate, cz. 1 — pierwsze logowanie, backup, firmware i interfejsy", "description": "Architektura FortiGate 60F i 120G, pierwsze logowanie, backup konfiguracji, bezpieczna aktualizacja FortiOS, interfejsy LAN/WAN i DHCP.", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "pl", "isPartOf": {"@type": "CreativeWorkSeries", "name": "FortiGate — przewodnik admina", "url": "https://sec-stack.github.io/sektor-x/artykuly/fortigate-przewodnik.html"}, "position": 1, "author": {"@type": "Person", "name": "Operator SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/o-mnie.html"}, "publisher": {"@type": "Organization", "name": "SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/"}, "mainEntityOfPage": "https://sec-stack.github.io/sektor-x/artykuly/fortigate-1-podstawy.html"}</script>
+
+<meta name="description" content="Architektura FortiGate 60F i 120G, pierwsze logowanie, backup konfiguracji, bezpieczna aktualizacja FortiOS, interfejsy LAN/WAN i DHCP.">
+<meta name="keywords" content="FortiGate, FortiOS, firewall, VPN, VLAN, VDOM, VoIP, cyberbezpieczeństwo, sieć, administrator">
+<meta name="author" content="Operator SEKTOR_X">
+<meta name="robots" content="index, follow">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<style>
+/* ===== SEKTOR_X HEADER OVERRIDES ===== */
+:root {
+  --sx-green: #00ff41;
+  --sx-cyan: #00e5ff;
+  --sx-red: #ff003c;
+  --sx-bg: #030a03;
+  --sx-border: rgba(0,255,65,0.15);
+  --sx-dim: #3a5a3a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* SEKTOR_X TOP NAV */
+.sx-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(3,10,3,0.97);
+  border-bottom: 1px solid var(--sx-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 48px;
+  backdrop-filter: blur(8px);
+}
+.sx-logo {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.sx-logo span { color: var(--sx-red); }
+.sx-nav-links {
+  display: flex;
+  list-style: none;
+  gap: 0;
+}
+.sx-nav-links a {
+  display: block;
+  padding: 0 1rem;
+  height: 48px;
+  line-height: 48px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--sx-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  border-right: 1px solid var(--sx-border);
+}
+.sx-nav-links a:first-child { border-left: 1px solid var(--sx-border); }
+.sx-nav-links a:hover, .sx-nav-links a.active { color: var(--sx-green); }
+.sx-back {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--sx-green);
+  text-decoration: none;
+  border: 1px solid var(--sx-border);
+  padding: 0.3rem 0.8rem;
+  transition: all 0.2s;
+}
+.sx-back:hover { background: rgba(0,255,65,0.08); }
+
+/* SCANLINES */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* HAMBURGER */
+.sx-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.sx-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--sx-green);
+}
+.sx-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 48px; left: 0; right: 0;
+  background: rgba(3,10,3,0.98);
+  border-bottom: 1px solid var(--sx-border);
+  z-index: 999;
+}
+.sx-mobile-menu.open { display: block; }
+.sx-mobile-menu a {
+  display: block;
+  padding: 0.9rem 2rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: var(--sx-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--sx-border);
+}
+.sx-mobile-menu a:hover { color: var(--sx-green); }
+
+/* WRAPPER — push content below fixed nav */
+.sx-wrapper {
+  padding-top: 48px;
+}
+
+/* ===== ORIGINAL STYLES ===== */
+
+:root {
+  --bg: #07090d;
+  --surface: #0d1117;
+  --card: #111820;
+  --card2: #141c26;
+  --border: #1a2535;
+  --border2: #243040;
+  --accent: #e03b24;
+  --accent2: #ff5c3e;
+  --orange: #f08030;
+  --green: #2dcc6f;
+  --blue: #3ba6e8;
+  --cyan: #00d4e8;
+  --yellow: #f5c842;
+  --purple: #9b6fff;
+  --text: #c8d8e8;
+  --text2: #8fa3ba;
+  --muted: #4a6075;
+  --done-bg: #0d1f14;
+  --done-border: #1a3d24;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,9,13,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  height:56px;
+  display:flex;align-items:center;gap:20px;
+}
+.tb-logo{
+  font-family:'Unbounded',sans-serif;
+  font-size:.8rem;font-weight:900;
+  color:var(--accent2);
+  letter-spacing:.05em;
+  white-space:nowrap;
+}
+.tb-sep{width:1px;height:24px;background:var(--border);flex-shrink:0;}
+.tb-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.tb-pill{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;font-weight:600;
+  padding:3px 8px;border-radius:3px;
+  border:1px solid;
+  white-space:nowrap;
+}
+.p-red{color:var(--accent2);border-color:var(--accent2);background:rgba(255,92,62,.07);}
+.p-blue{color:var(--blue);border-color:var(--blue);background:rgba(59,166,232,.07);}
+.p-green{color:var(--green);border-color:var(--green);background:rgba(45,204,111,.07);}
+.p-orange{color:var(--orange);border-color:var(--orange);background:rgba(240,128,48,.07);}
+.tb-progress{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-bar{width:120px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.tb-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--orange));width:0%;transition:width .4s;}
+.tb-pct{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--orange);min-width:32px;}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:248px 1fr;min-height:calc(100vh - 56px);}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  padding:20px 0;
+  position:sticky;top:56px;
+  height:calc(100vh - 56px);
+  overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-track{background:transparent;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.sb-section{margin-bottom:4px;}
+.sb-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--muted);
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:14px 20px 6px;
+}
+.sb-item{
+  padding:9px 20px;
+  cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  border-left:2px solid transparent;
+  transition:all .15s;
+  font-size:.83rem;
+  color:var(--text2);
+  position:relative;
+}
+.sb-item:hover{background:var(--card);color:var(--text);}
+.sb-item.active{border-left-color:var(--accent2);background:var(--card);color:#fff;}
+.sb-item.done-phase{border-left-color:var(--green);color:var(--green);}
+.sb-badge{
+  margin-left:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;
+  padding:2px 6px;border-radius:2px;
+  background:var(--border);
+  color:var(--muted);
+  flex-shrink:0;
+}
+.sb-item.active .sb-badge{background:rgba(255,92,62,.15);color:var(--accent2);}
+.sb-item.done-phase .sb-badge{background:rgba(45,204,111,.12);color:var(--green);}
+.sb-done-count{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--muted);
+  padding:2px 6px;
+  background:var(--card);
+  border-radius:10px;
+  margin-left:auto;
+}
+.sb-divider{border:none;border-top:1px solid var(--border);margin:12px 16px;}
+.sb-link{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 20px;
+  font-size:.78rem;color:var(--text2);
+  text-decoration:none;
+  transition:color .15s;
+}
+.sb-link:hover{color:var(--cyan);}
+.sb-link-icon{font-size:.8rem;width:16px;text-align:center;}
+
+/* ── CONTENT ── */
+.content{padding:32px 40px;max-width:960px;}
+.phase{display:none;animation:fadeIn .2s ease;}
+.phase.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* ── PHASE HEADER ── */
+.ph-head{
+  display:flex;align-items:flex-start;gap:20px;
+  padding-bottom:24px;
+  margin-bottom:28px;
+  border-bottom:1px solid var(--border);
+}
+.ph-num{
+  font-family:'Unbounded',sans-serif;
+  font-size:3rem;font-weight:900;
+  line-height:1;
+  flex-shrink:0;
+  -webkit-text-stroke:1px;
+  color:transparent;
+}
+.ph-num.c1{-webkit-text-stroke-color:var(--accent2);}
+.ph-num.c2{-webkit-text-stroke-color:var(--orange);}
+.ph-num.c3{-webkit-text-stroke-color:var(--purple);}
+.ph-num.c4{-webkit-text-stroke-color:var(--cyan);}
+.ph-num.c5{-webkit-text-stroke-color:var(--green);}
+.ph-num.c6{-webkit-text-stroke-color:var(--blue);}
+.ph-meta{}
+.ph-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.ph-tag.c1{color:var(--accent2);}
+.ph-tag.c2{color:var(--orange);}
+.ph-tag.c3{color:var(--purple);}
+.ph-tag.c4{color:var(--cyan);}
+.ph-tag.c5{color:var(--green);}
+.ph-tag.c6{color:var(--blue);}
+.ph-title{font-family:'Unbounded',sans-serif;font-size:1.35rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px;}
+.ph-desc{font-size:.88rem;color:var(--text2);line-height:1.6;max-width:600px;}
+.ph-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;color:var(--yellow);
+  margin-top:8px;display:inline-block;
+  padding:3px 8px;background:rgba(245,200,66,.07);
+  border:1px solid rgba(245,200,66,.2);border-radius:3px;
+}
+
+/* ── SECTION HEADING ── */
+.s-head{
+  display:flex;align-items:center;gap:12px;
+  margin:28px 0 14px;
+}
+.s-head-line{flex:1;height:1px;background:var(--border);}
+.s-head-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* ── TOPIC CARD ── */
+.topic{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:12px;
+  overflow:hidden;
+  transition:border-color .15s;
+}
+.topic:hover{border-color:var(--border2);}
+.topic.done{background:var(--done-bg);border-color:var(--done-border);}
+
+.topic-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;
+  cursor:pointer;
+  user-select:none;
+}
+.topic-check{
+  width:22px;height:22px;
+  border:2px solid var(--border2);
+  border-radius:5px;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;
+  transition:all .15s;
+  background:transparent;
+  color:transparent;
+}
+.topic.done .topic-check{
+  background:var(--green);border-color:var(--green);color:#07090d;
+}
+.topic-title{font-size:.92rem;font-weight:500;color:#fff;flex:1;line-height:1.3;}
+.topic.done .topic-title{text-decoration:line-through;color:var(--muted);}
+.topic-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;font-weight:700;
+  padding:2px 7px;border-radius:3px;
+}
+.t-gui{background:rgba(59,166,232,.1);color:var(--blue);}
+.t-cli{background:rgba(240,128,48,.1);color:var(--orange);}
+.t-kb{background:rgba(155,111,255,.1);color:var(--purple);}
+.t-voip{background:rgba(245,200,66,.1);color:var(--yellow);}
+.t-sec{background:rgba(224,59,36,.1);color:var(--accent2);}
+.t-imp{background:rgba(45,204,111,.1);color:var(--green);}
+.t-warn{background:rgba(240,128,48,.15);color:var(--orange);}
+.topic-expand{
+  font-size:1rem;color:var(--muted);
+  transition:transform .2s;
+  flex-shrink:0;
+}
+.topic.open .topic-expand{transform:rotate(180deg);}
+
+/* ── TOPIC BODY ── */
+.topic-body{
+  display:none;
+  padding:0 18px 18px;
+  border-top:1px solid var(--border);
+}
+.topic.open .topic-body{display:block;}
+
+.tb-intro{
+  font-size:.85rem;color:var(--text);
+  line-height:1.7;
+  padding:14px 0 10px;
+}
+.tb-intro strong{color:#fff;font-weight:500;}
+
+/* explanation blocks */
+.explain{
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:7px;
+  padding:14px 16px;
+  margin:10px 0;
+  font-size:.83rem;
+  line-height:1.7;
+  color:var(--text);
+}
+.explain strong{color:#fff;}
+.explain-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:var(--cyan);
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:8px;font-weight:700;
+}
+
+/* code blocks */
+.cmd{
+  background:#050709;
+  border:1px solid var(--border);
+  border-radius:7px;
+  padding:14px 16px;
+  margin:10px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;
+  line-height:1.9;
+  overflow-x:auto;
+}
+.cmd .cmt{color:var(--muted);}
+.cmd .kw{color:var(--cyan);}
+.cmd .val{color:var(--green);}
+.cmd .str{color:var(--yellow);}
+.cmd .prompt{color:var(--accent2);user-select:none;}
+.cmd-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:4px;
+  display:block;
+}
+
+/* steps */
+.steps{counter-reset:step;margin:10px 0;}
+.step{
+  display:flex;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:.83rem;line-height:1.6;
+}
+.step:last-child{border-bottom:none;}
+.step::before{
+  counter-increment:step;
+  content:counter(step);
+  width:22px;height:22px;
+  background:var(--border2);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;font-weight:700;
+  color:var(--text2);
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+/* tip / warn / info boxes */
+.box{
+  border-radius:7px;
+  padding:12px 15px;
+  margin:10px 0;
+  font-size:.82rem;
+  line-height:1.6;
+  display:flex;gap:10px;
+  align-items:flex-start;
+}
+.box-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+.box-body{}
+.box-title{font-weight:600;margin-bottom:3px;font-size:.82rem;}
+.box.tip{background:rgba(45,204,111,.07);border:1px solid rgba(45,204,111,.2);}
+.box.tip .box-title{color:var(--green);}
+.box.warn{background:rgba(240,128,48,.07);border:1px solid rgba(240,128,48,.25);}
+.box.warn .box-title{color:var(--orange);}
+.box.info{background:rgba(59,166,232,.07);border:1px solid rgba(59,166,232,.2);}
+.box.info .box-title{color:var(--blue);}
+.box.danger{background:rgba(224,59,36,.07);border:1px solid rgba(224,59,36,.2);}
+.box.danger .box-title{color:var(--accent2);}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0;}
+.tbl th{
+  background:var(--card2);
+  color:var(--text2);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;
+  padding:8px 12px;text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+.tbl td{
+  padding:8px 12px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  vertical-align:top;
+  line-height:1.5;
+}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;
+  background:var(--border);
+  padding:1px 5px;border-radius:3px;
+  color:var(--green);
+}
+
+/* checklist inside body */
+.checklist{list-style:none;margin:8px 0;}
+.checklist li{
+  padding:5px 0 5px 22px;
+  position:relative;
+  font-size:.83rem;
+  color:var(--text);
+  line-height:1.5;
+  border-bottom:1px solid var(--border);
+}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{
+  content:'▸';
+  position:absolute;left:0;
+  color:var(--accent2);font-size:.75rem;
+  top:6px;
+}
+.checklist li strong{color:#fff;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .content{padding:20px;}
+  .topbar{padding:0 16px;}
+  .tb-pills{display:none;}
+}
+
+
+/* ===== SEKTOR_X STYLE OVERRIDES ===== */
+body {
+  background: #07090d;
+  cursor: default;
+}
+
+/* Make topbar sit below sx-nav */
+.topbar {
+  top: 48px !important;
+  border-top: 1px solid rgba(0,255,65,0.08);
+}
+.layout {
+  min-height: calc(100vh - 104px);
+}
+.sidebar {
+  top: 104px !important;
+  height: calc(100vh - 104px) !important;
+}
+
+/* SEKTOR_X accent on sidebar active */
+.sb-item.active {
+  border-left: 2px solid #00ff41 !important;
+  color: #00ff41 !important;
+}
+.sb-item:hover { color: #00e5ff !important; }
+
+/* Progress bar sx-green */
+.tb-fill {
+  background: linear-gradient(90deg, #00ff41, #00e5ff) !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sx-nav { padding: 0 1rem; }
+  .sx-nav-links { display: none; }
+  .sx-hamburger { display: flex; }
+  .topbar { padding: 0 1rem; top: 48px !important; }
+  .tb-pills { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .content { padding: 16px; }
+}
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+</style>
+<style>
+/* === TRYB ARTYKUŁU (seria) === */
+.topbar,.sidebar,.topic-check,.topic-expand{display:none!important;}
+.layout{display:block!important;max-width:980px;margin:0 auto;padding-top:60px;}
+.phase{display:block!important;margin-bottom:3rem;}
+.topic-body{display:block!important;}
+.topic-head{cursor:default!important;}
+.sx-series{border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);padding:1.1rem 1.3rem;margin:1.5rem 0 2rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;line-height:1.8;}
+.sx-series b{display:block;font-family:'Rajdhani',sans-serif;letter-spacing:0.15em;text-transform:uppercase;font-size:0.72rem;color:#00ff41;margin-bottom:0.4rem;}
+.sx-series ol{margin:0 0 0 1.3rem;padding:0;}
+.sx-series a{color:inherit;}
+.sx-series li.cur{color:#00ff41;font-weight:bold;}
+.sx-crumb{font-family:'Share Tech Mono',monospace;font-size:0.72rem;opacity:.7;margin-bottom:.8rem;}
+.sx-crumb a{color:inherit;}
+.sx-h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.3rem,3.6vw,2rem);line-height:1.25;color:#fff;margin:0 0 .6rem;}
+.sx-lead{font-size:0.95rem;line-height:1.8;opacity:.85;margin-bottom:.6rem;}
+.sx-meta{font-family:'Share Tech Mono',monospace;font-size:0.7rem;opacity:.6;}
+.sx-pn{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:2rem 0 1rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;}
+.sx-pn a{border:1px solid rgba(255,255,255,0.15);padding:.7rem 1rem;color:inherit;text-decoration:none;max-width:48%;}
+.sx-pn a:hover{border-color:#00ff41;color:#00ff41;}
+.sx-foot{max-width:980px;margin:3rem auto 0;padding:1.5rem 1rem;border-top:1px solid rgba(255,255,255,0.1);font-family:'Share Tech Mono',monospace;font-size:0.7rem;opacity:.75;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;}
+.sx-foot a{color:inherit;}
+@media(max-width:700px){.layout{padding:60px 1rem 0}.sx-pn a{max-width:100%;}}
+</style>
+</head>
+<body>
+
+
+<!-- SEKTOR_X NAV -->
+<nav class="sx-nav">
+  <a href="../index.html" class="sx-logo">SEKTOR<span>_X</span></a>
+  <ul class="sx-nav-links">
+    <li><a href="../index.html#artykuly">Artykuły</a></li>
+    <li><a href="../baza-operacyjna.html">Baza Operacyjna</a></li>
+    <li><a href="../o-mnie.html">O mnie</a></li>
+    <li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <a href="../index.html" class="sx-back">← Strona główna</a>
+  <button class="sx-hamburger" onclick="document.querySelector('.sx-mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="sx-mobile-menu">
+  <a href="../index.html">← Strona główna</a>
+  <a href="../index.html#artykuly">Artykuły</a>
+  <a href="../baza-operacyjna.html">Baza Operacyjna</a>
+  <a href="../o-mnie.html">O mnie</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+</div>
+
+<div class="sx-wrapper">
+
+
+<div class="layout">
+<main class="content" id="content">
+<div class="sx-crumb"><a href="../index.html">Sektor_X</a> › <a href="../index.html#artykuly">Poradniki</a> › <a href="fortigate-przewodnik.html">FortiGate</a> › część 1</div>
+<h1 class="sx-h1">FortiGate, cz. 1 — pierwsze logowanie, backup, firmware i interfejsy</h1>
+<p class="sx-lead">Architektura FortiGate 60F i 120G, pierwsze logowanie, backup konfiguracji, bezpieczna aktualizacja FortiOS, interfejsy LAN/WAN i DHCP.</p>
+<div class="sx-meta">// część 1 z 8 · 28.09.2026 · na podstawie przewodnika z 19.05.2026</div>
+<nav class="sx-series" aria-label="Seria artykułów"><b>// Seria: FortiGate — przewodnik admina (8 części)</b><ol><li class="cur">pierwsze logowanie, backup, firmware i interfejsy</li><li class=""><a href="fortigate-2-polityki-nat.html">polityki firewall, NAT i Virtual IP</a></li><li class=""><a href="fortigate-3-routing-sdwan.html">DNS, routing i SD-WAN z dwoma łączami</a></li><li class=""><a href="fortigate-4-voip-qos.html">VoIP, SIP ALG i QoS</a></li><li class=""><a href="fortigate-5-profile-bezpieczenstwa.html">licencje FortiGuard, antywirus, IPS i Web Filter</a></li><li class=""><a href="fortigate-6-monitoring-awarie.html">monitoring, logi, alerty i scenariusze awaryjne</a></li><li class=""><a href="fortigate-7-vlany.html">VLANy i segmentacja sieci 802.1Q</a></li><li class=""><a href="fortigate-8-vdomy.html">VDOMy: wiele firewalli w jednym urządzeniu</a></li></ol><div style="margin-top:.5rem;opacity:.7">Wolisz wszystko na jednej stronie z odhaczaniem postępu? <a href="fortigate-przewodnik.html">Wersja interaktywna →</a></div></nav>
+<div class="phase" id="phase-0">
+  <div class="ph-head">
+    <div class="ph-num c1">01</div>
+    <div class="ph-meta">
+      <div class="ph-tag c1">Faza pierwsza</div>
+      <div class="ph-title">Podstawy i Interfejs</div>
+      <div class="ph-desc">Pierwsze logowanie, architektura urządzenia, backup, aktualizacja firmware, konfiguracja interfejsów LAN/WAN i serwer DHCP. Fundament pod wszystko co dalej.</div>
+      <span class="ph-time">⏱ 1–2 tygodnie • priorytet: START</span>
+    </div>
+  </div>
+
+  <div class="s-head"><div class="s-head-label">Architektura i dostęp</div><div class="s-head-line"></div></div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Jak działa FortiGate – architektura ASIC (SoC4, SP5)</div>
+      <div class="topic-tags"><span class="tag t-kb">TEORIA</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">FortiGate to <strong>Next-Generation Firewall (NGFW)</strong> wyposażony we własne układy ASIC (Application-Specific Integrated Circuit). Model 60F ma układ <strong>SoC4</strong> (zintegrowane NP6XLite i CP9XLite), a nowszy 120G — układ <strong>SP5</strong> – dzięki temu część ruchu jest przetwarzana sprzętowo, a nie przez CPU, co daje gigabitowe przepustowości bez zauważalnego obciążenia procesora.</div>
+      <div class="explain">
+        <div class="explain-title">Kluczowe pojęcia</div>
+        <strong>FortiOS</strong> – system operacyjny FortiGate (aktualna gałąź: 7.4.x / 7.6.x)<br>
+        <strong>NP (Network Processor)</strong> – sprzętowe przyspieszenie: firewall, IPsec VPN, routing. Duże modele mają osobne NP7, małe mają go wbudowanego w SoC/SP<br>
+        <strong>CP (Content Processor)</strong> – przyspiesza SSL/TLS inspekcję, antywirus, IPS (w 60F jako CP9XLite w SoC4, w 120G wbudowany w SP5)<br>
+        <strong>SPU</strong> – Security Processing Unit: wspólna nazwa procesorów Fortinet (NP, CP, SoC, SP)<br>
+        <strong>FortiGuard</strong> – chmura Fortinet dostarczająca sygnatury AV, IPS, URL filtering, aktualizowane co kilkanaście minut
+      </div>
+      <div class="box info"><div class="box-icon">ℹ️</div><div class="box-body"><div class="box-title">60F vs 120G</div>60F: 10 portów GE RJ45, SoC4, firewall do ~10 Gbps — dobry dla małego biura. 120G: SP5, 16 portów GE RJ45 + 8 SFP + 4 SFP+, firewall do 39 Gbps, ochrona przed zagrożeniami ~2,8 Gbps, inspekcja SSL ~3 Gbps (wg karty katalogowej) — rozsądny wybór dla firmy ~100–150 osób. Liczby „na ilu userów” traktuj orientacyjnie: decyduje ruch i włączone profile, nie liczba osób.</div></div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Pierwsze logowanie – GUI i CLI</div>
+      <div class="topic-tags"><span class="tag t-gui">GUI</span><span class="tag t-cli">CLI</span><span class="tag t-imp">START</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">FortiGate fabrycznie ma adres <strong>192.168.1.99</strong> na porcie <code>mgmt</code> (lub <code>internal1</code> zależnie od modelu). Podłącz komputer kablem do tego portu i otwórz przeglądarkę.</div>
+      <div class="steps">
+        <div class="step">Otwórz <strong>https://192.168.1.99</strong> (HTTPS! – zaakceptuj self-signed cert)</div>
+        <div class="step">Login: <code>admin</code> | Hasło: <strong>puste</strong> (tylko Enter)</div>
+        <div class="step">System wymusi zmianę hasła przy pierwszym logowaniu – ustaw silne hasło (min. 12 znaków, litery + cyfry + znaki specjalne)</div>
+        <div class="step">Zapoznaj się z układem: pasek górny (profil, powiadomienia), lewe menu (Network, Policy, Security...), dashboard w centrum</div>
+      </div>
+      <span class="cmd-label">Dostęp przez CLI (SSH lub kabel konsolowy)</span>
+      <div class="cmd">
+        <span class="cmt"># SSH (po skonfigurowaniu sieci)</span><br>
+        ssh admin@192.168.1.99<br><br>
+        <span class="cmt"># Kabel konsolowy: 9600 baud, 8N1, bez flow control</span><br>
+        <span class="cmt"># W PuTTY: Connection Type = Serial, Speed = 9600</span><br><br>
+        <span class="cmt"># Pierwsza komenda diagnostyczna – sprawdź wersję</span><br>
+        <span class="kw">get</span> system status<br><br>
+        <span class="cmt"># Pokaż wszystkie interfejsy</span><br>
+        <span class="kw">get</span> system interface physical
+      </div>
+      <div class="box warn"><div class="box-icon">⚠️</div><div class="box-body"><div class="box-title">Zarządzanie przez WAN</div>Nigdy nie zostawiaj włączonego dostępu HTTPS/SSH na interfejsie WAN w produkcji! System → Network → Interfaces → wan1 → odznacz HTTPS i SSH. Zarządzaj tylko z sieci LAN lub przez dedykowany port mgmt.</div></div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Backup i restore konfiguracji – rutyna admina</div>
+      <div class="topic-tags"><span class="tag t-gui">GUI</span><span class="tag t-cli">CLI</span><span class="tag t-imp">WAŻNE</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Backup to <strong>Twoje ubezpieczenie</strong>. Rób go przed każdą zmianą i przechowuj poza urządzeniem (USB, serwer plików, chmura). Plik <code>.conf</code> to zwykły tekst – możesz go otworzyć notatnikiem i przejrzeć całą konfigurację.</div>
+      <div class="steps">
+        <div class="step"><strong>GUI backup:</strong> System → Configuration → Backup → wybierz "Local PC" → zapisz plik .conf</div>
+        <div class="step">Opcjonalnie: zaszyfruj backup hasłem (pole "Encrypt configuration file") – ważne jeśli backup zawiera hasła VPN, PSK itp.</div>
+        <div class="step"><strong>Restore:</strong> System → Configuration → Restore → wgraj plik → FortiGate zrestartuje się i wczyta konfigurację</div>
+        <div class="step">Po restore sprawdź: <code>get system status</code> i przetestuj dostęp do internetu</div>
+      </div>
+      <span class="cmd-label">Backup przez CLI (SCP na serwer)</span>
+      <div class="cmd">
+        <span class="cmt"># Backup na serwer FTP/SCP</span><br>
+        <span class="kw">execute</span> backup config sftp backup.conf 192.168.1.10 admin haslo<br><br>
+        <span class="cmt"># Backup na USB (jeśli podłączony)</span><br>
+        <span class="kw">execute</span> backup config usb backup_$(date).conf<br><br>
+        <span class="cmt"># Sprawdź aktualną konfigurację (wylistuj)</span><br>
+        <span class="kw">show</span> full-configuration | grep -i hostname
+      </div>
+      <div class="box tip"><div class="box-icon">✅</div><div class="box-body"><div class="box-title">Dobra praktyka</div>Zapisuj backupy z datą w nazwie: <code>FW-FIRMA_2025-01-15.conf</code>. Trzymaj przynajmniej 3 ostatnie wersje. Raz w miesiącu przetestuj restore na środowisku testowym lub laboratoryjnym (FortiGate VM jest bezpłatny do pobrania).</div></div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Aktualizacja FortiOS – kiedy i jak</div>
+      <div class="topic-tags"><span class="tag t-gui">GUI</span><span class="tag t-imp">WAŻNE</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Fortinet regularnie wydaje aktualizacje bezpieczeństwa. Ważne: <strong>nie aktualizuj automatycznie w produkcji</strong>. Czytaj Release Notes, testuj na VM lub poza godzinami pracy.</div>
+      <div class="explain">
+        <div class="explain-title">Numery wersji FortiOS</div>
+        Format: <strong>7.4.3 build 2573</strong> – major.minor.patch build<br>
+        Gałąź <strong>7.4.x</strong> – stabilna, rekomendowana dla środowisk produkcyjnych<br>
+        Gałąź <strong>7.6.x</strong> – najnowsza, może mieć więcej bugów w pierwszych patchach<br>
+        Fortinet oznacza wersje: <span style="color:var(--green)">●</span> GA (General Availability) | <span style="color:var(--yellow)">●</span> MR (Maintenance Release)
+      </div>
+      <div class="steps">
+        <div class="step">Zrób <strong>backup konfiguracji</strong> przed aktualizacją!</div>
+        <div class="step">System → Firmware → sprawdź dostępne wersje (kliknij "Check for Updates")</div>
+        <div class="step">Przeczytaj Release Notes na docs.fortinet.com – szukaj sekcji "Known Issues" i "Upgrade Path"</div>
+        <div class="step">Jeśli aktualizujesz przez kilka gałęzi (np. 7.2 → 7.4), przejdź przez pośrednie wersje zgodnie z Upgrade Path</div>
+        <div class="step">Kliknij "Upgrade" → FortiGate pobierze firmware i zrestartuje się (~5 min)</div>
+        <div class="step">Po restarcie: sprawdź status, przetestuj polityki i VoIP</div>
+      </div>
+      <div class="box danger"><div class="box-icon">🚨</div><div class="box-body"><div class="box-title">Uwaga na Upgrade Path</div>Nie można przeskoczyć zbyt wielu wersji naraz. Zawsze sprawdź Upgrade Path Tool na support.fortinet.com. Np. z 7.0 → 7.4 musisz przez 7.2. Pominięcie grozi uszkodzeniem konfiguracji.</div></div>
+      <div class="box warn"><div class="box-icon">⚠️</div><div class="box-body"><div class="box-title">FortiOS 7.6.3+ i SSL VPN</div>Od FortiOS 7.6.3 Fortinet usunął tryb tunelowy SSL VPN — zastępuje go IPsec VPN (FortiClient). Jeśli użytkownicy łączą się zdalnie przez SSL VPN, <strong>najpierw przygotuj i przetestuj IPsec</strong>, dopiero potem aktualizuj do 7.6.3 lub nowszej. Szczegóły w dokumentacji Fortinet: „SSL VPN tunnel mode to IPsec VPN migration”.</div></div>
+    </div>
+  </div>
+
+  <div class="s-head"><div class="s-head-label">Interfejsy sieciowe</div><div class="s-head-line"></div></div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Konfiguracja interfejsu WAN – połączenie z ISP</div>
+      <div class="topic-tags"><span class="tag t-gui">GUI</span><span class="tag t-cli">CLI</span><span class="tag t-imp">KLUCZOWE</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Interfejs WAN to "wyjście na świat". Zazwyczaj dostarcza go ISP jako DHCP lub statyczny IP. W FortiGate jest to zazwyczaj <code>wan1</code>.</div>
+      <div class="steps">
+        <div class="step">Network → Interfaces → kliknij <strong>wan1</strong> → Edit</div>
+        <div class="step"><strong>Jeśli ISP daje DHCP:</strong> Addressing Mode = DHCP. FortiGate automatycznie pobierze IP, maskę, bramę i DNS</div>
+        <div class="step"><strong>Jeśli ISP daje statyczny IP:</strong> Addressing Mode = Manual → wpisz IP/maskę. W Network → Static Routes → dodaj default route z bramą ISP</div>
+        <div class="step">Rola interfejsu: ustaw na <strong>WAN</strong> (ważne dla SD-WAN i polityk)</div>
+        <div class="step">Administrative Access: odznacz HTTPS, SSH, Ping (bezpieczeństwo!)</div>
+      </div>
+      <span class="cmd-label">Weryfikacja CLI</span>
+      <div class="cmd">
+        <span class="cmt"># Sprawdź stan interfejsów</span><br>
+        <span class="kw">get</span> system interface physical<br><br>
+        <span class="cmt"># Sprawdź czy masz domyślną trasę</span><br>
+        <span class="kw">get</span> router info routing-table all<br><br>
+        <span class="cmt"># Ping do bramy ISP (test WAN)</span><br>
+        <span class="kw">execute</span> ping 8.8.8.8<br><br>
+        <span class="cmt"># Ping ze wskazanego interfejsu</span><br>
+        <span class="kw">execute</span> ping-options source wan1<br>
+        <span class="kw">execute</span> ping 8.8.8.8
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Konfiguracja LAN dla 120 użytkowników</div>
+      <div class="topic-tags"><span class="tag t-gui">GUI</span><span class="tag t-imp">KLUCZOWE</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Dla 120 userów + drukarki + VoIP polecam <strong>podsieć /23</strong> (510 hostów) lub <strong>/22</strong> (1022 hosty) – daje zapas na wzrost i urządzenia IoT.</div>
+      <div class="explain">
+        <div class="explain-title">Dobór podsieci</div>
+        <table class="tbl">
+          <tr><th>Maska</th><th>Pula hostów</th><th>Kiedy używać</th></tr>
+          <tr><td><code>/24</code></td><td>254</td><td>Ciasno dla 120 userów + urządzenia</td></tr>
+          <tr><td><code>/23</code></td><td>510</td><td>✅ Dobry wybór – duży zapas</td></tr>
+          <tr><td><code>/22</code></td><td>1022</td><td>Jeśli planujesz VLANy w przyszłości</td></tr>
+        </table>
+        Przykład: <strong>10.10.0.1/23</strong> = pula 10.10.0.1 – 10.10.1.254
+      </div>
+      <div class="steps">
+        <div class="step">Network → Interfaces → <strong>internal</strong> (lub lan) → Edit</div>
+        <div class="step">IP/Network Mask: wpisz np. <code>10.10.0.1/23</code></div>
+        <div class="step">Rola: <strong>LAN</strong></div>
+        <div class="step">Administrative Access: zaznacz <strong>HTTPS, SSH, Ping</strong> (tylko dla admina)</div>
+        <div class="step">Przewiń niżej → DHCP Server → Enable → ustaw zakres</div>
+      </div>
+      <span class="cmd-label">CLI – konfiguracja interfejsu LAN</span>
+      <div class="cmd">
+        <span class="kw">config</span> system interface<br>
+        &nbsp;&nbsp;<span class="kw">edit</span> <span class="str">"internal"</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">set</span> ip <span class="val">10.10.0.1 255.255.254.0</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">set</span> allowaccess https ssh ping<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">set</span> role lan<br>
+        &nbsp;&nbsp;<span class="kw">next</span><br>
+        <span class="kw">end</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="0">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Serwer DHCP – zakres, rezerwacje, opcje</div>
+      <div class="topic-tags"><span class="tag t-gui">GUI</span><span class="tag t-cli">CLI</span><span class="tag t-imp">WAŻNE</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">FortiGate może być pełnym serwerem DHCP dla Twojej sieci. Dla drukarek i telefonów VoIP koniecznie ustaw <strong>rezerwacje MAC→IP</strong> – stałe IP upraszcza diagnostykę i tworzenie polityk.</div>
+      <div class="steps">
+        <div class="step">Network → DHCP Server → Edit (pod interfejsem internal)</div>
+        <div class="step">IP Range Start: <code>10.10.0.50</code> | End: <code>10.10.1.200</code> (zostawiasz 10.10.0.1-49 na statyczne urządzenia)</div>
+        <div class="step">Lease Time: 86400 (24h dla stacji roboczych) lub 3600 (1h dla gości)</div>
+        <div class="step">DNS Server: wpisz IP Twojego Windows DNS (np. 10.10.0.10) lub 8.8.8.8 jako backup</div>
+        <div class="step">Default Gateway: 10.10.0.1 (adres FortiGate na LAN)</div>
+        <div class="step">Mac Reservation → dodaj rezerwacje dla drukarek i telefonów VoIP</div>
+      </div>
+      <span class="cmd-label">Rezerwacja DHCP przez CLI</span>
+      <div class="cmd">
+        <span class="kw">config</span> system dhcp server<br>
+        &nbsp;&nbsp;<span class="kw">edit</span> 1<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">config</span> reserved-address<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">edit</span> 1<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">set</span> mac <span class="val">AA:BB:CC:DD:EE:01</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">set</span> ip <span class="val">10.10.0.20</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">set</span> description <span class="str">"Drukarka-HP-Recepcja"</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">next</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">end</span><br>
+        &nbsp;&nbsp;<span class="kw">next</span><br>
+        <span class="kw">end</span><br><br>
+        <span class="cmt"># Sprawdź aktywne dzierżawy DHCP</span><br>
+        <span class="kw">diagnose</span> sys dhcp server list
+      </div>
+      <div class="box tip"><div class="box-icon">✅</div><div class="box-body"><div class="box-title">Opcja 66/67 dla VoIP</div>Jeśli Twoje telefony IP pobierają konfigurację z serwera TFTP (np. przy centrali Cisco/Panasonic), możesz ustawić w DHCP Custom Options: Option 66 = adres serwera TFTP, Option 67 = nazwa pliku konfiguracyjnego.</div></div>
+    </div>
+  </div>
+
+</div><!-- /phase-0 -->
+<div class="sx-pn"><span></span><a href="fortigate-2-polityki-nat.html" style="text-align:right">polityki firewall, NAT i Virtual IP →</a></div>
+<nav class="sx-series" aria-label="Seria artykułów"><b>// Seria: FortiGate — przewodnik admina (8 części)</b><ol><li class="cur">pierwsze logowanie, backup, firmware i interfejsy</li><li class=""><a href="fortigate-2-polityki-nat.html">polityki firewall, NAT i Virtual IP</a></li><li class=""><a href="fortigate-3-routing-sdwan.html">DNS, routing i SD-WAN z dwoma łączami</a></li><li class=""><a href="fortigate-4-voip-qos.html">VoIP, SIP ALG i QoS</a></li><li class=""><a href="fortigate-5-profile-bezpieczenstwa.html">licencje FortiGuard, antywirus, IPS i Web Filter</a></li><li class=""><a href="fortigate-6-monitoring-awarie.html">monitoring, logi, alerty i scenariusze awaryjne</a></li><li class=""><a href="fortigate-7-vlany.html">VLANy i segmentacja sieci 802.1Q</a></li><li class=""><a href="fortigate-8-vdomy.html">VDOMy: wiele firewalli w jednym urządzeniu</a></li></ol><div style="margin-top:.5rem;opacity:.7">Wolisz wszystko na jednej stronie z odhaczaniem postępu? <a href="fortigate-przewodnik.html">Wersja interaktywna →</a></div></nav>
+</main>
+</div>
+<div class="sx-foot"><span>SEKTOR_X // FortiGate — przewodnik admina · część 1/8</span><span><a href="../o-mnie.html">O mnie</a> · <a href="../polityka-prywatnosci.html">Polityka prywatności</a> · <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></span></div>
+</body>
+</html>

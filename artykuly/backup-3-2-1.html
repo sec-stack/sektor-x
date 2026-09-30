@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backup 3-2-1 w praktyce — jak nie stracić danych w domu i w firmie — SEKTOR_X</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="SEKTOR_X" href="../feed.xml">
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/artykuly/backup-3-2-1.html">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/artykuly/backup-3-2-1.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="pl_PL">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Backup 3-2-1 w praktyce — jak nie stracić danych w domu i w firmie", "description": "Zasada 3-2-1 i 3-2-1-1-0 w praktyce: dysk zewnętrzny, chmura, NAS z migawkami, ochrona przed ransomware i test odtwarzania. Dla domu i małej firmy.", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "pl", "author": {"@type": "Person", "name": "Operator SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/o-mnie.html"}, "publisher": {"@type": "Organization", "name": "SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/"}, "mainEntityOfPage": "https://sec-stack.github.io/sektor-x/artykuly/backup-3-2-1.html"}</script>
+
+  <meta name="description" content="Zasada 3-2-1 i 3-2-1-1-0 w praktyce: dysk zewnętrzny, chmura, NAS z migawkami, ochrona przed ransomware i test odtwarzania. Dla domu i małej firmy.">
+  <meta name="keywords" content="backup, kopia zapasowa, 3-2-1, ransomware, NAS, Time Machine, Historia plików">
+  <meta name="author" content="Operator SEKTOR_X">
+  <meta property="og:title" content="Backup 3-2-1 w praktyce — jak nie stracić danych w domu i w firmie — SEKTOR_X">
+  <meta property="og:description" content="Zasada 3-2-1 i 3-2-1-1-0 w praktyce: dysk zewnętrzny, chmura, NAS z migawkami, ochrona przed ransomware i test odtwarzania. Dla domu i małej firmy.">
+  <meta property="og:type" content="article">
+  <meta name="robots" content="index, follow">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--cyan);border-color:rgba(0,229,255,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+  .callout strong{color:#fff;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  /* VPN TABLE */
+  .vpn-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.75rem;}
+  .vpn-table th{background:var(--panel);border:1px solid var(--border);padding:0.75rem 1rem;text-align:left;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;}
+  .vpn-table td{border:1px solid rgba(0,255,65,0.08);padding:0.75rem 1rem;color:#6a9a6a;}
+  .vpn-table tr:hover td{background:var(--panel);}
+  .vpn-table .yes{color:var(--green);}.vpn-table .no{color:var(--red);}.vpn-table .partial{color:var(--yellow);}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+  
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .ticker-label { font-size: 0.55rem; padding: 0 0.5rem; }
+    .ticker-track span { font-size: 0.55rem; padding: 0 1.5rem; }
+    .article-wrapper { padding: 90px 1rem 3rem; }
+    .article-title { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .article-meta { flex-wrap: wrap; gap: 0.75rem; }
+    .article-lead { font-size: 0.82rem; }
+    .article-content { font-size: 0.78rem; }
+    .article-content h2 { font-size: 1rem; }
+    .callout { padding: 1rem; font-size: 0.75rem; }
+    .checklist { padding: 1rem; }
+    .related-list a { padding: 0.75rem 1rem; font-size: 0.72rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1rem; }
+    /* VPN TABLE — scrollable on mobile */
+    .vpn-table { display: block; overflow-x: auto; white-space: nowrap; }
+    /* Code blocks */
+    .code-block { padding: 0.75rem 1rem; }
+    .code-block pre { font-size: 0.7rem; }
+  }
+
+  @media (max-width: 480px) {
+    .article-title { font-size: clamp(1.1rem, 6vw, 1.5rem); }
+    .breadcrumb { font-size: 0.6rem; }
+    .article-tags { gap: 0.35rem; }
+    .tag { font-size: 0.55rem; }
+  }
+
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    transition: all 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0;
+    background: rgba(3,10,3,0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 998;
+    backdrop-filter: blur(8px);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 1rem 2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+  }
+
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+  .article-content a{color:var(--cyan);}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Artykuły</a></li><li><a href="../baza-operacyjna.html">Baza Operacyjna</a></li><li><a href="../o-mnie.html">O mnie</a></li><li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="../index.html">Artykuły</a>
+  <a href="../baza-operacyjna.html">Baza Operacyjna</a>
+  <a href="../o-mnie.html">O mnie</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+</div>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span><a href="../artykuly/klucze-dostepu-passkeys.html" style="color:inherit;text-decoration:none;">NOWE: Klucze dostępu (passkeys) — logowanie bez haseł</a> <em>///</em> <a href="../artykuly/backup-3-2-1.html" style="color:inherit;text-decoration:none;">NOWE: Backup 3-2-1 w praktyce</a> <em>///</em> <a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Audyty i sprawy sądowe 7 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+    <span><a href="../artykuly/klucze-dostepu-passkeys.html" style="color:inherit;text-decoration:none;">NOWE: Klucze dostępu (passkeys) — logowanie bez haseł</a> <em>///</em> <a href="../artykuly/backup-3-2-1.html" style="color:inherit;text-decoration:none;">NOWE: Backup 3-2-1 w praktyce</a> <em>///</em> <a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Audyty i sprawy sądowe 7 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+  </div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html">Sektor_X</a><span class="breadcrumb-sep">›</span>
+    <a href="../index.html#artykuly">Poradniki</a><span class="breadcrumb-sep">›</span>
+    <span>Backup 3-2-1 w praktyce</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat">● Poradniki</span>
+    <h1 class="article-title">Backup 3-2-1 w praktyce — jak nie stracić danych w domu i w firmie</h1>
+    <div class="article-meta"><span>28.09.2026</span><span>9 min czytania</span></div>
+    <p class="article-lead">Synchronizacja z chmurą to nie kopia zapasowa. Pokazuję, jak zbudować backup, który przetrwa padnięty dysk, kradzież laptopa i ransomware — w domu i w małym biurze.</p>
+  </header>
+  <div class="article-content">
+    <p>Są dwa rodzaje ludzi: ci, którzy robią backup, i ci, którzy jeszcze nie stracili danych. Brzmi jak żart z forum, ale każdy, kto choć raz odzyskiwał pliki po padniętym dysku albo ransomware, wie, że to po prostu prawda.</p>
+    <p>Ten poradnik jest dla dwóch grup: dla ciebie w domu (zdjęcia, dokumenty, praca zdalna) i dla małej firmy albo biura, w którym „ktoś od komputerów” to często jedna osoba. Zasady są te same, różni się skala.</p>
+
+    <h2 id="synchronizacja">Synchronizacja to nie backup</h2>
+    <p>Najczęstsze nieporozumienie: „mam wszystko na OneDrive / Google Drive, więc mam kopię”. Nie do końca. Synchronizacja <strong>kopiuje każdą zmianę</strong> — również tę złą. Usuniesz folder przez pomyłkę? Zniknie wszędzie. Ransomware zaszyfruje pliki na dysku? Zaszyfrowane wersje grzecznie wyślą się do chmury.</p>
+    <p>Usługi chmurowe mają kosz i historię wersji, które często ratują skórę — ale działają tylko przez ograniczony czas i na zasadach dostawcy. Traktuj je jako dodatkową warstwę, nie jako jedyną kopię.</p>
+    <div class="callout warn"><strong>⚠️ Prosty test:</strong> jeśli ktoś ukradnie ci laptopa, a hasło do konta chmurowego wycieknie tego samego dnia — czy nadal masz swoje zdjęcia? Jeśli odpowiedź brzmi „nie wiem”, czytaj dalej.</div>
+
+    <h2 id="zasada">Zasada 3-2-1 (i jej nowsza wersja)</h2>
+    <ul>
+      <li><strong>3 kopie danych</strong> — oryginał i dwie kopie zapasowe,</li>
+      <li><strong>2 różne nośniki</strong> — np. dysk w komputerze i dysk zewnętrzny lub NAS,</li>
+      <li><strong>1 kopia poza domem lub firmą</strong> — chmura albo dysk trzymany w innym miejscu.</li>
+    </ul>
+    <p>Przez ransomware do tej zasady dopisuje się dziś dwie cyfry: <strong>3-2-1-1-0</strong>.</p>
+    <ul>
+      <li><strong>+1 kopia offline lub niezmienialna</strong> — odłączony dysk albo kopia, której nie da się skasować ani nadpisać przez określony czas (tzw. <em>immutable</em>). Ransomware nie zaszyfruje czegoś, do czego nie ma dostępu.</li>
+      <li><strong>0 błędów przy odtwarzaniu</strong> — backup jest coś wart dopiero wtedy, gdy sprawdzisz, że da się z niego odzyskać dane.</li>
+    </ul>
+
+    <h2 id="dom">Backup w domu — zestaw, który wystarczy</h2>
+    <h3>1. Kopia lokalna na dysku zewnętrznym</h3>
+    <ul>
+      <li><strong>Windows:</strong> Historia plików (Panel sterowania → Historia plików) automatycznie kopiuje foldery użytkownika na dysk zewnętrzny i trzyma poprzednie wersje.</li>
+      <li><strong>macOS:</strong> Time Machine — podłączasz dysk, włączasz, zapominasz.</li>
+      <li><strong>Linux:</strong> Déjà Dup (GNOME) albo, dla bardziej technicznych, <em>restic</em> lub <em>BorgBackup</em>.</li>
+    </ul>
+    <div class="callout"><strong>💡 Ważne:</strong> <strong>odłączaj dysk po zakończeniu kopii.</strong> Dysk podłączony na stałe ransomware zaszyfruje razem z resztą. Dwa dyski na zmianę (jeden w domu, drugi np. u rodziców lub w pracy) to tani sposób na spełnienie całej zasady 3-2-1.</div>
+
+    <h3>2. Kopia w chmurze</h3>
+    <ul>
+      <li><strong>Backblaze Personal Backup</strong> — 9 $/mies. lub 99 $/rok, bez limitu danych, działa w tle (Windows i Mac).</li>
+      <li><strong>Proton Drive</strong> lub <strong>iCloud</strong> — wygodne, ale to przede wszystkim synchronizacja. Sprawdź, jak długo trzymają historię wersji i usunięte pliki.</li>
+      <li>Dla technicznych: <em>restic</em> lub <em>rclone</em> + tani magazyn obiektowy (np. Backblaze B2) — pełna kontrola i szyfrowanie po twojej stronie.</li>
+    </ul>
+
+    <h3>3. Nie zapomnij o rzeczach „niewidocznych”</h3>
+    <ul>
+      <li><strong>Kody zapasowe 2FA</strong> — wydrukuj i schowaj. Bez nich utrata telefonu może oznaczać utratę kont.</li>
+      <li><strong>Sejf menedżera haseł</strong> — Bitwarden i inni pozwalają zrobić zaszyfrowany eksport. Trzymaj go offline.</li>
+      <li><strong>Zdjęcia z telefonu</strong> — sprawdź, czy naprawdę się kopiują, a nie tylko „optymalizują miejsce”.</li>
+    </ul>
+
+    <h2 id="firma">Backup w małej firmie</h2>
+    <p>W firmie stawką nie są tylko pliki, ale też to, czy jutro w ogóle da się pracować. Minimum, które polecam dla biura kilkunastu–kilkudziesięciu osób:</p>
+    <ul>
+      <li><strong>NAS z migawkami (snapshots)</strong> — Synology, QNAP i podobne potrafią robić migawki tylko do odczytu co godzinę lub co dzień. Jeśli ransomware zaszyfruje udział sieciowy, cofasz się do migawki sprzed ataku.</li>
+      <li><strong>Kopia poza biurem</strong> — replikacja na drugi NAS w innej lokalizacji albo do chmury z włączoną niezmienialnością (np. <em>Object Lock</em> w magazynach zgodnych z S3).</li>
+      <li><strong>Backup Microsoft 365 / Google Workspace</strong> — dostawca dba o to, żeby usługa działała, ale przywrócenie skasowanej przed pół rokiem skrzynki to już zwykle twoje zadanie. Rozważ osobne narzędzie do backupu poczty i dysków w chmurze.</li>
+      <li><strong>Kopie konfiguracji</strong> — firewall, przełączniki, kontroler domeny. Jak to zrobić dla FortiGate, opisuję w <a href="fortigate-przewodnik.html">przewodniku admina FortiGate</a>, a dla domeny — w <a href="samba-ad-dc.html">przewodniku Samba AD DC</a>.</li>
+    </ul>
+    <div class="callout alert"><strong>🚨 Oddziel backup od domeny:</strong> atakujący, który przejmie konto administratora domeny, jako jedną z pierwszych rzeczy kasuje kopie zapasowe. NAS z backupem nie powinien być logowany tym samym kontem co reszta sieci. Osobne konto, silne hasło, 2FA i — jeśli się da — brak dostępu z sieci użytkowników.</div>
+
+    <h2 id="test">Test odtwarzania — krok, który wszyscy pomijają</h2>
+    <p>Backup, którego nigdy nie odtwarzałeś, to tylko nadzieja. Ustal prosty rytm:</p>
+    <ul>
+      <li><strong>Raz w miesiącu</strong> odtwórz jeden losowy plik z każdej kopii i sprawdź, czy się otwiera.</li>
+      <li><strong>Raz w roku</strong> (w firmie: raz na kwartał) zrób pełną próbę: odtwórz cały komputer lub serwer na innym sprzęcie albo maszynie wirtualnej. Zmierz, ile to trwa.</li>
+      <li><strong>Zapisz procedurę</strong> — kartka „jak odtworzyć dane” schowana razem z hasłem do backupu. W stresie po ataku nikt nie pamięta szczegółów.</li>
+    </ul>
+    <div class="callout"><strong>💡 Szyfruj kopie poza domem:</strong> dysk w szufladzie u rodziców albo kopia w chmurze powinny być zaszyfrowane (BitLocker To Go, FileVault, szyfrowanie w restic/Borg). Hasło trzymaj w menedżerze haseł <em>i</em> na papierze — bez niego zaszyfrowany backup jest bezużyteczny także dla ciebie.</div>
+    <h2 id="checklista">Checklista</h2>
+    <ul>
+      <li>Mam kopię na dysku zewnętrznym i odłączam go po backupie</li>
+      <li>Mam kopię poza domem/firmą (chmura lub drugi dysk w innym miejscu)</li>
+      <li>Przynajmniej jedna kopia jest offline lub niezmienialna</li>
+      <li>Kopie poza domem są zaszyfrowane, a hasło mam zapisane w dwóch miejscach</li>
+      <li>Kody zapasowe 2FA są wydrukowane</li>
+      <li>W tym miesiącu odtworzyłem przynajmniej jeden plik</li>
+    </ul>
+
+    <h2 id="zrodla">Źródła</h2>
+    <ul>
+      <li><a href="https://www.veeam.com/blog/321-backup-rule.html" target="_blank" rel="noopener">Veeam — zasada 3-2-1</a></li>
+      <li><a href="https://www.avepoint.com/blog/backup/what-is-the-3-2-1-backup-rule" target="_blank" rel="noopener">AvePoint — od 3-2-1 do 3-2-1-1-0</a></li>
+      <li><a href="https://www.backblaze.com/cloud-backup/pricing" target="_blank" rel="noopener">Backblaze — cennik</a></li>
+    </ul>
+
+  </div>
+  <div class="article-tags"><span class="tag">backup</span><span class="tag">ransomware</span><span class="tag">nas</span><span class="tag">3-2-1</span><span class="tag">poradnik</span></div>
+  <div class="related">
+    <div class="related-header">// Powiązane artykuły</div>
+    <ul class="related-list">
+      <li><a href="10-rzeczy-bezpieczenstwo.html">10 rzeczy, które musisz zrobić dziś, żeby nie dać się zhakować</a></li>
+      <li><a href="jak-sprawdzic-czy-mam-wirusa.html">Jak sprawdzić, czy mam wirusa? 8 sygnałów i darmowe narzędzia</a></li>
+      <li><a href="fortigate-przewodnik.html">FortiGate — kompletny przewodnik admina</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="newsletter-cta" style="margin-top:2.5rem;padding:2rem;border:1px solid var(--green);background:var(--panel);text-align:center;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.75rem;">// Newsletter</div>
+  <p style="color:#ccc;font-size:0.85rem;margin-bottom:1.25rem;">Spodobało się? Otrzymuj nowe artykuły prosto na skrzynkę — bez spamu, bez bullshitu.</p>
+  <a href="https://sektorx.substack.com" target="_blank" style="display:inline-block;padding:0.75rem 2rem;background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;font-size:0.85rem;">📧 Zapisz się na newsletter</a>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026</div>
+  <div><a href="../o-mnie.html">O mnie</a> · <a href="../polityka-prywatnosci.html">Polityka prywatności</a></div>
+</footer>
+</body>
+</html>

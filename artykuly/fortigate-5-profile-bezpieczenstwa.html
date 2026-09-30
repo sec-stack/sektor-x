@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FortiGate, cz. 5 — licencje FortiGuard, antywirus, IPS i Web Filter — SEKTOR_X</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="SEKTOR_X" href="../feed.xml">
+
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/artykuly/fortigate-5-profile-bezpieczenstwa.html">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/artykuly/fortigate-5-profile-bezpieczenstwa.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="pl_PL">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "FortiGate, cz. 5 — licencje FortiGuard, antywirus, IPS i Web Filter", "description": "Profile bezpieczeństwa FortiGate w praktyce: licencje FortiGuard, antywirus, IPS, filtrowanie stron, kontrola aplikacji i inspekcja SSL.", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "pl", "isPartOf": {"@type": "CreativeWorkSeries", "name": "FortiGate — przewodnik admina", "url": "https://sec-stack.github.io/sektor-x/artykuly/fortigate-przewodnik.html"}, "position": 5, "author": {"@type": "Person", "name": "Operator SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/o-mnie.html"}, "publisher": {"@type": "Organization", "name": "SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/"}, "mainEntityOfPage": "https://sec-stack.github.io/sektor-x/artykuly/fortigate-5-profile-bezpieczenstwa.html"}</script>
+
+<meta name="description" content="Profile bezpieczeństwa FortiGate w praktyce: licencje FortiGuard, antywirus, IPS, filtrowanie stron, kontrola aplikacji i inspekcja SSL.">
+<meta name="keywords" content="FortiGate, FortiOS, firewall, VPN, VLAN, VDOM, VoIP, cyberbezpieczeństwo, sieć, administrator">
+<meta name="author" content="Operator SEKTOR_X">
+<meta name="robots" content="index, follow">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<style>
+/* ===== SEKTOR_X HEADER OVERRIDES ===== */
+:root {
+  --sx-green: #00ff41;
+  --sx-cyan: #00e5ff;
+  --sx-red: #ff003c;
+  --sx-bg: #030a03;
+  --sx-border: rgba(0,255,65,0.15);
+  --sx-dim: #3a5a3a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* SEKTOR_X TOP NAV */
+.sx-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(3,10,3,0.97);
+  border-bottom: 1px solid var(--sx-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 48px;
+  backdrop-filter: blur(8px);
+}
+.sx-logo {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.sx-logo span { color: var(--sx-red); }
+.sx-nav-links {
+  display: flex;
+  list-style: none;
+  gap: 0;
+}
+.sx-nav-links a {
+  display: block;
+  padding: 0 1rem;
+  height: 48px;
+  line-height: 48px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--sx-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  border-right: 1px solid var(--sx-border);
+}
+.sx-nav-links a:first-child { border-left: 1px solid var(--sx-border); }
+.sx-nav-links a:hover, .sx-nav-links a.active { color: var(--sx-green); }
+.sx-back {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--sx-green);
+  text-decoration: none;
+  border: 1px solid var(--sx-border);
+  padding: 0.3rem 0.8rem;
+  transition: all 0.2s;
+}
+.sx-back:hover { background: rgba(0,255,65,0.08); }
+
+/* SCANLINES */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* HAMBURGER */
+.sx-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.sx-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--sx-green);
+}
+.sx-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 48px; left: 0; right: 0;
+  background: rgba(3,10,3,0.98);
+  border-bottom: 1px solid var(--sx-border);
+  z-index: 999;
+}
+.sx-mobile-menu.open { display: block; }
+.sx-mobile-menu a {
+  display: block;
+  padding: 0.9rem 2rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: var(--sx-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--sx-border);
+}
+.sx-mobile-menu a:hover { color: var(--sx-green); }
+
+/* WRAPPER — push content below fixed nav */
+.sx-wrapper {
+  padding-top: 48px;
+}
+
+/* ===== ORIGINAL STYLES ===== */
+
+:root {
+  --bg: #07090d;
+  --surface: #0d1117;
+  --card: #111820;
+  --card2: #141c26;
+  --border: #1a2535;
+  --border2: #243040;
+  --accent: #e03b24;
+  --accent2: #ff5c3e;
+  --orange: #f08030;
+  --green: #2dcc6f;
+  --blue: #3ba6e8;
+  --cyan: #00d4e8;
+  --yellow: #f5c842;
+  --purple: #9b6fff;
+  --text: #c8d8e8;
+  --text2: #8fa3ba;
+  --muted: #4a6075;
+  --done-bg: #0d1f14;
+  --done-border: #1a3d24;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,9,13,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  height:56px;
+  display:flex;align-items:center;gap:20px;
+}
+.tb-logo{
+  font-family:'Unbounded',sans-serif;
+  font-size:.8rem;font-weight:900;
+  color:var(--accent2);
+  letter-spacing:.05em;
+  white-space:nowrap;
+}
+.tb-sep{width:1px;height:24px;background:var(--border);flex-shrink:0;}
+.tb-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.tb-pill{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;font-weight:600;
+  padding:3px 8px;border-radius:3px;
+  border:1px solid;
+  white-space:nowrap;
+}
+.p-red{color:var(--accent2);border-color:var(--accent2);background:rgba(255,92,62,.07);}
+.p-blue{color:var(--blue);border-color:var(--blue);background:rgba(59,166,232,.07);}
+.p-green{color:var(--green);border-color:var(--green);background:rgba(45,204,111,.07);}
+.p-orange{color:var(--orange);border-color:var(--orange);background:rgba(240,128,48,.07);}
+.tb-progress{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-bar{width:120px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.tb-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--orange));width:0%;transition:width .4s;}
+.tb-pct{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--orange);min-width:32px;}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:248px 1fr;min-height:calc(100vh - 56px);}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  padding:20px 0;
+  position:sticky;top:56px;
+  height:calc(100vh - 56px);
+  overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-track{background:transparent;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.sb-section{margin-bottom:4px;}
+.sb-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--muted);
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:14px 20px 6px;
+}
+.sb-item{
+  padding:9px 20px;
+  cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  border-left:2px solid transparent;
+  transition:all .15s;
+  font-size:.83rem;
+  color:var(--text2);
+  position:relative;
+}
+.sb-item:hover{background:var(--card);color:var(--text);}
+.sb-item.active{border-left-color:var(--accent2);background:var(--card);color:#fff;}
+.sb-item.done-phase{border-left-color:var(--green);color:var(--green);}
+.sb-badge{
+  margin-left:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;
+  padding:2px 6px;border-radius:2px;
+  background:var(--border);
+  color:var(--muted);
+  flex-shrink:0;
+}
+.sb-item.active .sb-badge{background:rgba(255,92,62,.15);color:var(--accent2);}
+.sb-item.done-phase .sb-badge{background:rgba(45,204,111,.12);color:var(--green);}
+.sb-done-count{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--muted);
+  padding:2px 6px;
+  background:var(--card);
+  border-radius:10px;
+  margin-left:auto;
+}
+.sb-divider{border:none;border-top:1px solid var(--border);margin:12px 16px;}
+.sb-link{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 20px;
+  font-size:.78rem;color:var(--text2);
+  text-decoration:none;
+  transition:color .15s;
+}
+.sb-link:hover{color:var(--cyan);}
+.sb-link-icon{font-size:.8rem;width:16px;text-align:center;}
+
+/* ── CONTENT ── */
+.content{padding:32px 40px;max-width:960px;}
+.phase{display:none;animation:fadeIn .2s ease;}
+.phase.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* ── PHASE HEADER ── */
+.ph-head{
+  display:flex;align-items:flex-start;gap:20px;
+  padding-bottom:24px;
+  margin-bottom:28px;
+  border-bottom:1px solid var(--border);
+}
+.ph-num{
+  font-family:'Unbounded',sans-serif;
+  font-size:3rem;font-weight:900;
+  line-height:1;
+  flex-shrink:0;
+  -webkit-text-stroke:1px;
+  color:transparent;
+}
+.ph-num.c1{-webkit-text-stroke-color:var(--accent2);}
+.ph-num.c2{-webkit-text-stroke-color:var(--orange);}
+.ph-num.c3{-webkit-text-stroke-color:var(--purple);}
+.ph-num.c4{-webkit-text-stroke-color:var(--cyan);}
+.ph-num.c5{-webkit-text-stroke-color:var(--green);}
+.ph-num.c6{-webkit-text-stroke-color:var(--blue);}
+.ph-meta{}
+.ph-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.ph-tag.c1{color:var(--accent2);}
+.ph-tag.c2{color:var(--orange);}
+.ph-tag.c3{color:var(--purple);}
+.ph-tag.c4{color:var(--cyan);}
+.ph-tag.c5{color:var(--green);}
+.ph-tag.c6{color:var(--blue);}
+.ph-title{font-family:'Unbounded',sans-serif;font-size:1.35rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px;}
+.ph-desc{font-size:.88rem;color:var(--text2);line-height:1.6;max-width:600px;}
+.ph-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;color:var(--yellow);
+  margin-top:8px;display:inline-block;
+  padding:3px 8px;background:rgba(245,200,66,.07);
+  border:1px solid rgba(245,200,66,.2);border-radius:3px;
+}
+
+/* ── SECTION HEADING ── */
+.s-head{
+  display:flex;align-items:center;gap:12px;
+  margin:28px 0 14px;
+}
+.s-head-line{flex:1;height:1px;background:var(--border);}
+.s-head-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* ── TOPIC CARD ── */
+.topic{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:12px;
+  overflow:hidden;
+  transition:border-color .15s;
+}
+.topic:hover{border-color:var(--border2);}
+.topic.done{background:var(--done-bg);border-color:var(--done-border);}
+
+.topic-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;
+  cursor:pointer;
+  user-select:none;
+}
+.topic-check{
+  width:22px;height:22px;
+  border:2px solid var(--border2);
+  border-radius:5px;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;
+  transition:all .15s;
+  background:transparent;
+  color:transparent;
+}
+.topic.done .topic-check{
+  background:var(--green);border-color:var(--green);color:#07090d;
+}
+.topic-title{font-size:.92rem;font-weight:500;color:#fff;flex:1;line-height:1.3;}
+.topic.done .topic-title{text-decoration:line-through;color:var(--muted);}
+.topic-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;font-weight:700;
+  padding:2px 7px;border-radius:3px;
+}
+.t-gui{background:rgba(59,166,232,.1);color:var(--blue);}
+.t-cli{background:rgba(240,128,48,.1);color:var(--orange);}
+.t-kb{background:rgba(155,111,255,.1);color:var(--purple);}
+.t-voip{background:rgba(245,200,66,.1);color:var(--yellow);}
+.t-sec{background:rgba(224,59,36,.1);color:var(--accent2);}
+.t-imp{background:rgba(45,204,111,.1);color:var(--green);}
+.t-warn{background:rgba(240,128,48,.15);color:var(--orange);}
+.topic-expand{
+  font-size:1rem;color:var(--muted);
+  transition:transform .2s;
+  flex-shrink:0;
+}
+.topic.open .topic-expand{transform:rotate(180deg);}
+
+/* ── TOPIC BODY ── */
+.topic-body{
+  display:none;
+  padding:0 18px 18px;
+  border-top:1px solid var(--border);
+}
+.topic.open .topic-body{display:block;}
+
+.tb-intro{
+  font-size:.85rem;color:var(--text);
+  line-height:1.7;
+  padding:14px 0 10px;
+}
+.tb-intro strong{color:#fff;font-weight:500;}
+
+/* explanation blocks */
+.explain{
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:7px;
+  padding:14px 16px;
+  margin:10px 0;
+  font-size:.83rem;
+  line-height:1.7;
+  color:var(--text);
+}
+.explain strong{color:#fff;}
+.explain-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:var(--cyan);
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:8px;font-weight:700;
+}
+
+/* code blocks */
+.cmd{
+  background:#050709;
+  border:1px solid var(--border);
+  border-radius:7px;
+  padding:14px 16px;
+  margin:10px 0;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;
+  line-height:1.9;
+  overflow-x:auto;
+}
+.cmd .cmt{color:var(--muted);}
+.cmd .kw{color:var(--cyan);}
+.cmd .val{color:var(--green);}
+.cmd .str{color:var(--yellow);}
+.cmd .prompt{color:var(--accent2);user-select:none;}
+.cmd-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:4px;
+  display:block;
+}
+
+/* steps */
+.steps{counter-reset:step;margin:10px 0;}
+.step{
+  display:flex;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:.83rem;line-height:1.6;
+}
+.step:last-child{border-bottom:none;}
+.step::before{
+  counter-increment:step;
+  content:counter(step);
+  width:22px;height:22px;
+  background:var(--border2);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;font-weight:700;
+  color:var(--text2);
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+/* tip / warn / info boxes */
+.box{
+  border-radius:7px;
+  padding:12px 15px;
+  margin:10px 0;
+  font-size:.82rem;
+  line-height:1.6;
+  display:flex;gap:10px;
+  align-items:flex-start;
+}
+.box-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+.box-body{}
+.box-title{font-weight:600;margin-bottom:3px;font-size:.82rem;}
+.box.tip{background:rgba(45,204,111,.07);border:1px solid rgba(45,204,111,.2);}
+.box.tip .box-title{color:var(--green);}
+.box.warn{background:rgba(240,128,48,.07);border:1px solid rgba(240,128,48,.25);}
+.box.warn .box-title{color:var(--orange);}
+.box.info{background:rgba(59,166,232,.07);border:1px solid rgba(59,166,232,.2);}
+.box.info .box-title{color:var(--blue);}
+.box.danger{background:rgba(224,59,36,.07);border:1px solid rgba(224,59,36,.2);}
+.box.danger .box-title{color:var(--accent2);}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem;margin:10px 0;}
+.tbl th{
+  background:var(--card2);
+  color:var(--text2);
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;
+  padding:8px 12px;text-align:left;
+  border-bottom:1px solid var(--border2);
+}
+.tbl td{
+  padding:8px 12px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  vertical-align:top;
+  line-height:1.5;
+}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;
+  background:var(--border);
+  padding:1px 5px;border-radius:3px;
+  color:var(--green);
+}
+
+/* checklist inside body */
+.checklist{list-style:none;margin:8px 0;}
+.checklist li{
+  padding:5px 0 5px 22px;
+  position:relative;
+  font-size:.83rem;
+  color:var(--text);
+  line-height:1.5;
+  border-bottom:1px solid var(--border);
+}
+.checklist li:last-child{border-bottom:none;}
+.checklist li::before{
+  content:'▸';
+  position:absolute;left:0;
+  color:var(--accent2);font-size:.75rem;
+  top:6px;
+}
+.checklist li strong{color:#fff;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .layout{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .content{padding:20px;}
+  .topbar{padding:0 16px;}
+  .tb-pills{display:none;}
+}
+
+
+/* ===== SEKTOR_X STYLE OVERRIDES ===== */
+body {
+  background: #07090d;
+  cursor: default;
+}
+
+/* Make topbar sit below sx-nav */
+.topbar {
+  top: 48px !important;
+  border-top: 1px solid rgba(0,255,65,0.08);
+}
+.layout {
+  min-height: calc(100vh - 104px);
+}
+.sidebar {
+  top: 104px !important;
+  height: calc(100vh - 104px) !important;
+}
+
+/* SEKTOR_X accent on sidebar active */
+.sb-item.active {
+  border-left: 2px solid #00ff41 !important;
+  color: #00ff41 !important;
+}
+.sb-item:hover { color: #00e5ff !important; }
+
+/* Progress bar sx-green */
+.tb-fill {
+  background: linear-gradient(90deg, #00ff41, #00e5ff) !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sx-nav { padding: 0 1rem; }
+  .sx-nav-links { display: none; }
+  .sx-hamburger { display: flex; }
+  .topbar { padding: 0 1rem; top: 48px !important; }
+  .tb-pills { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .content { padding: 16px; }
+}
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+</style>
+<style>
+/* === TRYB ARTYKUŁU (seria) === */
+.topbar,.sidebar,.topic-check,.topic-expand{display:none!important;}
+.layout{display:block!important;max-width:980px;margin:0 auto;padding-top:60px;}
+.phase{display:block!important;margin-bottom:3rem;}
+.topic-body{display:block!important;}
+.topic-head{cursor:default!important;}
+.sx-series{border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);padding:1.1rem 1.3rem;margin:1.5rem 0 2rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;line-height:1.8;}
+.sx-series b{display:block;font-family:'Rajdhani',sans-serif;letter-spacing:0.15em;text-transform:uppercase;font-size:0.72rem;color:#00ff41;margin-bottom:0.4rem;}
+.sx-series ol{margin:0 0 0 1.3rem;padding:0;}
+.sx-series a{color:inherit;}
+.sx-series li.cur{color:#00ff41;font-weight:bold;}
+.sx-crumb{font-family:'Share Tech Mono',monospace;font-size:0.72rem;opacity:.7;margin-bottom:.8rem;}
+.sx-crumb a{color:inherit;}
+.sx-h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.3rem,3.6vw,2rem);line-height:1.25;color:#fff;margin:0 0 .6rem;}
+.sx-lead{font-size:0.95rem;line-height:1.8;opacity:.85;margin-bottom:.6rem;}
+.sx-meta{font-family:'Share Tech Mono',monospace;font-size:0.7rem;opacity:.6;}
+.sx-pn{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:2rem 0 1rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;}
+.sx-pn a{border:1px solid rgba(255,255,255,0.15);padding:.7rem 1rem;color:inherit;text-decoration:none;max-width:48%;}
+.sx-pn a:hover{border-color:#00ff41;color:#00ff41;}
+.sx-foot{max-width:980px;margin:3rem auto 0;padding:1.5rem 1rem;border-top:1px solid rgba(255,255,255,0.1);font-family:'Share Tech Mono',monospace;font-size:0.7rem;opacity:.75;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;}
+.sx-foot a{color:inherit;}
+@media(max-width:700px){.layout{padding:60px 1rem 0}.sx-pn a{max-width:100%;}}
+</style>
+</head>
+<body>
+
+
+<!-- SEKTOR_X NAV -->
+<nav class="sx-nav">
+  <a href="../index.html" class="sx-logo">SEKTOR<span>_X</span></a>
+  <ul class="sx-nav-links">
+    <li><a href="../index.html#artykuly">Artykuły</a></li>
+    <li><a href="../baza-operacyjna.html">Baza Operacyjna</a></li>
+    <li><a href="../o-mnie.html">O mnie</a></li>
+    <li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <a href="../index.html" class="sx-back">← Strona główna</a>
+  <button class="sx-hamburger" onclick="document.querySelector('.sx-mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="sx-mobile-menu">
+  <a href="../index.html">← Strona główna</a>
+  <a href="../index.html#artykuly">Artykuły</a>
+  <a href="../baza-operacyjna.html">Baza Operacyjna</a>
+  <a href="../o-mnie.html">O mnie</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+</div>
+
+<div class="sx-wrapper">
+
+
+<div class="layout">
+<main class="content" id="content">
+<div class="sx-crumb"><a href="../index.html">Sektor_X</a> › <a href="../index.html#artykuly">Poradniki</a> › <a href="fortigate-przewodnik.html">FortiGate</a> › część 5</div>
+<h1 class="sx-h1">FortiGate, cz. 5 — licencje FortiGuard, antywirus, IPS i Web Filter</h1>
+<p class="sx-lead">Profile bezpieczeństwa FortiGate w praktyce: licencje FortiGuard, antywirus, IPS, filtrowanie stron, kontrola aplikacji i inspekcja SSL.</p>
+<div class="sx-meta">// część 5 z 8 · 28.09.2026 · na podstawie przewodnika z 19.05.2026</div>
+<nav class="sx-series" aria-label="Seria artykułów"><b>// Seria: FortiGate — przewodnik admina (8 części)</b><ol><li class=""><a href="fortigate-1-podstawy.html">pierwsze logowanie, backup, firmware i interfejsy</a></li><li class=""><a href="fortigate-2-polityki-nat.html">polityki firewall, NAT i Virtual IP</a></li><li class=""><a href="fortigate-3-routing-sdwan.html">DNS, routing i SD-WAN z dwoma łączami</a></li><li class=""><a href="fortigate-4-voip-qos.html">VoIP, SIP ALG i QoS</a></li><li class="cur">licencje FortiGuard, antywirus, IPS i Web Filter</li><li class=""><a href="fortigate-6-monitoring-awarie.html">monitoring, logi, alerty i scenariusze awaryjne</a></li><li class=""><a href="fortigate-7-vlany.html">VLANy i segmentacja sieci 802.1Q</a></li><li class=""><a href="fortigate-8-vdomy.html">VDOMy: wiele firewalli w jednym urządzeniu</a></li></ol><div style="margin-top:.5rem;opacity:.7">Wolisz wszystko na jednej stronie z odhaczaniem postępu? <a href="fortigate-przewodnik.html">Wersja interaktywna →</a></div></nav>
+<div class="phase" id="phase-4">
+  <div class="ph-head">
+    <div class="ph-num c5">05</div>
+    <div class="ph-meta">
+      <div class="ph-tag c5">Faza piąta</div>
+      <div class="ph-title">Bezpieczeństwo UTM</div>
+      <div class="ph-desc">FortiGate to pełny UTM (Unified Threat Management). Aktywuj profile bezpieczeństwa i chroń 120 userów przed złośliwym oprogramowaniem, phishingiem i atakami.</div>
+      <span class="ph-time">⏱ 2 tygodnie • wymaga licencji FortiGuard</span>
+    </div>
+  </div>
+
+  <div class="s-head"><div class="s-head-label">Profile bezpieczeństwa</div><div class="s-head-line"></div></div>
+
+  <div class="topic" data-phase="4">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Licencje FortiGuard – co masz i co kupić</div>
+      <div class="topic-tags"><span class="tag t-sec">BEZP.</span><span class="tag t-imp">NAJPIERW</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Bez aktualnych licencji FortiGuard, bazy sygnatur nie są aktualizowane. Antywirus z bazą sprzed roku = prawie żadna ochrona. Sprawdź status na start.</div>
+      <div class="steps">
+        <div class="step">System → FortiGuard → sprawdź datę wygaśnięcia każdej licencji</div>
+        <div class="step">Zarejestruj urządzenie: support.fortinet.com → dodaj serial number (znajdziesz w System → Dashboard lub na naklejce)</div>
+      </div>
+      <table class="tbl">
+        <tr><th>Licencja</th><th>Co chroni</th><th>Priorytet</th></tr>
+        <tr><td>FortiGuard AV</td><td>Antywirus, anty-botnet, sygnatury malware</td><td style="color:var(--accent2)">Krytyczna</td></tr>
+        <tr><td>FortiGuard IPS</td><td>Sygnatury exploitów i ataków sieciowych</td><td style="color:var(--accent2)">Krytyczna</td></tr>
+        <tr><td>FortiGuard Web Filter</td><td>Kategoryzacja i blokowanie URL</td><td style="color:var(--orange)">Ważna</td></tr>
+        <tr><td>FortiGuard App Control</td><td>Kontrola aplikacji (P2P, social, VPN)</td><td style="color:var(--orange)">Ważna</td></tr>
+        <tr><td>FortiGuard DNS Filter</td><td>Blokowanie złośliwych domen na poziomie DNS</td><td style="color:var(--yellow)">Przydatna</td></tr>
+        <tr><td>FortiCloud</td><td>Przechowywanie logów w chmurze (7 dni free)</td><td style="color:var(--text2)">Opcjonalna</td></tr>
+      </table>
+      <div class="box tip"><div class="box-icon">✅</div><div class="box-body"><div class="box-title">Bundle licencyjny</div>Kupuj pakiet (bundle), np. „Unified Threat Protection (UTP)” — sprawdź u dystrybutora aktualną ofertę pakietów, bo Fortinet co jakiś czas je zmienia. Pakiety są tańsze niż pojedyncze licencje i zawierają AV+IPS+WebFilter+AppControl w jednym pakiecie. Licencje na 1 lub 3 lata.</div></div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="4">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Antywirus – profil i inspekcja protokołów</div>
+      <div class="topic-tags"><span class="tag t-sec">BEZP.</span><span class="tag t-gui">GUI</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">FortiGate skanuje ruch w locie: HTTP, HTTPS (z SSL inspekcją), SMTP, IMAP, FTP. Pliki są skanowane przez silnik antywirusowy FortiGuard zanim dotrą do użytkownika.</div>
+      <div class="steps">
+        <div class="step">Security Profiles → AntiVirus → Create New (lub edytuj profil "default")</div>
+        <div class="step">Włącz protokoły: <strong>HTTP, HTTPS, FTP, IMAP, POP3, SMTP, MAPI</strong></div>
+        <div class="step">Virus Outbreak Prevention: <strong>Enable</strong> – cloud lookups dla nieznanych plików (zero-day)</div>
+        <div class="step">Content Disarm & Reconstruction (CDR): Enable dla Office i PDF – usuwa makra i aktywną zawartość</div>
+        <div class="step">Przypnij profil do polityki LAN→WAN: edytuj politykę → Security Profiles → AntiVirus = Twój profil</div>
+      </div>
+      <div class="box warn"><div class="box-icon">⚠️</div><div class="box-body"><div class="box-title">Wpływ na wydajność</div>Skanowanie AV zwiększa latencję i obciążenie CPU. Na FortiGate 60F przy 120 userach i HTTPS inspection możesz zauważyć spowolnienia pobierania dużych plików. 120G z układem SP5 ma wyraźnie wyższą wydajność inspekcji — ale nadal testuj na realnym ruchu.</div></div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="4">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">IPS – Intrusion Prevention System</div>
+      <div class="topic-tags"><span class="tag t-sec">BEZP.</span><span class="tag t-gui">GUI</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">IPS analizuje ruch pod kątem znanych wzorców ataków: exploity, skanowanie portów, ataki brute-force, SQL injection, RCE. Działa na bazie sygnatur FortiGuard aktualizowanych kilka razy dziennie.</div>
+      <div class="steps">
+        <div class="step">Security Profiles → Intrusion Prevention → użyj profilu <strong>default</strong> (zawiera wszystkie sygnatury high severity)</div>
+        <div class="step">Sprawdź ustawienia: Signature Detection → wszystkie protokoły zaznaczone</div>
+        <div class="step">Dla serwerów DMZ: utwórz dedykowany profil z surowszymi regułami</div>
+        <div class="step">Przypnij do polityk: LAN→WAN (chroni przed wychodzącymi exploitami), WAN→LAN/DMZ (chroni serwery)</div>
+        <div class="step">Monitoruj: Log & Report → Security → Intrusion Prevention → sprawdzaj alerty</div>
+      </div>
+      <div class="explain">
+        <div class="explain-title">Akcje IPS</div>
+        <strong>Monitor</strong> – loguj ale przepuść (dobre na start do kalibracji)<br>
+        <strong>Block</strong> – blokuj pakiet ataku<br>
+        <strong>Reset</strong> – zresetuj sesję TCP<br>
+        <strong>Quarantine</strong> – zablokuj IP źródłowy na określony czas (np. 5 min po wykryciu skanu portów)
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="4">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Web Filter – blokowanie kategorii stron</div>
+      <div class="topic-tags"><span class="tag t-sec">BEZP.</span><span class="tag t-gui">GUI</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">FortiGuard kategoryzuje miliardy URL w ponad 90 kategorii. Web Filter sprawdza każde żądanie i decyduje na podstawie kategorii: Malware, Phishing, Gambling, Adult Content itp.</div>
+      <div class="steps">
+        <div class="step">Security Profiles → Web Filter → Create New</div>
+        <div class="step">Zaznacz "Enable FortiGuard Category Based Filter"</div>
+        <div class="step">Kategorie do blokowania (Action = Block): <strong>Malicious Websites, Phishing, Spyware, Botnets, Gambling, Adult/Mature Content, Proxy Avoidance</strong></div>
+        <div class="step">Kategorie do monitorowania (Action = Monitor): Social Networking, Video Streaming – zobaczysz ile czasu spędzają na YouTube</div>
+        <div class="step">Wyjątki: w zakładce "URL Filter" dodaj konkretne adresy z akcją Allow (np. strona firmowego klienta która jest w zablokowanej kategorii)</div>
+        <div class="step">Ustaw "Block Page" – stronę blokowania którą zobaczy user (możesz dodać kontakt do IT)</div>
+      </div>
+      <div class="box tip"><div class="box-icon">✅</div><div class="box-body"><div class="box-title">Tryb Flow vs Proxy</div>Web Filter działa w trybie Flow (szybszy, mniej zasobów) lub Proxy (pełna inspekcja, wolniejszy). Dla 120 userów zacznij od Flow. Proxy włącz tylko jeśli potrzebujesz zaawansowanej inspekcji HTTPS treści.</div></div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="4">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">SSL/TLS Inspection – inspekcja szyfrowanego HTTPS</div>
+      <div class="topic-tags"><span class="tag t-sec">BEZP.</span><span class="tag t-kb">TEORIA</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">~90% ruchu w internecie to HTTPS – szyfrowany. Bez SSL Inspection, AV i IPS widzą tylko zaszyfrowane bałaganiny. Są dwa tryby:</div>
+      <div class="explain">
+        <div class="explain-title">Certificate Inspection (zalecane na start)</div>
+        FortiGate sprawdza <strong>certyfikat serwera</strong> ale nie deszyfruje treści. Może blokować złe certyfikaty, wyciągać SNI (nazwę domeny) do Web Filter. Nie wpływa na wydajność, nie wymaga instalacji certyfikatu CA na komputerach. <strong>Włącz to zawsze.</strong>
+      </div>
+      <div class="explain">
+        <div class="explain-title">Deep Packet Inspection – SSL Inspection (zaawansowane)</div>
+        FortiGate <strong>deszyfruje, skanuje, ponownie szyfruje</strong> każde połączenie HTTPS. Pełna widoczność zawartości dla AV, IPS, DLP. Wymaga: zainstalowania certyfikatu CA FortiGate na <strong>każdym komputerze</strong> (przez GPO w AD). Uwaga na prywatność (banking, ZUS, e-commerce) – dodaj wyjątki dla tych kategorii.
+      </div>
+      <div class="steps">
+        <div class="step">Security Profiles → SSL/SSH Inspection → kliknij "certificate-inspection" i ustaw jako domyślny w politykach</div>
+        <div class="step">Dla Deep Inspection: utwórz nowy profil → tryb "Full SSL Inspection" → wybierz certyfikat CA (możesz użyć wbudowanego FortiGate lub własnego z AD)</div>
+        <div class="step">Eksportuj certyfikat CA: Security Profiles → SSL/SSH Inspection → Download Certificate</div>
+        <div class="step">Zainstaluj przez GPO: Computer Configuration → Policies → Windows Settings → Security Settings → Public Key Policies → Trusted Root Certification Authorities</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="4">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check">✓</div>
+      <div class="topic-title">Application Control – kontrola aplikacji</div>
+      <div class="topic-tags"><span class="tag t-sec">BEZP.</span><span class="tag t-gui">GUI</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Application Control identyfikuje aplikacje po sygnaturach (nie tylko po porcie). Możesz blokować BitTorrent nawet na niestandardowych portach, zezwalać na Teams ale blokować Telegram, ograniczać YouTube do określonych godzin.</div>
+      <div class="steps">
+        <div class="step">Security Profiles → Application Control → Create New</div>
+        <div class="step">Kategorie do blokowania: <strong>P2P</strong> (torrenty, Gnutella), <strong>Proxy</strong> (TOR, VPN klientów), <strong>Game</strong> (zależnie od polityki firmy)</div>
+        <div class="step">Kategorie do monitorowania: Social.Media, Video.Streaming – dobre do analizy ruchu</div>
+        <div class="step">Przykład szczegółowy: szukaj "BitTorrent" w Override → Action = Block; szukaj "Microsoft.Teams" → Action = Allow</div>
+        <div class="step">Pamiętaj: Application Control potrzebuje SSL Inspection żeby widzieć aplikacje w HTTPS</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /phase-4 -->
+<div class="sx-pn"><a href="fortigate-4-voip-qos.html">← VoIP, SIP ALG i QoS</a><a href="fortigate-6-monitoring-awarie.html" style="text-align:right">monitoring, logi, alerty i scenariusze awaryjne →</a></div>
+<nav class="sx-series" aria-label="Seria artykułów"><b>// Seria: FortiGate — przewodnik admina (8 części)</b><ol><li class=""><a href="fortigate-1-podstawy.html">pierwsze logowanie, backup, firmware i interfejsy</a></li><li class=""><a href="fortigate-2-polityki-nat.html">polityki firewall, NAT i Virtual IP</a></li><li class=""><a href="fortigate-3-routing-sdwan.html">DNS, routing i SD-WAN z dwoma łączami</a></li><li class=""><a href="fortigate-4-voip-qos.html">VoIP, SIP ALG i QoS</a></li><li class="cur">licencje FortiGuard, antywirus, IPS i Web Filter</li><li class=""><a href="fortigate-6-monitoring-awarie.html">monitoring, logi, alerty i scenariusze awaryjne</a></li><li class=""><a href="fortigate-7-vlany.html">VLANy i segmentacja sieci 802.1Q</a></li><li class=""><a href="fortigate-8-vdomy.html">VDOMy: wiele firewalli w jednym urządzeniu</a></li></ol><div style="margin-top:.5rem;opacity:.7">Wolisz wszystko na jednej stronie z odhaczaniem postępu? <a href="fortigate-przewodnik.html">Wersja interaktywna →</a></div></nav>
+</main>
+</div>
+<div class="sx-foot"><span>SEKTOR_X // FortiGate — przewodnik admina · część 5/8</span><span><a href="../o-mnie.html">O mnie</a> · <a href="../polityka-prywatnosci.html">Polityka prywatności</a> · <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></span></div>
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samba AD DC, cz. 3 — użytkownicy, grupy, OU i import z CSV — SEKTOR_X</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="SEKTOR_X" href="../feed.xml">
+
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/artykuly/samba-ad-dc-3-uzytkownicy-ou.html">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/artykuly/samba-ad-dc-3-uzytkownicy-ou.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="pl_PL">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Samba AD DC, cz. 3 — użytkownicy, grupy, OU i import z CSV", "description": "Tworzenie kont w samba-tool, struktura OU dla firmy i skrypt importu użytkowników z pliku CSV z wymuszoną zmianą hasła.", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "pl", "isPartOf": {"@type": "CreativeWorkSeries", "name": "Samba AD DC — Linux jako Active Directory", "url": "https://sec-stack.github.io/sektor-x/artykuly/samba-ad-dc.html"}, "position": 3, "author": {"@type": "Person", "name": "Operator SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/o-mnie.html"}, "publisher": {"@type": "Organization", "name": "SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/"}, "mainEntityOfPage": "https://sec-stack.github.io/sektor-x/artykuly/samba-ad-dc-3-uzytkownicy-ou.html"}</script>
+
+<meta name="description" content="Tworzenie kont w samba-tool, struktura OU dla firmy i skrypt importu użytkowników z pliku CSV z wymuszoną zmianą hasła.">
+<meta name="keywords" content="Samba AD, Active Directory Linux, Samba DC, LDAP, Kerberos, GPO Linux, Ubuntu AD, integracja Windows Linux">
+<meta name="author" content="Operator SEKTOR_X">
+<meta name="robots" content="index, follow">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<style>
+:root {
+  --bg:       #080b14;
+  --bg2:      #0c1020;
+  --surface:  #0f1525;
+  --card:     #131928;
+  --card2:    #171e30;
+  --border:   #1e2d4a;
+  --border2:  #263554;
+  --blue:     #4f8ef7;
+  --blue2:    #6ba3ff;
+  --purple:   #9b6fff;
+  --purple2:  #b88aff;
+  --cyan:     #22d3ee;
+  --green:    #34d399;
+  --yellow:   #fbbf24;
+  --red:      #f87171;
+  --text:     #c8d8f0;
+  --text2:    #7a95b8;
+  --muted:    #3a5070;
+  --done-bg:  #0a1628;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BACKGROUND EFFECT */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(79,142,247,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(155,111,255,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(34,211,238,0.02) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* GRID PATTERN */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(79,142,247,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SEKTOR_X TOP NAV ── */
+.sx-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(8,11,20,0.95);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 48px;
+  backdrop-filter: blur(12px);
+}
+.sx-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+.sx-logo span { color: #f87171; }
+.sx-nav-links { display: flex; list-style: none; }
+.sx-nav-links a {
+  display: block;
+  padding: 0 1rem;
+  height: 48px;
+  line-height: 48px;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: color 0.2s;
+  border-right: 1px solid var(--border);
+}
+.sx-nav-links a:first-child { border-left: 1px solid var(--border); }
+.sx-nav-links a:hover { color: var(--blue2); }
+.sx-back {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  transition: all 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+}
+.sx-back:hover { background: rgba(79,142,247,0.08); border-color: var(--blue); }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky;
+  top: 48px;
+  z-index: 100;
+  background: rgba(12,16,32,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tb-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+.tb-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+.tb-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.tb-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 2px;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+.p-blue   { color: var(--blue);   border-color: var(--blue);   background: rgba(79,142,247,.07); }
+.p-purple { color: var(--purple); border-color: var(--purple); background: rgba(155,111,255,.07); }
+.p-cyan   { color: var(--cyan);   border-color: var(--cyan);   background: rgba(34,211,238,.07); }
+.p-green  { color: var(--green);  border-color: var(--green);  background: rgba(52,211,153,.07); }
+.tb-progress { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.tb-bar { width: 120px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.tb-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); width: 0%; transition: width .4s; }
+.tb-pct { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--purple2); min-width: 32px; }
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: calc(100vh - 100px);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 100px;
+  height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.sb-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 16px 8px;
+  font-weight: 600;
+}
+.sb-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 16px;
+  font-size: 0.78rem;
+  color: var(--text2);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.sb-item:hover { color: var(--blue2); background: rgba(79,142,247,0.05); }
+.sb-item.active { color: var(--blue2); border-left-color: var(--blue); background: rgba(79,142,247,0.08); }
+.sb-item.done-phase { color: var(--green); }
+.sb-item.done-phase.active { border-left-color: var(--green); }
+.sb-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.sb-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+.sb-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 0.72rem;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.sb-link:hover { color: var(--blue2); }
+.sb-link-icon { font-size: 0.9rem; }
+
+/* ── CONTENT ── */
+.content {
+  padding: 32px 40px;
+  max-width: 900px;
+}
+
+/* PHASE */
+.phase { display: none; }
+.phase.active { display: block; }
+
+/* PHASE HEADER */
+.ph-head {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.ph-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.3;
+}
+.c1 { color: var(--blue); }
+.c2 { color: var(--purple); }
+.c3 { color: var(--cyan); }
+.c4 { color: var(--green); }
+.c5 { color: var(--yellow); }
+.c6 { color: var(--red); }
+.c7 { color: var(--purple2); }
+.c8 { color: var(--blue2); }
+
+.ph-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+.ph-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.ph-desc { font-size: 0.85rem; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+.ph-time { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+
+/* SECTION HEAD */
+.s-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 12px;
+}
+.s-head-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  font-weight: 600;
+}
+.s-head-line { flex: 1; height: 1px; background: var(--border); }
+
+/* TOPIC */
+.topic {
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  background: var(--card);
+  transition: border-color 0.2s;
+}
+.topic:hover { border-color: var(--border2); }
+.topic.open { border-color: rgba(79,142,247,0.3); }
+.topic.done { background: var(--done-bg); border-color: rgba(52,211,153,0.2); }
+
+.topic-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.topic-check {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  color: var(--green);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.topic.done .topic-check {
+  background: rgba(52,211,153,0.15);
+  border-color: var(--green);
+}
+.topic-title {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.topic.done .topic-title { color: var(--text2); }
+.topic-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.topic-expand {
+  font-size: 0.7rem;
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+.topic.open .topic-expand { transform: rotate(180deg); }
+
+/* TAGS */
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.t-cli  { color: var(--blue);   border-color: rgba(79,142,247,.3);   background: rgba(79,142,247,.07); }
+.t-gui  { color: var(--purple); border-color: rgba(155,111,255,.3); background: rgba(155,111,255,.07); }
+.t-imp  { color: var(--yellow); border-color: rgba(251,191,36,.3);  background: rgba(251,191,36,.07); }
+.t-warn { color: var(--red);    border-color: rgba(248,113,113,.3); background: rgba(248,113,113,.07); }
+.t-kb   { color: var(--cyan);   border-color: rgba(34,211,238,.3);  background: rgba(34,211,238,.07); }
+.t-ok   { color: var(--green);  border-color: rgba(52,211,153,.3);  background: rgba(52,211,153,.07); }
+
+/* TOPIC BODY */
+.topic-body {
+  display: none;
+  padding: 0 16px 20px;
+  border-top: 1px solid var(--border);
+}
+.topic.open .topic-body { display: block; }
+
+.tb-intro {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--text2);
+  margin: 16px 0 12px;
+}
+.tb-intro strong { color: var(--text); font-weight: 600; }
+
+/* STEPS */
+.steps { margin: 12px 0; }
+.step {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.8rem;
+  color: var(--text2);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  line-height: 1.6;
+  counter-increment: step;
+}
+.steps { counter-reset: step; }
+.step::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--blue);
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: 700;
+}
+.step strong { color: var(--text); font-weight: 600; }
+
+/* CMD BLOCK */
+.cmd-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 16px 0 6px;
+}
+.cmd {
+  background: #05080f;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: #8bb8e8;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  position: relative;
+}
+.cmd::before {
+  content: 'bash';
+  position: absolute;
+  top: 6px; right: 10px;
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.cmt { color: var(--muted); font-style: italic; }
+.kw  { color: var(--blue2); font-weight: 600; }
+.str { color: var(--green); }
+.val { color: var(--cyan); }
+.prompt { color: var(--purple); }
+
+/* EXPLAIN */
+.explain {
+  background: rgba(79,142,247,0.04);
+  border: 1px solid rgba(79,142,247,0.12);
+  border-left: 3px solid var(--blue);
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--text2);
+}
+.explain strong { color: var(--blue2); font-weight: 600; }
+.explain-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.explain code {
+  background: rgba(79,142,247,0.1);
+  color: var(--cyan);
+  padding: 1px 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+}
+
+/* BOXES */
+.box {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  border: 1px solid;
+  border-radius: 2px;
+}
+.box-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.box-title { font-weight: 700; margin-bottom: 4px; font-size: 0.8rem; }
+.box.info  { background: rgba(79,142,247,0.05); border-color: rgba(79,142,247,0.2); color: var(--text2); }
+.box.info .box-title { color: var(--blue2); }
+.box.warn  { background: rgba(251,191,36,0.05); border-color: rgba(251,191,36,0.2); color: var(--text2); }
+.box.warn .box-title { color: var(--yellow); }
+.box.tip   { background: rgba(52,211,153,0.05); border-color: rgba(52,211,153,0.2); color: var(--text2); }
+.box.tip .box-title { color: var(--green); }
+.box.danger { background: rgba(248,113,113,0.05); border-color: rgba(248,113,113,0.2); color: var(--text2); }
+.box.danger .box-title { color: var(--red); }
+
+code {
+  background: rgba(79,142,247,0.08);
+  color: var(--cyan);
+  padding: 1px 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85em;
+  border: 1px solid rgba(79,142,247,0.15);
+}
+
+/* TABLE */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.76rem;
+}
+.tbl th {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--blue2);
+  text-transform: uppercase;
+}
+.tbl td {
+  border: 1px solid rgba(30,45,74,0.6);
+  padding: 8px 12px;
+  color: var(--text2);
+}
+.tbl tr:hover td { background: rgba(79,142,247,0.03); }
+.tbl .yes { color: var(--green); }
+.tbl .no  { color: var(--red); }
+.tbl .part { color: var(--yellow); }
+
+/* HAMBURGER */
+.sx-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.sx-hamburger span { display: block; width: 20px; height: 2px; background: var(--blue2); }
+.sx-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 48px; left: 0; right: 0;
+  background: rgba(8,11,20,0.98);
+  border-bottom: 1px solid var(--border);
+  z-index: 999;
+  backdrop-filter: blur(12px);
+}
+.sx-mobile-menu.open { display: block; }
+.sx-mobile-menu a {
+  display: block;
+  padding: 0.9rem 2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.sx-mobile-menu a:hover { color: var(--blue2); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sx-nav { padding: 0 1rem; }
+  .sx-nav-links { display: none; }
+  .sx-hamburger { display: flex; }
+  .topbar { padding: 0 1rem; }
+  .tb-pills { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .content { padding: 20px 16px; }
+  .ph-title { font-size: 1.3rem; }
+  .cmd { font-size: 0.68rem; }
+}
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+</style>
+<style>
+/* === TRYB ARTYKUŁU (seria) === */
+.topbar,.sidebar,.topic-check,.topic-expand{display:none!important;}
+.layout{display:block!important;max-width:980px;margin:0 auto;padding-top:60px;}
+.phase{display:block!important;margin-bottom:3rem;}
+.topic-body{display:block!important;}
+.topic-head{cursor:default!important;}
+.sx-series{border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);padding:1.1rem 1.3rem;margin:1.5rem 0 2rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;line-height:1.8;}
+.sx-series b{display:block;font-family:'Rajdhani',sans-serif;letter-spacing:0.15em;text-transform:uppercase;font-size:0.72rem;color:#4f8ef7;margin-bottom:0.4rem;}
+.sx-series ol{margin:0 0 0 1.3rem;padding:0;}
+.sx-series a{color:inherit;}
+.sx-series li.cur{color:#4f8ef7;font-weight:bold;}
+.sx-crumb{font-family:'Share Tech Mono',monospace;font-size:0.72rem;opacity:.7;margin-bottom:.8rem;}
+.sx-crumb a{color:inherit;}
+.sx-h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.3rem,3.6vw,2rem);line-height:1.25;color:#fff;margin:0 0 .6rem;}
+.sx-lead{font-size:0.95rem;line-height:1.8;opacity:.85;margin-bottom:.6rem;}
+.sx-meta{font-family:'Share Tech Mono',monospace;font-size:0.7rem;opacity:.6;}
+.sx-pn{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:2rem 0 1rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;}
+.sx-pn a{border:1px solid rgba(255,255,255,0.15);padding:.7rem 1rem;color:inherit;text-decoration:none;max-width:48%;}
+.sx-pn a:hover{border-color:#4f8ef7;color:#4f8ef7;}
+.sx-foot{max-width:980px;margin:3rem auto 0;padding:1.5rem 1rem;border-top:1px solid rgba(255,255,255,0.1);font-family:'Share Tech Mono',monospace;font-size:0.7rem;opacity:.75;display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;}
+.sx-foot a{color:inherit;}
+@media(max-width:700px){.layout{padding:60px 1rem 0}.sx-pn a{max-width:100%;}}
+</style>
+</head>
+<body>
+
+
+<!-- SEKTOR_X NAV -->
+<nav class="sx-nav">
+  <a href="../index.html" class="sx-logo">SEKTOR<span>_X</span></a>
+  <ul class="sx-nav-links">
+    <li><a href="../index.html#artykuly">Artykuły</a></li>
+    <li><a href="../baza-operacyjna.html">Baza Operacyjna</a></li>
+    <li><a href="../o-mnie.html">O mnie</a></li>
+    <li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <a href="../index.html" class="sx-back">← Strona główna</a>
+  <button class="sx-hamburger" onclick="document.querySelector('.sx-mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="sx-mobile-menu">
+  <a href="../index.html">← Strona główna</a>
+  <a href="../index.html#artykuly">Artykuły</a>
+  <a href="../baza-operacyjna.html">Baza Operacyjna</a>
+  <a href="../o-mnie.html">O mnie</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+</div>
+
+<div class="layout">
+<main class="content" id="content">
+<div class="sx-crumb"><a href="../index.html">Sektor_X</a> › <a href="../index.html#artykuly">Poradniki</a> › <a href="samba-ad-dc.html">Samba AD DC</a> › część 3</div>
+<h1 class="sx-h1">Samba AD DC, cz. 3 — użytkownicy, grupy, OU i import z CSV</h1>
+<p class="sx-lead">Tworzenie kont w samba-tool, struktura OU dla firmy i skrypt importu użytkowników z pliku CSV z wymuszoną zmianą hasła.</p>
+<div class="sx-meta">// część 3 z 5 · 28.09.2026 · na podstawie przewodnika z 19.05.2026</div>
+<nav class="sx-series" aria-label="Seria artykułów"><b>// Seria: Samba AD DC — Linux jako Active Directory (5 części)</b><ol><li class=""><a href="samba-ad-dc-1-planowanie-instalacja.html">planowanie i instalacja kontrolera domeny</a></li><li class=""><a href="samba-ad-dc-2-dns.html">DNS: konfiguracja, testy i najczęstsze problemy</a></li><li class="cur">użytkownicy, grupy, OU i import z CSV</li><li class=""><a href="samba-ad-dc-4-windows-gpo.html">dołączanie Windows do domeny i GPO</a></li><li class=""><a href="samba-ad-dc-5-udzialy-backup.html">udziały plikowe, backup i diagnostyka</a></li></ol><div style="margin-top:.5rem;opacity:.7">Wolisz wszystko na jednej stronie z odhaczaniem postępu? <a href="samba-ad-dc.html">Wersja interaktywna →</a></div></nav>
+<div class="phase" id="phase-3">
+  <div class="ph-head">
+    <div class="ph-num c4">04</div>
+    <div class="ph-meta">
+      <div class="ph-tag c4">Faza czwarta</div>
+      <div class="ph-title">Użytkownicy, grupy i OU</div>
+      <div class="ph-desc">Tworzenie użytkowników i grup, organizacja w jednostkach organizacyjnych (OU), zarządzanie hasłami, bulk import 120 userów.</div>
+      <span class="ph-time">⏱ 2–4 godziny • priorytet: WYSOKI</span>
+    </div>
+  </div>
+
+  <div class="s-head"><div class="s-head-label">Zarządzanie obiektami AD</div><div class="s-head-line"></div></div>
+
+  <div class="topic" data-phase="3">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check"></div>
+      <div class="topic-title">Tworzenie użytkowników przez samba-tool</div>
+      <div class="topic-tags"><span class="tag t-cli">CLI</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Samba-tool user to podstawowe narzędzie do zarządzania kontami. Możesz też używać RSAT z Windows.</div>
+      <div class="cmd">
+<span class="cmt"># Utwórz użytkownika</span>
+<span class="kw">sudo</span> samba-tool user create <span class="str">jan.kowalski</span> <span class="str">'Haslo123!'</span> \
+  --given-name=<span class="str">"Jan"</span> \
+  --surname=<span class="str">"Kowalski"</span> \
+  --mail-address=<span class="str">"jan.kowalski@firma.pl"</span> \
+  --department=<span class="str">"IT"</span>
+
+<span class="cmt"># Lista użytkowników</span>
+<span class="kw">sudo</span> samba-tool user list
+
+<span class="cmt"># Szczegóły użytkownika</span>
+<span class="kw">sudo</span> samba-tool user show jan.kowalski
+
+<span class="cmt"># Reset hasła</span>
+<span class="kw">sudo</span> samba-tool user setpassword jan.kowalski --newpassword=<span class="str">'NoweHaslo123!'</span>
+
+<span class="cmt"># Wyłącz/włącz konto</span>
+<span class="kw">sudo</span> samba-tool user disable jan.kowalski
+<span class="kw">sudo</span> samba-tool user enable jan.kowalski
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="3">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check"></div>
+      <div class="topic-title">Jednostki organizacyjne (OU) — struktura dla 120 userów</div>
+      <div class="topic-tags"><span class="tag t-cli">CLI</span><span class="tag t-imp">WAŻNE</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">OU to foldery w AD — organizują użytkowników i komputery oraz pozwalają stosować GPO do konkretnych grup.</div>
+      <div class="cmd">
+<span class="cmt"># Utwórz OU dla użytkowników</span>
+<span class="kw">sudo</span> samba-tool ou create "OU=Uzytkownicy,DC=ad,DC=firma,DC=pl"
+<span class="kw">sudo</span> samba-tool ou create "OU=IT,OU=Uzytkownicy,DC=ad,DC=firma,DC=pl"
+<span class="kw">sudo</span> samba-tool ou create "OU=Biuro,OU=Uzytkownicy,DC=ad,DC=firma,DC=pl"
+<span class="kw">sudo</span> samba-tool ou create "OU=Komputery,DC=ad,DC=firma,DC=pl"
+<span class="kw">sudo</span> samba-tool ou create "OU=Drukarki,DC=ad,DC=firma,DC=pl"
+
+<span class="cmt"># Przenieś użytkownika do OU</span>
+<span class="kw">sudo</span> samba-tool user move jan.kowalski "OU=IT,OU=Uzytkownicy,DC=ad,DC=firma,DC=pl"
+      </div>
+    </div>
+  </div>
+
+  <div class="topic" data-phase="3">
+    <div class="topic-head" onclick="toggleTopic(this)">
+      <div class="topic-check"></div>
+      <div class="topic-title">Import 120 użytkowników z CSV</div>
+      <div class="topic-tags"><span class="tag t-cli">CLI</span><span class="tag t-ok">AUTOMATYZACJA</span></div>
+      <div class="topic-expand">▾</div>
+    </div>
+    <div class="topic-body">
+      <div class="tb-intro">Tworzenie 120 userów ręcznie? Nie. Skrypt bash + plik CSV robi to w minutę.</div>
+      <div class="cmd">
+<span class="cmt"># Format pliku users.csv:</span>
+<span class="cmt"># username,firstname,lastname,email,department,ou</span>
+<span class="cmt"># jan.kowalski,Jan,Kowalski,j.kowalski@firma.pl,IT,IT</span>
+<span class="cmt"># anna.nowak,Anna,Nowak,a.nowak@firma.pl,Biuro,Biuro</span>
+      </div>
+      <div class="cmd">
+<span class="cmt">#!/bin/bash</span>
+<span class="cmt"># import-users.sh — import użytkowników z CSV</span>
+
+DOMAIN="DC=ad,DC=firma,DC=pl"
+DEFAULT_PASS="<span class="str">Tymczasowe123!</span>"
+
+<span class="kw">while</span> IFS=, <span class="kw">read</span> -r username firstname lastname email dept ou; <span class="kw">do</span>
+  <span class="cmt"># Pomiń nagłówek</span>
+  [[ "$username" == "username" ]] && continue
+
+  echo "Tworzę: $username"
+
+  samba-tool user create "$username" "$DEFAULT_PASS" \
+    --given-name="$firstname" \
+    --surname="$lastname" \
+    --mail-address="$email" \
+    --department="$dept"
+
+  <span class="cmt"># Przenieś do właściwego OU</span>
+  samba-tool user move "$username" \
+    "OU=$ou,OU=Uzytkownicy,$DOMAIN"
+
+  <span class="cmt"># Wymuś zmianę hasła przy pierwszym logowaniu</span>
+  <span class="cmt"># UWAGA: nie używaj "setexpiry --days=0" — to ustawia wygaśnięcie KONTA na dziś</span>
+  samba-tool user setpassword "$username" --newpassword="$DEFAULT_PASS" --must-change-at-next-login
+
+<span class="kw">done</span> < users.csv
+
+echo "Import zakończony!"
+      </div>
+      <div class="cmd">
+<span class="cmt"># Uruchom skrypt</span>
+<span class="kw">sudo</span> bash import-users.sh
+      </div>
+    </div>
+  </div>
+</div><!-- /phase-3 -->
+<div class="sx-pn"><a href="samba-ad-dc-2-dns.html">← DNS: konfiguracja, testy i najczęstsze problemy</a><a href="samba-ad-dc-4-windows-gpo.html" style="text-align:right">dołączanie Windows do domeny i GPO →</a></div>
+<nav class="sx-series" aria-label="Seria artykułów"><b>// Seria: Samba AD DC — Linux jako Active Directory (5 części)</b><ol><li class=""><a href="samba-ad-dc-1-planowanie-instalacja.html">planowanie i instalacja kontrolera domeny</a></li><li class=""><a href="samba-ad-dc-2-dns.html">DNS: konfiguracja, testy i najczęstsze problemy</a></li><li class="cur">użytkownicy, grupy, OU i import z CSV</li><li class=""><a href="samba-ad-dc-4-windows-gpo.html">dołączanie Windows do domeny i GPO</a></li><li class=""><a href="samba-ad-dc-5-udzialy-backup.html">udziały plikowe, backup i diagnostyka</a></li></ol><div style="margin-top:.5rem;opacity:.7">Wolisz wszystko na jednej stronie z odhaczaniem postępu? <a href="samba-ad-dc.html">Wersja interaktywna →</a></div></nav>
+</main>
+</div>
+<div class="sx-foot"><span>SEKTOR_X // Samba AD DC — Linux jako Active Directory · część 3/5</span><span><a href="../o-mnie.html">O mnie</a> · <a href="../polityka-prywatnosci.html">Polityka prywatności</a> · <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></span></div>
+</body>
+</html>

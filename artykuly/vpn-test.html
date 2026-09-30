@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Który VPN naprawdę nie loguje? Audyty i sprawy sądowe — SEKTOR_X</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="SEKTOR_X" href="../feed.xml">
+
+  <link rel="alternate" hreflang="pl" href="https://sec-stack.github.io/sektor-x/artykuly/vpn-test.html">
+  <link rel="alternate" hreflang="en" href="https://sec-stack.github.io/sektor-x/articles/vpn-test.html">
+  <link rel="alternate" hreflang="x-default" href="https://sec-stack.github.io/sektor-x/artykuly/vpn-test.html">
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/artykuly/vpn-test.html">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/artykuly/vpn-test.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="pl_PL">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Który VPN naprawdę nie loguje? Audyty i sprawy sądowe", "description": "Które VPN faktycznie nie przechowują logów? Audyty, naloty policji i sprawy sądowe: Mullvad, Proton VPN, IVPN, NordVPN, ExpressVPN, Surfshark, PIA.", "datePublished": "2026-05-12", "dateModified": "2026-09-27", "inLanguage": "pl", "author": {"@type": "Person", "name": "Operator SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/o-mnie.html"}, "publisher": {"@type": "Organization", "name": "SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/"}, "mainEntityOfPage": "https://sec-stack.github.io/sektor-x/artykuly/vpn-test.html"}</script>
+
+  <meta name="description" content="Które VPN faktycznie nie przechowują logów? Audyty, naloty policji i sprawy sądowe: Mullvad, Proton VPN, IVPN, NordVPN, ExpressVPN, Surfshark, PIA.">
+  <meta name="keywords" content="VPN no-logs, najlepszy VPN, Mullvad, ProtonVPN, prywatność online, VPN Polska">
+  <meta name="author" content="Operator SEKTOR_X">
+  <meta property="og:title" content="Który VPN naprawdę nie loguje? Audyty i sprawy sądowe — SEKTOR_X">
+  <meta property="og:description" content="Które VPN faktycznie nie przechowują logów? Audyty, naloty policji i sprawy sądowe: Mullvad, Proton VPN, IVPN, NordVPN, ExpressVPN, Surfshark, PIA.">
+  <meta property="og:type" content="article">
+  <meta name="robots" content="index, follow">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--cyan);border-color:rgba(0,229,255,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+  .callout strong{color:#fff;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  /* VPN TABLE */
+  .vpn-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.75rem;}
+  .vpn-table th{background:var(--panel);border:1px solid var(--border);padding:0.75rem 1rem;text-align:left;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;}
+  .vpn-table td{border:1px solid rgba(0,255,65,0.08);padding:0.75rem 1rem;color:#6a9a6a;}
+  .vpn-table tr:hover td{background:var(--panel);}
+  .vpn-table .yes{color:var(--green);}.vpn-table .no{color:var(--red);}.vpn-table .partial{color:var(--yellow);}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+  
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .ticker-label { font-size: 0.55rem; padding: 0 0.5rem; }
+    .ticker-track span { font-size: 0.55rem; padding: 0 1.5rem; }
+    .article-wrapper { padding: 90px 1rem 3rem; }
+    .article-title { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .article-meta { flex-wrap: wrap; gap: 0.75rem; }
+    .article-lead { font-size: 0.82rem; }
+    .article-content { font-size: 0.78rem; }
+    .article-content h2 { font-size: 1rem; }
+    .callout { padding: 1rem; font-size: 0.75rem; }
+    .checklist { padding: 1rem; }
+    .related-list a { padding: 0.75rem 1rem; font-size: 0.72rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1rem; }
+    /* VPN TABLE — scrollable on mobile */
+    .vpn-table { display: block; overflow-x: auto; white-space: nowrap; }
+    /* Code blocks */
+    .code-block { padding: 0.75rem 1rem; }
+    .code-block pre { font-size: 0.7rem; }
+  }
+
+  @media (max-width: 480px) {
+    .article-title { font-size: clamp(1.1rem, 6vw, 1.5rem); }
+    .breadcrumb { font-size: 0.6rem; }
+    .article-tags { gap: 0.35rem; }
+    .tag { font-size: 0.55rem; }
+  }
+
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    transition: all 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0;
+    background: rgba(3,10,3,0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 998;
+    backdrop-filter: blur(8px);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 1rem 2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+  }
+
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Artykuły</a></li><li><a href="../baza-operacyjna.html">Baza Operacyjna</a></li><li><a href="../o-mnie.html">O mnie</a></li><li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="../index.html">Artykuły</a>
+  <a href="../baza-operacyjna.html">Baza Operacyjna</a>
+  <a href="../o-mnie.html">O mnie</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+</div>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span><a href="../artykuly/klucze-dostepu-passkeys.html" style="color:inherit;text-decoration:none;">NOWE: Klucze dostępu (passkeys) — logowanie bez haseł</a> <em>///</em> <a href="../artykuly/backup-3-2-1.html" style="color:inherit;text-decoration:none;">NOWE: Backup 3-2-1 w praktyce</a> <em>///</em> <a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Audyty i sprawy sądowe 7 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+    <span><a href="../artykuly/klucze-dostepu-passkeys.html" style="color:inherit;text-decoration:none;">NOWE: Klucze dostępu (passkeys) — logowanie bez haseł</a> <em>///</em> <a href="../artykuly/backup-3-2-1.html" style="color:inherit;text-decoration:none;">NOWE: Backup 3-2-1 w praktyce</a> <em>///</em> <a href="../artykuly/10-rzeczy-bezpieczenstwo.html" style="color:inherit;text-decoration:none;">10 rzeczy które musisz zrobić żeby nie dać się zhakować</a> <em>///</em> <a href="../artykuly/jak-rozpoznac-phishing.html" style="color:inherit;text-decoration:none;">Jak rozpoznać fałszywy email — 7 sygnałów alarmowych</a> <em>///</em> <a href="../artykuly/vpn-test.html" style="color:inherit;text-decoration:none;">Który VPN naprawdę nie loguje? Audyty i sprawy sądowe 7 usług</a> <em>///</em> <a href="../artykuly/menedzer-hasel.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass — który wybrać?</a> <em>///</em> <a href="../artykuly/zabezpiecz-router.html" style="color:inherit;text-decoration:none;">Zabezpiecz router domowy w 15 minut</a> <em>///</em> <a href="../artykuly/zhakowane-konto-facebook.html" style="color:inherit;text-decoration:none;">Zhakowali mi Facebook — plan awaryjny krok po kroku</a> <em>///</em> <a href="../artykuly/jak-sprawdzic-czy-mam-wirusa.html" style="color:inherit;text-decoration:none;">Jak sprawdzić czy mam wirusa? 8 sygnałów</a> <em>///</em></span>
+  </div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html">Sektor_X</a><span class="breadcrumb-sep">›</span>
+    <a href="../index.html#artykuly">Prywatność</a><span class="breadcrumb-sep">›</span>
+    <span>Który VPN naprawdę nie loguje</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat">● Prywatność</span>
+    <h1 class="article-title">Który VPN naprawdę nie loguje? Sprawdziłem audyty i sprawy sądowe 7 usług</h1>
+    <div class="article-meta"><span>12.05.2026</span><span>Zaktualizowano: 27.09.2026</span><span>8 min czytania</span></div>
+    <p class="article-lead">Każdy VPN twierdzi, że „nie loguje”. Ale obietnica w regulaminie to jeszcze nie dowód. Zebrałem to, co da się sprawdzić: niezależne audyty i sytuacje, w których policja albo sąd faktycznie zapukali do drzwi.</p>
+  </header>
+  <div class="article-content">
+
+    <p>Rynek VPN zalany jest marketingiem. „No-logs policy”, „military-grade encryption”, „your privacy is our priority” — te slogany powtarza dosłownie każdy dostawca. Ale obietnica to jedno, a praktyka — drugie.</p>
+
+    <p>Uczciwie na starcie: <strong>to nie jest test laboratoryjny</strong>. Nie mierzyłem prędkości ani nie szukałem wycieków DNS. To przegląd publicznie dostępnych dowodów — audytów, raportów i spraw sądowych — z linkami do źródeł na końcu, żebyś mógł sam sprawdzić.</p>
+
+    <h2>Kryteria oceny</h2>
+    <p>Każdą usługę oceniam według 4 kryteriów:</p>
+    <ul>
+      <li><strong>Audyt zewnętrzny</strong> — czy polityka no-logs została zweryfikowana przez niezależną firmę?</li>
+      <li><strong>Test w praktyce</strong> — czy znana jest sprawa, w której policja lub sąd zażądali danych i nic nie dostali?</li>
+      <li><strong>Jurysdykcja</strong> — gdzie firma jest zarejestrowana. Ważne, ale mniej niż myślisz: Mullvad działa w Szwecji (kraj „14 Eyes”), a i tak policja wyszła z pustymi rękami. Liczy się, czy dane w ogóle istnieją.</li>
+      <li><strong>Open source</strong> — czy kod aplikacji jest otwarty i weryfikowalny?</li>
+    </ul>
+
+    <h2>Wyniki — tabela porównawcza</h2>
+
+    <table class="vpn-table">
+      <tr>
+        <th>VPN</th><th>Audyt no-logs</th><th>Test w praktyce</th><th>Jurysdykcja</th><th>Open Source</th>
+      </tr>
+      <tr><td><strong>Mullvad</strong></td><td class="yes">✓ Tak</td><td class="yes">✓ Nalot policji 2023</td><td class="yes">Szwecja</td><td class="yes">✓ Tak</td></tr>
+      <tr><td><strong>Proton VPN</strong></td><td class="yes">✓ Coroczne (Securitum)</td><td class="partial">Brak znanej sprawy</td><td class="yes">Szwajcaria</td><td class="yes">✓ Tak</td></tr>
+      <tr><td><strong>IVPN</strong></td><td class="yes">✓ Tak</td><td class="partial">Brak znanej sprawy</td><td class="yes">Gibraltar</td><td class="yes">✓ Tak</td></tr>
+      <tr><td><strong>NordVPN</strong></td><td class="yes">✓ 6 audytów (Deloitte 2025)</td><td class="partial">Brak znanej sprawy</td><td class="partial">Panama*</td><td class="no">✗ Nie</td></tr>
+      <tr><td><strong>ExpressVPN</strong></td><td class="yes">✓ Tak</td><td class="yes">✓ Serwer przejęty w Turcji 2017</td><td class="partial">Brytyjskie Wyspy Dziewicze (Kape)</td><td class="partial">Częściowo (Lightway)</td></tr>
+      <tr><td><strong>Surfshark</strong></td><td class="yes">✓ Tak</td><td class="partial">Brak znanej sprawy</td><td class="partial">Holandia**</td><td class="no">✗ Nie</td></tr>
+      <tr><td><strong>PIA</strong></td><td class="yes">✓ Tak</td><td class="yes">✓ Sprawy w USA 2016 i 2018</td><td class="no">USA (Kape)</td><td class="yes">✓ Tak</td></tr>
+    </table>
+
+    <p style="font-size:0.72rem;color:var(--dim);margin-top:0.5rem;">* Panama to jurysdykcja prawna, operacje prowadzone są głównie z Litwy i Holandii. ** Surfshark połączył się z Nord Security (właściciel NordVPN) w 2022 roku — mimo osobnych marek to jedna grupa.</p>
+
+    <h2>Moja rekomendacja: Top 3</h2>
+
+    <h3>1. Mullvad — najlepszy dla prywatności</h3>
+    <p>Mullvad to benchmark branży. Nie wymaga e-maila do rejestracji — dostajesz losowy numer konta. Możesz zapłacić gotówką w kopercie albo Monero. W kwietniu 2023 szwedzka policja przyszła do ich biura z nakazem i wyszła z pustymi rękami, bo nie było czego zabrać.</p>
+    <div class="callout"><strong>💡 Cena:</strong> 5 €/mies. (~22 zł), jeden plan, bez promocji i „-80% na 3 lata”. Firma regularnie zleca audyty — ostatni publiczny (Assured Security Consultants, sierpień 2025) dotyczył aplikacji webowej i nie wykazał podatności krytycznych, wysokich ani średnich.</div>
+
+    <h3>2. Proton VPN — najlepszy balans ceny i prywatności</h3>
+    <p>Szwajcarska jurysdykcja (poza UE i USA), darmowy plan bez limitu transferu, aplikacje open-source. Politykę no-logs co roku weryfikuje <strong>Securitum</strong> — polska firma, ta sama, która stoi za serwisem sekurak.pl.</p>
+    <div class="callout warn"><strong>⚠️ Uwaga:</strong> W 2021 Proton <em>Mail</em> przekazał adres IP francuskiego aktywisty na żądanie szwajcarskiego sądu. Proton VPN podlega innym przepisom niż poczta i nie ma obowiązku logowania — ale warto znać tę historię.</div>
+
+    <h3>3. IVPN — dla zaawansowanych</h3>
+    <p>Mniej znany, ale bardzo solidny. WireGuard i OpenVPN, rejestracja bez e-maila, niezależne audyty, otwarty kod. Minus: mniej serwerów i wyższa cena niż u dużych graczy.</p>
+
+    <div class="callout warn"><strong>⚠️ NordVPN — w porządku, ale z gwiazdką:</strong> sześć niezależnych ocen no-logs (ostatnia: Deloitte, listopad–grudzień 2025) potwierdza brak logów. Właściciel, Nord Security, wyrósł z grupy Tesonet, z którą powiązany jest też Oxylabs (proxy i scraping danych). Nie ma dowodów na współdzielenie danych — po prostu warto wiedzieć. W USA toczyły się też pozwy zbiorowe dotyczące automatycznego odnawiania subskrypcji.</div>
+
+    <h2>Na co uważać</h2>
+    <div class="callout alert">
+      <strong>🚨 Kape Technologies:</strong> ExpressVPN, PIA i CyberGhost należą do jednej firmy — Kape Technologies (dawniej Crossrider, której narzędzia były masowo wykorzystywane przez twórców adware). Kape kupiło też wydawcę popularnych serwisów z „niezależnymi” rankingami VPN. Same usługi mają dobre dowody: serwer ExpressVPN przejęty w Turcji w 2017 roku w śledztwie ws. zabójstwa rosyjskiego ambasadora <em>nie zawierał żadnych logów</em>, a PIA dwukrotnie nie mogło wydać danych w sprawach w USA. Mój problem to nie technika, tylko to, komu oddajesz pieniądze i czyim rankingom ufasz.<br><br>
+      <strong>Darmowe VPN:</strong> jeśli usługa jest darmowa i nie ma płatnej wersji, która ją finansuje — to ty jesteś produktem. Większość takich aplikacji zbiera i sprzedaje dane. Wyjątkiem jest darmowy plan Proton VPN, utrzymywany z płatnych subskrypcji.
+    </div>
+
+    <h2>VPN to nie srebrna kula</h2>
+    <p>VPN ukrywa twój IP przed odwiedzanymi stronami i szyfruje ruch przed dostawcą internetu. Nie chroni przed:</p>
+    <ul>
+      <li>śledzeniem przez ciasteczka i fingerprintingiem przeglądarki,</li>
+      <li>malwarem na twoim urządzeniu,</li>
+      <li>phishingiem,</li>
+      <li>wyciekami DNS, jeśli VPN jest źle skonfigurowany.</li>
+    </ul>
+
+    <div class="callout"><strong>🔍 Przejrzystość:</strong> w tym artykule nie ma linków afiliacyjnych i nikt mi nie zapłacił za kolejność. Jeśli kiedyś pojawią się linki partnerskie, będą wyraźnie oznaczone, a ranking się przez to nie zmieni.</div>
+
+    <h2>Źródła</h2>
+    <ul>
+      <li><a href="https://mullvad.net/en/blog/mullvad-vpn-was-subject-to-a-search-warrant-customer-data-not-compromised" target="_blank" rel="noopener" style="color:var(--cyan)">Mullvad — nalot policji, kwiecień 2023</a></li>
+      <li><a href="https://mullvad.net/en/blog/independent-security-audit-of-our-web-app-completed-by-assured" target="_blank" rel="noopener" style="color:var(--cyan)">Mullvad — audyt Assured, 2025</a></li>
+      <li><a href="https://protonvpn.com/blog/no-logs-audit" target="_blank" rel="noopener" style="color:var(--cyan)">Proton VPN — audyty no-logs (Securitum)</a></li>
+      <li><a href="https://www.ivpn.net/blog/ivpn-no-logging-claim-verified-by-independent-audit" target="_blank" rel="noopener" style="color:var(--cyan)">IVPN — audyt no-logs</a></li>
+      <li><a href="https://www.techradar.com/vpn/vpn-services/independent-auditors-confirm-nordvpn-never-stores-your-data-for-the-6th-time" target="_blank" rel="noopener" style="color:var(--cyan)">NordVPN — szósta ocena no-logs (Deloitte)</a></li>
+      <li><a href="https://www.expressvpn.com/blog/expressvpn-statement-andrey-karlov-investigation/" target="_blank" rel="noopener" style="color:var(--cyan)">ExpressVPN — oświadczenie ws. serwera w Turcji</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Kape_Technologies" target="_blank" rel="noopener" style="color:var(--cyan)">Kape Technologies — historia i marki</a></li>
+    </ul>
+
+  </div>
+  <div class="article-tags">
+    <span class="tag">vpn</span><span class="tag">prywatność</span><span class="tag">mullvad</span><span class="tag">protonvpn</span><span class="tag">no-logs</span>
+  </div>
+  <div class="related">
+    <div class="related-header">// Powiązane artykuły</div>
+    <ul class="related-list">
+      <li><a href="10-rzeczy-bezpieczenstwo.html">10 rzeczy które musisz zrobić dziś, żeby nie dać się zhakować</a></li>
+      <li><a href="jak-rozpoznac-phishing.html">Jak rozpoznać fałszywy email zanim klikniesz</a></li>
+      <li><a href="menedzer-hasel.html">Bitwarden vs 1Password vs KeePass — który menedżer haseł wybrać?</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="newsletter-cta" style="margin-top:2.5rem;padding:2rem;border:1px solid var(--green);background:var(--panel);text-align:center;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.75rem;">// Newsletter</div>
+  <p style="color:#ccc;font-size:0.85rem;margin-bottom:1.25rem;">Spodobało się? Otrzymuj nowe artykuły prosto na skrzynkę — bez spamu, bez bullshitu.</p>
+  <a href="https://sektorx.substack.com" target="_blank" style="display:inline-block;padding:0.75rem 2rem;background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;font-size:0.85rem;">📧 Zapisz się na newsletter</a>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGIA UJAWNIA PRAWDĘ // 2026</div>
+  <div><a href="../o-mnie.html">O mnie</a> · <a href="../polityka-prywatnosci.html">Polityka prywatności</a></div>
+</footer>
+</body>
+</html>
