@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passkeys — Passwordless Sign-in That Can&#39;t Be Phished — SEKTOR_X</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://sec-stack.github.io/sektor-x/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="SEKTOR_X" href="../feed.xml">
+  <link rel="alternate" hreflang="pl" href="https://sec-stack.github.io/sektor-x/artykuly/klucze-dostepu-passkeys.html">
+  <link rel="alternate" hreflang="en" href="https://sec-stack.github.io/sektor-x/articles/passkeys.html">
+  <link rel="alternate" hreflang="x-default" href="https://sec-stack.github.io/sektor-x/artykuly/klucze-dostepu-passkeys.html">
+  <link rel="canonical" href="https://sec-stack.github.io/sektor-x/articles/passkeys.html">
+  <meta property="og:url" content="https://sec-stack.github.io/sektor-x/articles/passkeys.html">
+  <meta property="og:site_name" content="SEKTOR_X">
+  <meta property="og:locale" content="en_US">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Passkeys — Passwordless Sign-in That Can't Be Phished", "description": "What passkeys are, why they protect you from phishing and how to turn them on for Google, Microsoft and Apple. Where to keep them and what to watch out for.", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "en", "author": {"@type": "Person", "name": "SEKTOR_X Operator", "url": "https://sec-stack.github.io/sektor-x/about.html"}, "publisher": {"@type": "Organization", "name": "SEKTOR_X", "url": "https://sec-stack.github.io/sektor-x/"}, "mainEntityOfPage": "https://sec-stack.github.io/sektor-x/articles/passkeys.html"}</script>
+
+  <meta name="description" content="What passkeys are, why they protect you from phishing and how to turn them on for Google, Microsoft and Apple. Where to keep them and what to watch out for.">
+  <meta name="keywords" content="passkeys, passwordless sign-in, phishing, 2FA, Windows Hello, FIDO2">
+  <meta name="author" content="SEKTOR_X Operator">
+  <meta property="og:title" content="Passkeys — Passwordless Sign-in That Can&#39;t Be Phished — SEKTOR_X">
+  <meta property="og:description" content="What passkeys are, why they protect you from phishing and how to turn them on for Google, Microsoft and Apple. Where to keep them and what to watch out for.">
+  <meta property="og:type" content="article">
+  <meta name="robots" content="index, follow">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<style>
+  :root{--green:#00ff41;--cyan:#00e5ff;--red:#ff003c;--yellow:#ffe600;--bg:#030a03;--panel:rgba(0,255,65,0.04);--border:rgba(0,255,65,0.15);--dim:#3a5a3a;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:#a0c8a0;font-family:'Share Tech Mono',monospace;overflow-x:hidden;cursor:crosshair;}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.15) 2px,rgba(0,0,0,0.15) 4px);pointer-events:none;z-index:9999;}
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,65,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(3,10,3,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;backdrop-filter:blur(8px);}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.2rem;color:#fff;text-decoration:none;}.logo span{color:var(--red);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1.1rem;height:52px;line-height:52px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.15em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border-right:1px solid var(--border);}
+  .nav-links a:first-child{border-left:1px solid var(--border);}.nav-links a:hover{color:var(--green);}
+  .ticker{position:fixed;top:52px;left:0;right:0;z-index:999;background:rgba(0,0,0,0.8);border-bottom:1px solid rgba(0,255,65,0.08);height:28px;overflow:hidden;display:flex;align-items:center;}
+  .ticker-label{background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;padding:0 0.75rem;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+  .ticker-track{display:flex;animation:ticker 40s linear infinite;white-space:nowrap;}
+  .ticker-track span{font-size:0.65rem;color:#5a8a5a;padding:0 3rem;}.ticker-track span em{color:var(--cyan);font-style:normal;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .article-wrapper{max-width:860px;margin:0 auto;padding:110px 2rem 6rem;position:relative;z-index:1;}
+  .breadcrumb{font-size:0.65rem;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:0.5rem;}
+  .breadcrumb a{color:var(--dim);text-decoration:none;}.breadcrumb a:hover{color:var(--green);}.breadcrumb-sep{color:var(--green);}
+  .article-header{margin-bottom:3rem;}
+  .article-cat{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:inline-block;padding:0.25rem 0.75rem;border:1px solid;color:var(--cyan);border-color:rgba(0,229,255,0.3);}
+  .article-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;line-height:1.2;margin-bottom:1.5rem;}
+  .article-meta{font-size:0.65rem;color:var(--dim);display:flex;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .article-meta::before{content:'//';color:var(--green);}
+  .article-lead{font-size:0.9rem;line-height:1.9;color:#6aaa6a;margin-top:1.5rem;padding-left:1rem;border-left:3px solid var(--green);}
+  .article-content{margin-top:2.5rem;font-size:0.82rem;line-height:2;color:#7aaa7a;}
+  .article-content h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;margin:2.5rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);text-transform:uppercase;}
+  .article-content h2::before{content:'// ';color:var(--green);}
+  .article-content h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--cyan);margin:1.8rem 0 0.75rem;}
+  .article-content p{margin-bottom:1.2rem;}
+  .article-content ul{list-style:none;margin:1rem 0 1.5rem;padding:0;}
+  .article-content ul li{padding:0.4rem 0 0.4rem 1.5rem;position:relative;border-bottom:1px solid rgba(0,255,65,0.05);}
+  .article-content ul li::before{content:'▸';position:absolute;left:0;color:var(--green);}
+  .callout{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--green);padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:0.8rem;line-height:1.8;color:#5a9a5a;}
+  .callout.warn{border-left-color:var(--yellow);}.callout.alert{border-left-color:var(--red);}
+  .callout strong{color:#fff;}
+  .article-content strong{color:#c8e6c8;font-weight:normal;}
+  .article-content em{color:var(--cyan);font-style:normal;}
+  .article-content hr{border:none;border-top:1px solid var(--border);margin:2rem 0;}
+  /* VPN TABLE */
+  .vpn-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.75rem;}
+  .vpn-table th{background:var(--panel);border:1px solid var(--border);padding:0.75rem 1rem;text-align:left;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;color:var(--green);text-transform:uppercase;}
+  .vpn-table td{border:1px solid rgba(0,255,65,0.08);padding:0.75rem 1rem;color:#6a9a6a;}
+  .vpn-table tr:hover td{background:var(--panel);}
+  .vpn-table .yes{color:var(--green);}.vpn-table .no{color:var(--red);}.vpn-table .partial{color:var(--yellow);}
+  .article-tags{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;flex-wrap:wrap;}
+  .tag{font-size:0.6rem;letter-spacing:0.1em;color:var(--dim);border:1px solid var(--border);padding:0.2rem 0.6rem;text-transform:uppercase;}
+  .related{margin-top:3rem;border:1px solid var(--border);}
+  .related-header{background:var(--panel);border-bottom:1px solid var(--border);padding:0.75rem 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;}
+  .related-list{list-style:none;}.related-list li{border-bottom:1px solid var(--border);}.related-list li:last-child{border-bottom:none;}
+  .related-list a{display:block;padding:1rem 1.5rem;text-decoration:none;color:#5a8a5a;font-size:0.78rem;transition:all 0.2s;}
+  .related-list a:hover{color:#fff;background:var(--panel);}.related-list a::before{content:'▸ ';color:var(--green);}
+  footer{border-top:1px solid var(--border);padding:2rem;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto;font-size:0.65rem;color:var(--dim);position:relative;z-index:1;}
+  footer a{color:var(--dim);text-decoration:none;}footer a:hover{color:var(--green);}
+  .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:0.9rem;color:#fff;}.footer-logo span{color:var(--red);}
+  
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .ticker-label { font-size: 0.55rem; padding: 0 0.5rem; }
+    .ticker-track span { font-size: 0.55rem; padding: 0 1.5rem; }
+    .article-wrapper { padding: 90px 1rem 3rem; }
+    .article-title { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .article-meta { flex-wrap: wrap; gap: 0.75rem; }
+    .article-lead { font-size: 0.82rem; }
+    .article-content { font-size: 0.78rem; }
+    .article-content h2 { font-size: 1rem; }
+    .callout { padding: 1rem; font-size: 0.75rem; }
+    .checklist { padding: 1rem; }
+    .related-list a { padding: 0.75rem 1rem; font-size: 0.72rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem 1rem; }
+    /* VPN TABLE — scrollable on mobile */
+    .vpn-table { display: block; overflow-x: auto; white-space: nowrap; }
+    /* Code blocks */
+    .code-block { padding: 0.75rem 1rem; }
+    .code-block pre { font-size: 0.7rem; }
+  }
+
+  @media (max-width: 480px) {
+    .article-title { font-size: clamp(1.1rem, 6vw, 1.5rem); }
+    .breadcrumb { font-size: 0.6rem; }
+    .article-tags { gap: 0.35rem; }
+    .tag { font-size: 0.55rem; }
+  }
+
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    transition: all 0.3s;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 0; right: 0;
+    background: rgba(3,10,3,0.98);
+    border-bottom: 1px solid var(--border);
+    z-index: 998;
+    backdrop-filter: blur(8px);
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu a {
+    display: block;
+    padding: 1rem 2rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--green); }
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+  }
+
+
+  .lang-switcher{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;margin-left:1rem;}
+  .lang-btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.15em;padding:0 0.8rem;height:32px;line-height:32px;background:none;border:none;color:var(--dim);cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+  .lang-btn:hover{color:var(--green);}.lang-btn.active{background:rgba(0,255,65,0.1);color:var(--green);}.lang-btn+.lang-btn{border-left:1px solid var(--border);}
+  .article-content a{color:var(--cyan);}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="../index.html?lang=en" class="logo">SEKTOR<span>_X</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html?lang=en">Articles</a></li><li><a href="../operator-base.html">Operator Base</a></li><li><a href="../about.html">About</a></li><li><a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" onclick="window.location.href='../artykuly/klucze-dostepu-passkeys.html'">🇵🇱 PL</button>
+    <button class="lang-btn active">🇬🇧 EN</button>
+  </div>
+  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="../index.html?lang=en">Articles</a>
+  <a href="../operator-base.html">Operator Base</a>
+  <a href="../about.html">About</a>
+  <a href="https://sektorx.substack.com" target="_blank" rel="noopener">Newsletter</a>
+</div>
+<div class="ticker">
+  <div class="ticker-label">⚡ NEWS</div>
+  <div class="ticker-track">
+    <span><a href="10-things-security.html" style="color:inherit;text-decoration:none;">10 Things You Must Do Today To Avoid Getting Hacked</a> <em>///</em> <a href="how-to-spot-phishing.html" style="color:inherit;text-decoration:none;">How to Spot a Phishing Email — 7 Red Flags</a> <em>///</em> <a href="vpn-test.html" style="color:inherit;text-decoration:none;">Which VPN Actually Doesn't Log? We Tested 12</a> <em>///</em> <a href="password-manager.html" style="color:inherit;text-decoration:none;">Bitwarden vs 1Password vs KeePass</a> <em>///</em> <a href="secure-your-router.html" style="color:inherit;text-decoration:none;">Secure Your Router in 15 Minutes</a> <em>///</em></span>
+    <span><a href="10-things-security.html" style="color:inherit;text-decoration:none;">10 Things You Must Do Today To Avoid Getting Hacked</a> <em>///</em> <a href="how-to-spot-phishing.html" style="color:inherit;text-decoration:none;">How to Spot a Phishing Email — 7 Red Flags</a> <em>///</em> <a href="vpn-test.html" style="color:inherit;text-decoration:none;">Which VPN Actually Doesn't Log? We Tested 12</a> <em>///</em></span></div>
+</div>
+<div class="article-wrapper">
+  <div class="breadcrumb">
+    <a href="../index.html?lang=en">Sektor_X</a><span class="breadcrumb-sep">›</span>
+    <a href="../index.html?lang=en#artykuly">Cybersec</a><span class="breadcrumb-sep">›</span>
+    <span>Passkeys</span>
+  </div>
+  <header class="article-header">
+    <span class="article-cat">● Cybersec</span>
+    <h1 class="article-title">Passkeys — Passwordless Sign-in That Can't Be Phished</h1>
+    <div class="article-meta"><span>28.09.2026</span><span>7 min read</span></div>
+    <p class="article-lead">A password can be stolen, guessed or phished. A passkey can't. Here's how passkeys work, where to keep them and how to turn them on for your most important accounts in 10 minutes.</p>
+  </header>
+  <div class="article-content">
+    <p>Passwords have two problems that never go away: people reuse them, and they can be phished. A password manager solves the first one. <strong>Passkeys</strong> solve both at once — and more and more services let you use them.</p>
+
+    <h2 id="what-are-they">What a passkey is</h2>
+    <p>Instead of a password, your device creates a pair of cryptographic keys for a given site:</p>
+    <ul>
+      <li>the <strong>private key</strong> stays with you — on your phone, computer or in your password manager — and is never sent anywhere,</li>
+      <li>the <strong>public key</strong> goes to the service. Even if the service gets hacked, nobody can sign in to your account with the public key.</li>
+    </ul>
+    <p>To sign in, you unlock the key the same way you unlock your phone: with a fingerprint, your face or a PIN. Your fingerprint and face scan <strong>never leave the device</strong> — they are only used to unlock the key locally.</p>
+
+    <h2 id="phishing">Why phishing stops working</h2>
+    <p>This is the biggest advantage. A passkey is <strong>bound to a specific domain</strong>. A passkey created for <em>google.com</em> simply won't work on <em>g00gle-login.com</em> — the browser won't even offer it. There's nothing to "type in" on a fake page, so there's nothing to steal.</p>
+    <div class="callout"><strong>💡 For comparison:</strong> an SMS code or a code from a 2FA app can be phished — the scammer asks you for it on a fake page and immediately uses it on the real one. With a passkey, that trick doesn't work. That's why in the articles on <a href="how-to-spot-phishing.html">spotting phishing</a> and in the <a href="10-things-security.html">security checklist</a> I recommend passkeys as the best option whenever a service offers them.</div>
+    <p>Microsoft reports that 98% of sign-in attempts with a passkey succeed, compared with only 32% with a password. Since May 2025, new Microsoft accounts are passwordless by default.</p>
+
+    <h2 id="where">Where to keep your passkeys</h2>
+    <ul>
+      <li><strong>Android and Chrome:</strong> Google Password Manager — passkeys sync across devices signed in to the same Google account.</li>
+      <li><strong>iPhone, iPad, Mac:</strong> the Passwords app / iCloud Keychain — syncs across your Apple devices.</li>
+      <li><strong>Windows:</strong> Windows Hello stores passkeys locally on the computer. Since the November 2025 update, Windows 11 also lets you save passkeys directly in <strong>1Password</strong> and <strong>Bitwarden</strong> (Bitwarden's integration launched in beta).</li>
+      <li><strong>A password manager</strong> (Bitwarden, 1Password, Proton Pass and others) — the best option if you mix systems, e.g. Android + Windows + iPad. One vault, every device.</li>
+      <li><strong>A hardware key</strong> (e.g. YubiKey) — for your most important accounts and for anyone who wants the key physically on them.</li>
+    </ul>
+
+    <h2 id="how-to-start">Getting started — three accounts first</h2>
+    <h3>1. Google account</h3>
+    <p>The fastest way: type <em>g.co/passkeys</em> into your browser — it takes you straight to the passkey settings of your Google account (Security → the section on how you sign in) → <strong>Create a passkey</strong>. On an Android phone signed in to that account, a passkey is often already set up.</p>
+    <h3>2. Microsoft account</h3>
+    <p>Go to <em>account.microsoft.com</em> → <strong>Security</strong> → sign-in options and add a passkey. Once everything works, you can remove the password from the account entirely.</p>
+    <h3>3. The account you use most</h3>
+    <p>Look for "passkey" in its security settings — Apple, Amazon, GitHub, PayPal and many online shops already support them. A list of services is kept at e.g. <em>passkeys.directory</em>.</p>
+
+    <h2 id="pitfalls">What to watch out for</h2>
+    <ul>
+      <li><strong>Losing your phone.</strong> If your passkeys live on a single device without sync, you can lose access. Keep them in a synced manager or add two passkeys (e.g. phone + hardware key).</li>
+      <li><strong>Recovery methods.</strong> Keep a working recovery email or phone number and save your backup codes. These become the weakest link — protect them.</li>
+      <li><strong>It doesn't work everywhere yet.</strong> Some services (including many banks) still require a password or their own app. There, keep using a password manager and 2FA as before.</li>
+      <li><strong>"Add a passkey" in a suspicious email</strong> is still phishing. Only add passkeys from the settings of an account you opened yourself.</li>
+    </ul>
+
+    <h2 id="checklist">Checklist</h2>
+    <ul>
+      <li>I know where I'll keep my passkeys (password manager or Google/Apple account)</li>
+      <li>I've added a passkey to my Google or Microsoft account</li>
+      <li>I have a second way to sign in in case I lose my phone</li>
+      <li>My backup codes are printed and stored safely</li>
+      <li>I've checked whether my email and my most-used shops support passkeys</li>
+    </ul>
+
+    <h2 id="sources">Sources</h2>
+    <ul>
+      <li><a href="https://www.microsoft.com/en-us/security/blog/2025/05/01/pushing-passkeys-forward-microsofts-latest-updates-for-simpler-safer-sign-ins/" target="_blank" rel="noopener">Microsoft Security Blog — passwordless by default (May 2025)</a></li>
+      <li><a href="https://www.bleepingcomputer.com/news/security/windows-11-now-supports-3rd-party-apps-for-native-passkey-management/" target="_blank" rel="noopener">BleepingComputer — Windows 11 and third-party passkey managers (November 2025)</a></li>
+      <li><a href="https://fidoalliance.org/passkeys/" target="_blank" rel="noopener">FIDO Alliance — what passkeys are</a></li>
+    </ul>
+
+  </div>
+  <div class="article-tags"><span class="tag">passkeys</span><span class="tag">passwords</span><span class="tag">2fa</span><span class="tag">phishing</span><span class="tag">cybersec</span></div>
+  <div class="related">
+    <div class="related-header">// Related articles</div>
+    <ul class="related-list">
+      <li><a href="password-manager.html">Bitwarden vs 1Password vs KeePass — Which Password Manager to Choose?</a></li>
+      <li><a href="how-to-spot-phishing.html">How to Spot a Phishing Email Before You Click</a></li>
+      <li><a href="password-generator.html">Password Generator + Strength Calculator</a></li>
+    </ul>
+  </div>
+</div>
+
+<div style="margin-top:2.5rem;padding:2rem;border:1px solid var(--green);background:var(--panel);text-align:center;">
+  <div style="font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.75rem;">// Newsletter</div>
+  <p style="color:#ccc;font-size:0.85rem;margin-bottom:1.25rem;">Enjoyed this? Get new articles straight to your inbox — no spam, no BS.</p>
+  <a href="https://sektorx.substack.com" target="_blank" style="display:inline-block;padding:0.75rem 2rem;background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;font-size:0.85rem;">📧 Subscribe to Newsletter</a>
+</div>
+
+<footer>
+  <div class="footer-logo">SEKTOR<span>_X</span></div>
+  <div>// TECHNOLOGY REVEALS TRUTH // 2026</div>
+  <div><a href="../about.html">About</a> · <a href="../privacy-policy.html">Privacy policy</a> · <a href="../feed.xml">RSS</a></div>
+</footer>
+</body>
+</html>

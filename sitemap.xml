@@ -44,4 +44,7 @@
   <url><loc>https://sec-stack.github.io/sektor-x/artykuly/samba-ad-dc-5-udzialy-backup.html</loc><lastmod>2026-09-28</lastmod><priority>0.7</priority></url>
   <url><loc>https://sec-stack.github.io/sektor-x/do-pobrania.html</loc><lastmod>2026-09-28</lastmod><priority>0.8</priority></url>
   <url><loc>https://sec-stack.github.io/sektor-x/downloads.html</loc><lastmod>2026-09-28</lastmod><priority>0.5</priority></url>
+  <url><loc>https://sec-stack.github.io/sektor-x/articles/passkeys.html</loc><lastmod>2026-09-30</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sec-stack.github.io/sektor-x/articles/backup-3-2-1.html</loc><lastmod>2026-09-30</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sec-stack.github.io/sektor-x/articles/domain-scanner.html</loc><lastmod>2026-09-30</lastmod><priority>0.7</priority></url>
 </urlset>
